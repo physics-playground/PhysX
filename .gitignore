@@ -1,0 +1,3 @@
+physx/bin/
+physx/compiler/vc*/
+physx/include/PxConfig.h

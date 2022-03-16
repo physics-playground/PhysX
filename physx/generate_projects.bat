@@ -14,14 +14,14 @@ SET PM_PATHS=%PM_CMAKEMODULES_PATH%;%PM_TARGA_PATH%
 
 if exist "%PHYSX_ROOT_DIR%/../externals/cmake/x64/bin/cmake.exe" (
     SET "PM_CMAKE_PATH=%PHYSX_ROOT_DIR%/../externals/cmake/x64"
-    GOTO CMAKE_EXTERNAL    
+    GOTO CMAKE_EXTERNAL
 )
 
 where /q cmake
-IF ERRORLEVEL 1 (    
-	ECHO Cmake is missing, please install cmake version 3.12 and up.
+IF ERRORLEVEL 1 (
+  ECHO Cmake is missing, please install cmake version 3.12 and up.
     set /p DUMMY=Hit ENTER to continue...
-	exit /b 1
+  exit /b 1
 )
 
 :CMAKE_EXTERNAL
@@ -35,14 +35,14 @@ IF ERRORLEVEL 0 (
 IF ERRORLEVEL 1 (
     python --version 2>NUL
     IF ERRORLEVEL 1 (
-        if "%PM_python_PATH%" == "" (        
+        if "%PM_python_PATH%" == "" (
             ECHO Python is missing, please install python version 2.7.6 and up. If Python is installed but not in the PATH, then set the env variable PM_python_PATH pointing to python root directory.
             set /p DUMMY=Hit ENTER to continue...
             exit /b 1
         )
     )
     IF ERRORLEVEL 0 (
-        if "%PM_python_PATH%" == "" (    
+        if "%PM_python_PATH%" == "" (
         set PM_PYTHON=python.exe
         ) else (
             set PM_PYTHON="%PM_python_PATH%\python.exe"
@@ -53,24 +53,29 @@ IF ERRORLEVEL 1 (
 IF %1.==. GOTO ADDITIONAL_PARAMS_MISSING
 
 for /f "usebackq tokens=*" %%i in (`"%PM_vswhere_PATH%\VsWhere.exe  -version [15.0,16.0) -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath"`) do (
-	set Install2017Dir=%%i
-	set VS150PATH="%%i"
+  set Install2017Dir=%%i
+  set VS150PATH="%%i"
 )
 
 for /f "usebackq tokens=*" %%i in (`"%PM_vswhere_PATH%\VsWhere.exe  -version [16.0,17.0) -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath"`) do (
   set Install2019Dir=%%i
-	set VS160PATH="%%i"	
-)	
+  set VS160PATH="%%i"
+)
+
+for /f "usebackq tokens=*" %%i in (`"%PM_vswhere_PATH%\VsWhere.exe  -version [17.0,18.0) -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath"`) do (
+  set Install2022Dir=%%i
+  set VS170PATH="%%i"
+)
 
 if exist "%Install2017Dir%\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" (
   pushd "%Install2017Dir%\VC\Auxiliary\Build\"
   set /p Version=<Microsoft.VCToolsVersion.default.txt
   for /f "delims=" %%x in (Microsoft.VCToolsVersion.default.txt) do (
-	if not %%x=="" (
-	  rem Example hardcodes x64 as the host and target architecture, but you could parse it from arguments
-	  set VS150CLPATH="%Install2017Dir%\VC\Tools\MSVC\%%x\bin\HostX64\x64\cl.exe"
-	)
-  )  
+  if not %%x=="" (
+    rem Example hardcodes x64 as the host and target architecture, but you could parse it from arguments
+    set VS150CLPATH="%Install2017Dir%\VC\Tools\MSVC\%%x\bin\HostX64\x64\cl.exe"
+  )
+  )
   popd
 )
 
@@ -78,11 +83,23 @@ if exist "%Install2019Dir%\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.t
   pushd "%Install2019Dir%\VC\Auxiliary\Build\"
   set /p Version=<Microsoft.VCToolsVersion.default.txt
   for /f "delims=" %%x in (Microsoft.VCToolsVersion.default.txt) do (
-	if not %%x=="" (
-	  rem Example hardcodes x64 as the host and target architecture, but you could parse it from arguments
-	  set VS160CLPATH="%Install2019Dir%\VC\Tools\MSVC\%%x\bin\HostX64\x64\cl.exe"
-	)
-  )  
+  if not %%x=="" (
+    rem Example hardcodes x64 as the host and target architecture, but you could parse it from arguments
+    set VS160CLPATH="%Install2019Dir%\VC\Tools\MSVC\%%x\bin\HostX64\x64\cl.exe"
+  )
+  )
+  popd
+)
+
+if exist "%Install2022Dir%\VC\Auxiliary\Build\Microsoft.VCToolsVersion.default.txt" (
+  pushd "%Install2022Dir%\VC\Auxiliary\Build\"
+  set /p Version=<Microsoft.VCToolsVersion.default.txt
+  for /f "delims=" %%x in (Microsoft.VCToolsVersion.default.txt) do (
+  if not %%x=="" (
+    rem Example hardcodes x64 as the host and target architecture, but you could parse it from arguments
+    set VS160CLPATH="%Install2022Dir%\VC\Tools\MSVC\%%x\bin\HostX64\x64\cl.exe"
+  )
+  )
   popd
 )
 

@@ -21,10 +21,10 @@ def cmakeExt():
 
 def filterPreset(presetName):
     winPresetFilter = ['win','uwp','ps4','switch','xboxone','android','crosscompile','xboxseriesx']
-    if sys.platform == 'win32':        
+    if sys.platform == 'win32':
         if any(presetName.find(elem) != -1 for elem in winPresetFilter):
             return True
-    else:        
+    else:
         if all(presetName.find(elem) == -1 for elem in winPresetFilter):
             return True
     return False
@@ -53,12 +53,12 @@ def noPresetProvided():
                 print('(' + str(counter) + ') ' + presetXml.get('name') +
                     '.user <--- ' + presetXml.get('comment'))
                 presetList.append(presetXml.get('name') + '.user')
-            counter = counter + 1            
+            counter = counter + 1
     # Fix Python 2.x.
-    try: 
+    try:
     	input = raw_input
-    except NameError: 
-    	pass    
+    except NameError:
+    	pass
     mode = int(input('Enter preset number: '))
     print('Running generate_projects.bat ' + presetList[mode])
     return presetList[mode]
@@ -138,6 +138,10 @@ class CMakePreset:
                     print('VS16CL:' + os.environ['VS160CLPATH'])
                     outString = outString + ' -DCUDA_HOST_COMPILER=' + \
                         os.environ['VS160CLPATH']
+                if self.compiler == 'vc17':
+                    print('VS17CL:' + os.environ['VS170CLPATH'])
+                    outString = outString + ' -DCUDA_HOST_COMPILER=' + \
+                        os.environ['VS170CLPATH']
 
         return outString
 
@@ -181,28 +185,28 @@ class CMakePreset:
             outString = outString + ' -DTARGET_BUILD_PLATFORM=uwp'
             outString = outString + ' -DPX_OUTPUT_ARCH=x86'
             outString = outString + ' -DCMAKE_SYSTEM_NAME=WindowsStore'
-            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'            
+            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'
             return outString
         elif self.targetPlatform == 'uwp32':
             outString = outString + ' -AWin32'
             outString = outString + ' -DTARGET_BUILD_PLATFORM=uwp'
             outString = outString + ' -DPX_OUTPUT_ARCH=x86'
             outString = outString + ' -DCMAKE_SYSTEM_NAME=WindowsStore'
-            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'            
+            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'
             return outString
         elif self.targetPlatform == 'uwparm32':
             outString = outString + ' -AARM'
             outString = outString + ' -DTARGET_BUILD_PLATFORM=uwp'
             outString = outString + ' -DPX_OUTPUT_ARCH=arm'
             outString = outString + ' -DCMAKE_SYSTEM_NAME=WindowsStore'
-            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'            
+            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'
             return outString
         elif self.targetPlatform == 'uwparm64':
             outString = outString + ' -AARM64'
             outString = outString + ' -DTARGET_BUILD_PLATFORM=uwp'
             outString = outString + ' -DPX_OUTPUT_ARCH=arm'
             outString = outString + ' -DCMAKE_SYSTEM_NAME=WindowsStore'
-            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'            
+            outString = outString + ' -DCMAKE_SYSTEM_VERSION=10.0'
             return outString
         elif self.targetPlatform == 'ps4':
             outString = outString + ' -DTARGET_BUILD_PLATFORM=ps4'
@@ -231,7 +235,15 @@ class CMakePreset:
                     '/xboxone/XboxOneToolchainVC16.txt'
                 outString = outString + ' -T v142'
                 outString = outString + ' -DCMAKE_VS160PATH=' + \
-                    os.environ['VS160PATH']            
+                    os.environ['VS160PATH']
+            elif self.compiler == 'vc17':
+                # TODO: Toolchain file need to be created
+                outString = outString + ' -DCMAKE_TOOLCHAIN_FILE=' + \
+                    os.environ['PM_CMakeModules_PATH'] + \
+                    '/xboxone/XboxOneToolchainVC17.txt'
+                outString = outString + ' -T v143'
+                outString = outString + ' -DCMAKE_VS170PATH=' + \
+                    os.environ['VS170PATH']
             outString = outString + ' -DCMAKE_GENERATOR_PLATFORM=Durango'
             outString = outString + ' -DSUPPRESS_SUFFIX=ON'
             return outString
@@ -252,6 +264,14 @@ class CMakePreset:
                 outString = outString + ' -T v142'
                 outString = outString + ' -DCMAKE_VS160PATH=' + \
                     os.environ['VS160PATH']
+            if self.compiler == 'vc17':
+                # TODO: Toolchain file need to be created
+                outString = outString + ' -DCMAKE_TOOLCHAIN_FILE=' + \
+                    os.environ['PM_CMakeModules_PATH'] + \
+                    '/xboxseriesx/XboxSeriesXToolchainVC17.txt'
+                outString = outString + ' -T v143'
+                outString = outString + ' -DCMAKE_VS170PATH=' + \
+                    os.environ['VS170PATH']
             outString = outString + ' -DCMAKE_GENERATOR_PLATFORM=Gaming.Xbox.Scarlett.x64'
             outString = outString + ' -DSUPPRESS_SUFFIX=ON'
             return outString
