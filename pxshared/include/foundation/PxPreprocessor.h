@@ -53,7 +53,11 @@ All definitions have a value of 1 or 0, use '#if' instead of '#ifdef'.
 Compiler defines, see http://sourceforge.net/p/predef/wiki/Compilers/
 */
 #if defined(_MSC_VER)
-#if _MSC_VER >= 1910
+#if _MSC_VER >= 1930
+#define PX_VC 17
+#elif _MSC_VER >= 1920
+#define PX_VC 16
+#elif _MSC_VER >= 1910
 #define PX_VC 15
 #elif _MSC_VER >= 1900
 #define PX_VC 14
