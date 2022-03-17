@@ -17,6 +17,7 @@ The Win32 build may intermittently boot to a black screen. If this occurs, exit 
 ## Acknowledgements
 
 This depot contains external third party open source software, copyright belonging to their respective owners:
+
 * OpenGL Extension Wrangler Library
 * glext
 * glut
