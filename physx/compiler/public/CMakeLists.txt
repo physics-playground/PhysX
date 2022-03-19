@@ -31,7 +31,7 @@ ELSE()
 	cmake_minimum_required(VERSION 3.11)
 ENDIF()
 
-project(PhysXSDK C CXX)
+project(PhysXSDK CXX)
 
 OPTION(PX_BUILDSNIPPETS "Generate the snippets" OFF)
 OPTION(PX_BUILDPUBLICSAMPLES "Generate the samples" OFF)

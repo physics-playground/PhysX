@@ -27,7 +27,7 @@
 
 cmake_minimum_required(VERSION 3.7)
 
-project(PhysX C CXX)
+project(PhysX CXX)
 
 CMAKE_POLICY(SET CMP0057 NEW) # Enable IN_LIST
 
