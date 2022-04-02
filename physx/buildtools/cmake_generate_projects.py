@@ -11,6 +11,11 @@ import sys
 import xml.etree.ElementTree
 
 
+def systemCall(command):
+    print("##[cmd] %s" % command)
+    os.system(command)
+
+
 def packmanExt():
     if sys.platform == "win32":
         return "cmd"
@@ -480,7 +485,7 @@ def getCommonParams():
 def cleanupCompilerDir(compilerDirName):
     if os.path.exists(compilerDirName):
         if sys.platform == "win32":
-            os.system("rmdir /S /Q " + compilerDirName)
+            systemCall("rmdir /S /Q " + compilerDirName)
         else:
             shutil.rmtree(compilerDirName, True)
     if not os.path.exists(compilerDirName):
@@ -520,7 +525,7 @@ def presetProvided(pName):
         # run the cmake script
         # print('Cmake params:' + cmakeParams)
         os.chdir(os.path.join(os.environ["PHYSX_ROOT_DIR"], outputDir))
-        os.system(
+        systemCall(
             cmakeExec
             + ' "'
             + os.environ["PHYSX_ROOT_DIR"]
@@ -541,7 +546,7 @@ def presetProvided(pName):
             # print('Cmake params:' + cmakeParams)
             os.chdir(os.path.join(os.environ["PHYSX_ROOT_DIR"], outputDir))
             # print(cmakeExec + ' \"' + os.environ['PHYSX_ROOT_DIR'] + '/compiler/' + cmakeMasterDir + '\"' + cmakeParams + ' -DCMAKE_BUILD_TYPE=' + config)
-            os.system(
+            systemCall(
                 cmakeExec
                 + ' "'
                 + os.environ["PHYSX_ROOT_DIR"]
@@ -561,9 +566,9 @@ def main():
         presetName = noPresetProvided()
         os.chdir(os.environ["PHYSX_ROOT_DIR"])
         if sys.platform == "win32":
-            os.system("generate_projects.bat " + presetName)
+            systemCall("generate_projects.bat " + presetName)
         else:
-            os.system("./generate_projects.sh " + presetName)
+            systemCall("./generate_projects.sh " + presetName)
     else:
         presetName = sys.argv[1]
         if filterPreset(presetName):
