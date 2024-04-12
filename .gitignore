@@ -1,4 +1,5 @@
 physx/bin/
 physx/compiler/vc*/
+physx/compiler/linux-*/
 physx/include/PxConfig.h
 build/
