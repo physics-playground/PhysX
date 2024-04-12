@@ -1,21 +1,10 @@
-# For most projects, this workflow file will not need changing; you simply need
-# to commit it to your repository.
-#
-# You may wish to alter this file to override the set of languages analyzed,
-# or to provide custom queries or build logic.
-#
-# ******** NOTE ********
-# We have attempted to detect the languages in your repository. Please check
-# the `language` matrix defined below to confirm you have the correct set of
-# supported CodeQL languages.
-#
-name: "CodeQL"
+name: CodeQL
 
 on:
   push:
-    branches: ["develop"]
+    branches: [main, dev, develop]
   pull_request:
-    branches: ["develop"]
+    branches: [main, dev, develop]
   schedule:
     - cron: "40 7 * * 3"
 
@@ -45,7 +34,7 @@ jobs:
       matrix:
         include:
           - language: c-cpp
-            build-mode: autobuild
+            build-mode: manual
           - language: python
             build-mode: none
     steps:
@@ -59,14 +48,20 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
-      - if: matrix.build-mode == 'manual'
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@v3.29.2
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@31e0ba28c780f4bd10cfc8075d1fff655386e214
+
+      - name: Configure CMake
         run: |
-          echo 'If you are using a "manual" build mode for one or more of the' \
-            'languages you are analyzing, replace this with the commands to build' \
-            'your code, for example:'
-          echo '  make bootstrap'
-          echo '  make release'
-          exit 1
+          $workspace = "$env:GITHUB_WORKSPACE" -replace '[\\/]', '/'
+          cmake -S "${workspace}/physx/compiler/public" -B "${workspace}/build" -Ax64 -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86 --no-warn-unused-cli -DCMAKEMODULES_PATH="${workspace}/externals/CMakeModules" -DPXSHARED_PATH="${workspace}/pxshared" -DCMAKE_PREFIX_PATH="${workspace}/externals/CMakeModules;${workspace}/externals/targa" -DPHYSX_ROOT_DIR="${workspace}/physx" -DPX_OUTPUT_LIB_DIR="${workspace}/physx" -DPX_OUTPUT_BIN_DIR="${workspace}/physx" -DPX_BUILDSNIPPETS=FALSE -DPX_BUILDPUBLICSAMPLES=FALSE -DPX_GENERATE_STATIC_LIBRARIES=FALSE -DNV_USE_STATIC_WINCRT=TRUE -DNV_USE_DEBUG_WINCRT=TRUE -DPX_FLOAT_POINT_PRECISE_MATH=FALSE -DCMAKE_INSTALL_PREFIX="${workspace}/physx/install/vc17win64/PhysX"
+
+      - if: matrix.build-mode == 'manual'
+        name: Build
+        run: cmake --build build/ --config Release
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
