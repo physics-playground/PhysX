@@ -562,9 +562,13 @@ def presetProvided(pName):
 
 
 def main():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    physx_root_dir = os.environ.get("PHYSX_ROOT_DIR", script_dir)
+    os.environ["PHYSX_ROOT_DIR"] = physx_root_dir
+
     if len(sys.argv) != 2:
         presetName = noPresetProvided()
-        os.chdir(os.environ["PHYSX_ROOT_DIR"])
+        os.chdir(physx_root_dir)
         if sys.platform == "win32":
             systemCall("generate_projects.bat " + presetName)
         else:
@@ -577,4 +581,5 @@ def main():
             print("Preset not supported on this build platform.")
 
 
-main()
+if __name__ == "__main__":
+    sys.exit(main())
