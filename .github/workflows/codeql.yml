@@ -53,23 +53,23 @@ jobs:
           cmake
           -S "${{github.workspace}}/physx/compiler/public"
           -B "${{github.workspace}}/build"
-           -Ax64
-           --no-warn-unused-cli
-           -DTARGET_BUILD_PLATFORM=linux
-           -DPX_OUTPUT_ARCH=x86
-           -DCMAKEMODULES_PATH="${{github.workspace}}/externals/CMakeModules"
-           -DPXSHARED_PATH="${{github.workspace}}/pxshared"
-           -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/CMakeModules;${{github.workspace}}/externals/targa"
-           -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
-           -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
-           -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
-           -DPX_BUILDSNIPPETS=FALSE
-           -DPX_BUILDPUBLICSAMPLES=FALSE
-           -DPX_GENERATE_STATIC_LIBRARIES=FALSE
-           -DNV_USE_STATIC_WINCRT=TRUE
-           -DNV_USE_DEBUG_WINCRT=TRUE
-           -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
-           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/vc17win64/PhysX"
+          -Ax64
+          --no-warn-unused-cli
+          -DTARGET_BUILD_PLATFORM=linux
+          -DPX_OUTPUT_ARCH=x86
+          -DCMAKEMODULES_PATH="${{github.workspace}}/externals/CMakeModules"
+          -DPXSHARED_PATH="${{github.workspace}}/pxshared"
+          -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/CMakeModules;${{github.workspace}}/externals/targa"
+          -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
+          -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
+          -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
+          -DPX_BUILDSNIPPETS=FALSE
+          -DPX_BUILDPUBLICSAMPLES=FALSE
+          -DPX_GENERATE_STATIC_LIBRARIES=FALSE
+          -DNV_USE_STATIC_WINCRT=TRUE
+          -DNV_USE_DEBUG_WINCRT=TRUE
+          -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/vc17win64/PhysX"
 
       - if: matrix.build-mode == 'manual'
         name: Build
