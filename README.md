@@ -1,6 +1,7 @@
 # NVIDIA PhysX SDK 4
 
 ![NVIDIA Logo](./physx/documentation/PhysXGuide/_static/images/nvidia_logo.png)
+
 Copyright (c) 2022 NVIDIA Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

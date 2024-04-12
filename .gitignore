@@ -5,3 +5,5 @@ physx/include/PxConfig.h
 build/
 .venv/
 .mypy_cache/
+node_modules/
+package-lock.json
