@@ -1,15 +1,13 @@
 name: Sonar Cloud
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+    branches: [ main, dev, develop ]
+  pull_request:  
+    branches: [ main, dev, develop ]
+    types: [opened, synchronize, reopened]    
+  workflow_dispatch:
   schedule:                # This trigger is here only to make sure
     - cron: '17 0 * * SUN' # the example itself doesn't become stale
-  workflow_dispatch:
-    branches:
-      - main
 jobs:
   build:
     name: Build
