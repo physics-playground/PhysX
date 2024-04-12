@@ -11,13 +11,8 @@ on:
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    # Runner size impacts CodeQL analysis time. To learn more, please see:
-    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
-    #   - https://gh.io/supported-runners-and-hardware-resources
-    #   - https://gh.io/using-larger-runners (GitHub.com only)
-    # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+    runs-on: "windows-latest"
+    timeout-minutes: 360
     permissions:
       # required for all workflows
       security-events: write
@@ -48,13 +43,33 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
-      - name: Get latest CMake and ninja
+      - if: matrix.build-mode == 'manual'
+        name: Get latest CMake and ninja
         uses: lukka/get-cmake@v3.29.2
 
-      - name: Configure CMake
-        run: |
-          $workspace = "$env:GITHUB_WORKSPACE" -replace '[\\/]', '/'
-          cmake -S "${workspace}/physx/compiler/public" -B "${workspace}/build" -Ax64 -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86 --no-warn-unused-cli -DCMAKEMODULES_PATH="${workspace}/externals/CMakeModules" -DPXSHARED_PATH="${workspace}/pxshared" -DCMAKE_PREFIX_PATH="${workspace}/externals/CMakeModules;${workspace}/externals/targa" -DPHYSX_ROOT_DIR="${workspace}/physx" -DPX_OUTPUT_LIB_DIR="${workspace}/physx" -DPX_OUTPUT_BIN_DIR="${workspace}/physx" -DPX_BUILDSNIPPETS=FALSE -DPX_BUILDPUBLICSAMPLES=FALSE -DPX_GENERATE_STATIC_LIBRARIES=FALSE -DNV_USE_STATIC_WINCRT=TRUE -DNV_USE_DEBUG_WINCRT=TRUE -DPX_FLOAT_POINT_PRECISE_MATH=FALSE -DCMAKE_INSTALL_PREFIX="${workspace}/physx/install/vc17win64/PhysX"
+      - if: matrix.build-mode == 'manual'
+        name: Configure CMake
+        run: >
+          cmake
+          -S "${{github.workspace}}/physx/compiler/public"
+          -B "${{github.workspace}}/build"
+           -Ax64
+           --no-warn-unused-cli
+           -DTARGET_BUILD_PLATFORM=linux
+           -DPX_OUTPUT_ARCH=x86
+           -DCMAKEMODULES_PATH="${{github.workspace}}/externals/CMakeModules"
+           -DPXSHARED_PATH="${{github.workspace}}/pxshared"
+           -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/CMakeModules;${{github.workspace}}/externals/targa"
+           -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
+           -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
+           -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
+           -DPX_BUILDSNIPPETS=FALSE
+           -DPX_BUILDPUBLICSAMPLES=FALSE
+           -DPX_GENERATE_STATIC_LIBRARIES=FALSE
+           -DNV_USE_STATIC_WINCRT=TRUE
+           -DNV_USE_DEBUG_WINCRT=TRUE
+           -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
+           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/vc17win64/PhysX"
 
       - if: matrix.build-mode == 'manual'
         name: Build
