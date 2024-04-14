@@ -6,6 +6,8 @@ DPHYSX
 DPXSHARED
 DTARGET
 glew
+Kapla
+kaplademo
 Khronos
 lukka
 Mikulic
