@@ -10,7 +10,8 @@ on:
     - cron: "17 0 * * SUN" # the example itself doesn't become stale
 
 permissions:
-  pull-requests: read # allows SonarCloud to decorate PRs with analysis results
+  # allows SonarCloud to decorate PRs with analysis results
+  pull-requests: read
 
 jobs:
   build:
@@ -28,14 +29,22 @@ jobs:
       - name: Analyze with SonarCloud
         uses: SonarSource/sonarcloud-github-action@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          # Needed to get PR information
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Install sonar-scanner and build-wrapper
-        uses: sonarsource/sonarcloud-github-c-cpp@v2
+        uses: SonarSource/sonarcloud-github-c-cpp@v2
 
       - name: Get latest CMake and ninja
         uses: lukka/get-cmake@v3.29.2
+
+      - name: Run build-wrapper
+        run: |
+          mkdir build
+          cmake -S . -B build
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
 
       - name: Configure CMake
         run: >
