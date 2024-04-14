@@ -1,0 +1,28 @@
+# https://taskfile.dev
+
+version: "3"
+
+vars:
+  PHYSX_EXTERNALS: "{{.ROOT_DIR}}/externals"
+  CMAKE_MODULES: "{{.ROOT_DIR}}/externals/cmakemodules"
+  CMAKE_TARGA: "{{.ROOT_DIR}}/externals/targa"
+  BUILD_DIR: "{{.ROOT_DIR}}/.build/task"
+
+tasks:
+  default:
+    vars:
+      SEARCH_PATHS: "{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}"
+      SOURCE_DIR: "{{toSlash .ROOT_DIR}}"
+      BUILD_DIR: "{{toSlash .BUILD_DIR}}"
+    cmds:
+      - cmd: >
+          cmake
+          -DCMAKE_PREFIX_PATH="{{.SEARCH_PATHS}}"
+          -S "{{.SOURCE_DIR}}"
+          -B "{{.BUILD_DIR}}"
+      - cmd: >
+          cmake
+          --build
+          "{{.BUILD_DIR}}"
+          --config Release
+    silent: false

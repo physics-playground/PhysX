@@ -1,5 +1,7 @@
 # Custom Dictionary Words
 cfamily
+cmakemodules
+cmds
 ctest
 DCMAKE
 DCMAKEMODULES

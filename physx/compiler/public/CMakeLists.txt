@@ -38,12 +38,13 @@ ELSE()
     cmake_minimum_required(VERSION 3.11)
 ENDIF()
 
-OPTION(PX_BUILDSNIPPETS "Generate the snippets" OFF)
-OPTION(PX_BUILDPUBLICSAMPLES "Generate the samples" OFF)
+OPTION(PX_BUILDSNIPPETS "Generate the snippets" ON)
+OPTION(PX_BUILDPUBLICSAMPLES "Generate the samples" ON)
 OPTION(PX_CMAKE_SUPPRESS_REGENERATION "Disable zero_check projects" OFF)
 
 file(REAL_PATH ${CMAKE_CURRENT_SOURCE_DIR} PROJECT_ROOT_ABS_DIR_OPT1)
 file(REAL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../.. PROJECT_ROOT_ABS_DIR_OPT2)
+
 IF(EXISTS ${PROJECT_ROOT_ABS_DIR_OPT2}/README.md)
     file(TO_CMAKE_PATH ${PROJECT_ROOT_ABS_DIR_OPT2} PROJECT_ROOT_DIR)
 ELSE()
@@ -82,7 +83,7 @@ IF(NOT EXISTS ${PHYSX_ROOT_DIR})
     MESSAGE(FATAL_ERROR "PHYSX_ROOT_DIR variable was invalid: ${PHYSX_ROOT_DIR}")
 ENDIF()
 
-SET(PUBLIC_RELEASE 1)
+SET(PUBLIC_RELEASE 0)
 
 # Enable folder properties
 SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -94,8 +95,8 @@ ENDIF()
 
 # Add PhysX SDK Source code to solution
 ADD_SUBDIRECTORY(
-        ${PHYSX_ROOT_DIR}/source/compiler/cmake
-        ${CMAKE_CURRENT_BINARY_DIR}/sdk_source_bin)
+    ${PHYSX_ROOT_DIR}/source/compiler/cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/sdk_source_bin)
 
 MESSAGE("Added PhysX")
 

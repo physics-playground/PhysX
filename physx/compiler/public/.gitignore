@@ -1,2 +1,6 @@
 out/
 cmake-*/
+sdk_*_bin/
+/cmake_install.cmake
+/*.vcxproj
+/*.vcxproj.filters

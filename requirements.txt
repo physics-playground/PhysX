@@ -1,0 +1,4 @@
+ruff
+pylint
+pylance
+black
