@@ -1,6 +1,8 @@
 {
   "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
-  "cmake.sourceDirectory": "M:/projects/PhysX/physx/compiler/public",
+  "cmake.sourceDirectory": "${workspaceFolder}",
+  "cmake.configureSettings": {},
+  "cmake.copyCompileCommands": "Always",
   "cmake.automaticReconfigure": true,
   "cmake.buildBeforeRun": true,
   "cmake.configureOnEdit": true,
