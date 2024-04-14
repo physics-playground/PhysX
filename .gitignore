@@ -12,3 +12,14 @@ node_modules/
 package-lock.json
 
 .vs/
+
+*.tlog
+*.pdb
+*.lib
+*.lastbuildstate
+*.obj
+*.lib.recipe
+*.log
+*.vcxproj.user
+
+cmake-build-*/
