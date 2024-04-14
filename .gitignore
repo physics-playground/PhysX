@@ -1,3 +1,12 @@
+#
+# PhysX 4
+#
+
+#
+# Intermediate
+#
+
+out/
 physx/bin/
 physx/compiler/vc*/
 physx/compiler/linux-*/
