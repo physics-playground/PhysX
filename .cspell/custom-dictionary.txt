@@ -1,5 +1,6 @@
 # Custom Dictionary Words
 cfamily
+ctest
 DCMAKE
 DCMAKEMODULES
 DPHYSX
@@ -11,6 +12,7 @@ kaplademo
 Khronos
 lukka
 Mikulic
+msvc
 Olszta
 Pawel
 physx
