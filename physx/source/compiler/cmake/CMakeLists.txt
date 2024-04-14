@@ -36,9 +36,9 @@ OPTION(PX_GENERATE_STATIC_LIBRARIES "Generate static libraries" OFF)
 OPTION(PX_EXPORT_LOWLEVEL_PDB "Export low level pdb's" OFF)
 
 IF(NOT DEFINED PHYSX_ROOT_DIR)
-	
+
 	STRING(REPLACE "\\" "/" BRD_TEMP $ENV{PHYSX_ROOT_DIR})
-	
+
 	# This env variable is set by GenerateProjects.bat, and is no longer available when CMake rebuilds, so this stores it in the cache
 	SET(PHYSX_ROOT_DIR ${BRD_TEMP} CACHE INTERNAL "Root of the PhysX source tree")
 
@@ -63,7 +63,6 @@ ENDIF()
 
 SET(CMAKE_MODULE_PATH ${CMAKEMODULES_PATH})
 
-
 MESSAGE("PhysX Build Platform: " ${TARGET_BUILD_PLATFORM})
 MESSAGE("Using CXX Compiler: " ${CMAKE_CXX_COMPILER})
 
@@ -77,7 +76,7 @@ IF (NOT EXISTS ${PXSHARED_PATH})
 
 	STRING(REPLACE "\\" "/" PXSHARED_PATH_TMP ${PXSHARED_PATH_TMP})
 	SET(PXSHARED_PATH ${PXSHARED_PATH_TMP} CACHE INTERNAL "Path to PxShared")
-	
+
 	STRING(REGEX REPLACE "/PhysX$" "/PxShared" PXSHARED_INSTALL_PREFIX_TMP ${CMAKE_INSTALL_PREFIX})
 	SET(PXSHARED_INSTALL_PREFIX ${PXSHARED_INSTALL_PREFIX_TMP} CACHE INTERNAL "Path to PxShared")
 ENDIF()
@@ -85,15 +84,15 @@ ENDIF()
 IF(CMAKE_CONFIGURATION_TYPES)
 	SET(CMAKE_CONFIGURATION_TYPES debug checked profile release)
 	SET(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
-		"Reset config to what we need" 
+		"Reset config to what we need"
 		FORCE)
-	
+
 	SET(CMAKE_SHARED_LINKER_FLAGS_CHECKED "")
 	SET(CMAKE_SHARED_LINKER_FLAGS_PROFILE "")
 
 	# Build PDBs for all configurations
 	SET(CMAKE_SHARED_LINKER_FLAGS "/DEBUG")
-	
+
 ENDIF()
 
 # Prevent failure due to command line limitations
