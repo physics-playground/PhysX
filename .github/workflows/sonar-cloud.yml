@@ -26,19 +26,8 @@ jobs:
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Analyze with SonarCloud
-        uses: SonarSource/sonarcloud-github-action@v2
-        env:
-          # Needed to get PR information
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Generate a token on Sonarcloud.io, add it to the secrets of this repo with the name SONAR_TOKEN (Settings > Secrets > Actions > add new repository secret)
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v2
-
-      - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@v3.29.2
 
       - name: Run build-wrapper
         run: |
@@ -46,37 +35,9 @@ jobs:
           cmake -S . -B build
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
 
-      - name: Configure CMake
-        run: >
-          cmake
-          -S "${{github.workspace}}/physx/compiler/public"
-          -B "${{github.workspace}}/build"
-          -Ax64
-          --no-warn-unused-cli
-          -DTARGET_BUILD_PLATFORM=linux
-          -DPX_OUTPUT_ARCH=x86
-          -DCMAKEMODULES_PATH="${{github.workspace}}/externals/CMakeModules"
-          -DPXSHARED_PATH="${{github.workspace}}/pxshared"
-          -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/CMakeModules;${{github.workspace}}/externals/targa"
-          -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
-          -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
-          -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
-          -DPX_BUILDSNIPPETS=FALSE
-          -DPX_BUILDPUBLICSAMPLES=FALSE
-          -DPX_GENERATE_STATIC_LIBRARIES=FALSE
-          -DNV_USE_STATIC_WINCRT=TRUE
-          -DNV_USE_DEBUG_WINCRT=TRUE
-          -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/vc17win64/PhysX"
-
-      - name: Run build-wrapper
-        run: |
-          # here goes your compilation wrapped with build-wrapper; See https://docs.sonarcloud.io/advanced-setup/languages/c-c-objective-c/#analysis-steps-using-build-wrapper for more information
-          # build-preparation steps
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
-
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" #Consult https://docs.sonarcloud.io/advanced-setup/ci-based-analysis/sonarscanner-cli/ for more information and options
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"

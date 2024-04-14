@@ -38,8 +38,6 @@ ELSE()
     cmake_minimum_required(VERSION 3.11)
 ENDIF()
 
-project(PhysXSDK CXX)
-
 OPTION(PX_BUILDSNIPPETS "Generate the snippets" OFF)
 OPTION(PX_BUILDPUBLICSAMPLES "Generate the samples" OFF)
 OPTION(PX_CMAKE_SUPPRESS_REGENERATION "Disable zero_check projects" OFF)
@@ -95,7 +93,9 @@ IF(PX_CMAKE_SUPPRESS_REGENERATION)
 ENDIF()
 
 # Add PhysX SDK Source code to solution
-ADD_SUBDIRECTORY(${PHYSX_ROOT_DIR}/source/compiler/cmake ${CMAKE_CURRENT_BINARY_DIR}/sdk_source_bin)
+ADD_SUBDIRECTORY(
+        ${PHYSX_ROOT_DIR}/source/compiler/cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/sdk_source_bin)
 
 MESSAGE("Added PhysX")
 

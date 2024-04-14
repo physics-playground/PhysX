@@ -12,6 +12,10 @@ build_x64/
 node_modules/
 package-lock.json
 
+#
+# Visual Studio
+#
+
 .vs/
 
 *.tlog
@@ -25,5 +29,12 @@ package-lock.json
 
 cmake-build-*/
 
+#
+# SonarCloud
+#
+
 .scannerwork/
 build_wrapper_output_directory/
+/build*/
+build-wrapper*.exe
+build-wrapper-dump.json
