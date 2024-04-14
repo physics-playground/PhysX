@@ -15,14 +15,13 @@ tasks:
       SOURCE_DIR: "{{toSlash .ROOT_DIR}}"
       BUILD_DIR: "{{toSlash .BUILD_DIR}}"
     cmds:
-      - cmd: >
+      - cmd: >-
           cmake
+          -G "Visual Studio 17 2022"
+          -A x64
           -DCMAKE_PREFIX_PATH="{{.SEARCH_PATHS}}"
           -S "{{.SOURCE_DIR}}"
           -B "{{.BUILD_DIR}}"
-      - cmd: >
-          cmake
-          --build
-          "{{.BUILD_DIR}}"
-          --config Release
+      - cmd: >-
+          cmake --build "{{.BUILD_DIR}}" --config Release
     silent: false
