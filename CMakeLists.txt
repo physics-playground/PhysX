@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22)
 project(PhysXSDK CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-include(physx/compiler/public/CMakeLists.txt)
+add_subdirectory(physx/compiler/public/)

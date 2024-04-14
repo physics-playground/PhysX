@@ -4,8 +4,7 @@
   "cmake.allowUnsupportedPresetsVersions": true,
   "cmake.automaticReconfigure": true,
   "cmake.buildBeforeRun": true,
-  "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
-  "cmake.buildTask": true,
+  "cmake.buildDirectory": "${workspaceFolder}/.build",
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
   "cmake.configureSettings": {},
@@ -16,9 +15,13 @@
   "cmake.installPrefix": "${workspaceFolder}/.build/install",
   "cmake.loggingLevel": "debug",
   "cmake.options.statusBarVisibility": "visible",
-  "cmake.revealLog": "never",
+  "cmake.revealLog": "always",
   "cmake.setBuildTypeOnMultiConfig": true,
-  "cmake.sourceDirectory": "${workspaceFolder}",
+  "cmake.sourceDirectory": [
+    "${workspaceFolder}",
+    "${workspaceFolder}/externals/cmakemodules",
+    "${workspaceFolder}/physx/compiler/public"
+  ],
   "cmake.touchbar.visibility": "hidden",
   "cmake.useCMakePresets": "never",
   "prettier.enable": false
