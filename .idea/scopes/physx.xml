@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="physx" pattern="!file[PhysX4]:build_wrapper_output_directory//*&amp;&amp;!file[PhysX4]:build_x64//*&amp;&amp;!file[PhysX4]:build//*&amp;&amp;!file[PhysX4]:.vs//*&amp;&amp;!file[PhysX4]:.scannerwork//*||file[PhysX4]:physx/*||file[PhysX4]:kaplademo/*||file[PhysX4]:kaplademo//*||file[PhysX4]:physx//*" />
+</component>
