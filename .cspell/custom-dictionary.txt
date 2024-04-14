@@ -1,0 +1,15 @@
+# Custom Dictionary Words
+cfamily
+DCMAKE
+DCMAKEMODULES
+DPHYSX
+DPXSHARED
+DTARGET
+glew
+Khronos
+lukka
+Mikulic
+Olszta
+Pawel
+physx
+pxshared
