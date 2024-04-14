@@ -1,15 +1,8 @@
 {
-  "cmake.sourceDirectory": "${workspaceFolder}/physx/compiler/public",
-  "cmake.environment": {
-    "PHYSX_ROOT_DIR": "${workspaceFolder}/physx"
-  },
-  "cmake.buildEnvironment": {
-    "PHYSX_ROOT_DIR": "${workspaceFolder}/physx"
-  },
+  "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
+  "cmake.sourceDirectory": "M:/projects/PhysX/physx/compiler/public",
   "cmake.automaticReconfigure": true,
   "cmake.buildBeforeRun": true,
-  "cmake.configureEnvironment": {
-    "PHYSX_ROOT_DIR": "${workspaceFolder}/physx"
-  },
-  "cmake.configureOnEdit": true
+  "cmake.configureOnEdit": true,
+  "prettier.enable": false
 }

@@ -3,6 +3,7 @@ physx/compiler/vc*/
 physx/compiler/linux-*/
 physx/include/PxConfig.h
 build/
+build_x64/
 
 .venv/
 .mypy_cache/
