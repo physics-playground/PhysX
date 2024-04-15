@@ -19,3 +19,5 @@ Olszta
 Pawel
 physx
 pxshared
+vcpkg
+VCPKG

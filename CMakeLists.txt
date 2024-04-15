@@ -3,4 +3,5 @@ project(PhysXSDK CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS OFF)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/externals/cmakemodules)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/externals/targa)
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/physx/compiler/public/)

@@ -22,33 +22,29 @@ setlocal EnableDelayedExpansion
     goto:$MainBuild
 
     :$MainClean
-    if exist "%PHYSX_SOURCE_ROOT_DIR%\build" rmdir /s /q "%PHYSX_SOURCE_ROOT_DIR%\build"
-    goto:$MainBuild
+        if exist "%PHYSX_SOURCE_ROOT_DIR%\build" rmdir /s /q "%PHYSX_SOURCE_ROOT_DIR%\build"
+        goto:$MainBuild
 
     ::
     :: call "%_root%\physx\generate_projects.bat" %_args%
     ::
     :$MainBuild
-    cmake ^
-        -S "%PHYSX_SOURCE_ROOT_DIR%/physx/compiler/public" ^
-        -B "%PHYSX_SOURCE_ROOT_DIR%/build" ^
-        -Ax64 ^
-        -DTARGET_BUILD_PLATFORM=windows ^
-        -DPX_OUTPUT_ARCH=x86 ^
-        --no-warn-unused-cli  ^
-        -DCMAKEMODULES_PATH=%PHYSX_SOURCE_ROOT_DIR%/externals/CMakeModules ^
-        -DPXSHARED_PATH=%PHYSX_SOURCE_ROOT_DIR%/pxshared ^
-        -DCMAKE_PREFIX_PATH="%PHYSX_SOURCE_ROOT_DIR%/externals/CMakeModules;%PHYSX_SOURCE_ROOT_DIR%/externals/targa" ^
-        -DPHYSX_ROOT_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
-        -DPX_OUTPUT_LIB_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
-        -DPX_OUTPUT_BIN_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
-        -DPX_BUILDSNIPPETS=TRUE ^
-        -DPX_BUILDPUBLICSAMPLES=TRUE ^
-        -DPX_GENERATE_STATIC_LIBRARIES=FALSE ^
-        -DNV_USE_STATIC_WINCRT=TRUE ^
-        -DNV_USE_DEBUG_WINCRT=TRUE ^
-        -DPX_FLOAT_POINT_PRECISE_MATH=FALSE ^
-        -DCMAKE_INSTALL_PREFIX="%PHYSX_SOURCE_ROOT_DIR%/physx/install/vc17win64/PhysX"
+        cmake ^
+            -S "%PHYSX_SOURCE_ROOT_DIR%/physx/compiler/public" ^
+            -B "%PHYSX_SOURCE_ROOT_DIR%/build" ^
+            -Ax64 ^
+            -DTARGET_BUILD_PLATFORM=windows ^
+            -DPX_OUTPUT_ARCH=x86 ^
+            --no-warn-unused-cli  ^
+            -DCMAKEMODULES_PATH=%PHYSX_SOURCE_ROOT_DIR%/externals/CMakeModules ^
+            -DPXSHARED_PATH=%PHYSX_SOURCE_ROOT_DIR%/pxshared ^
+            -DCMAKE_PREFIX_PATH="%PHYSX_SOURCE_ROOT_DIR%/externals/CMakeModules;%PHYSX_SOURCE_ROOT_DIR%/externals/targa" ^
+            -DPHYSX_ROOT_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
+            -DPX_OUTPUT_LIB_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
+            -DPX_OUTPUT_BIN_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
+            -DCMAKE_INSTALL_PREFIX="%PHYSX_SOURCE_ROOT_DIR%/physx/install/vc17win64/PhysX"
 
-    cmake --build "%PHYSX_SOURCE_ROOT_DIR%\build"
+        cmake --build "%PHYSX_SOURCE_ROOT_DIR%\build" --config Debug
+
+    :$MainDone
 endlocal & exit /b %errorlevel%

@@ -49,7 +49,7 @@ build-wrapper*.exe
 build-wrapper-dump.json
 
 #
-#
+# ...
 #
 
 ALL_BUILD.*
@@ -63,3 +63,9 @@ ZERO_CHECK/
 /CMakeFiles/
 generate.stamp
 generate.stamp.depend
+
+#
+#
+#
+
+/.env
