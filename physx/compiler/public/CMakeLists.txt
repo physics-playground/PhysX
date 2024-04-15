@@ -56,8 +56,10 @@ file(TO_CMAKE_PATH ${PROJECT_ROOT_DIR}/physx PHYSX_ROOT_DIR)
 SET(PXSHARED_PATH ${PROJECT_ROOT_DIR}/pxshared)
 SET(PM_PxShared_PATH ${PROJECT_ROOT_DIR}/pxshared)
 
-SET($ENV{PM_CMakeModules_PATH} ${PROJECT_ROOT_DIR}/externals/cmakemodules)
-SET(PM_CMakeModules_PATH ${PROJECT_ROOT_DIR}/externals/cmakemodules)
+SET(CMAKE_PREFIX_PATH "${PROJECT_ROOT_DIR}/externals/cmakemodules;${PROJECT_ROOT_DIR}/externals;${PROJECT_ROOT_DIR}/externals/targa" FORCE)
+SET(CMAKE_MODULE_PATH_PHYSX ${PROJECT_ROOT_DIR}/externals/cmakemodules)
+SET($ENV{PM_CMakeModules_PATH} ${CMAKE_MODULE_PATH_PHYSX})
+SET(PM_CMakeModules_PATH ${CMAKE_MODULE_PATH_PHYSX})
 
 SET(PM_opengllinux_PATH ${PROJECT_ROOT_DIR}/externals/opengl-linux)
 SET(PM_TARGA_PATH ${PROJECT_ROOT_DIR}/externals/targa)

@@ -29,16 +29,17 @@ setlocal EnableDelayedExpansion
     :: call "%_root%\physx\generate_projects.bat" %_args%
     ::
     :$MainBuild
+        set "VCPKG_ROOT=%USERPROFILE%/.vcpkg-clion/vcpkg"
+
         cmake ^
             -S "%PHYSX_SOURCE_ROOT_DIR%/physx/compiler/public" ^
             -B "%PHYSX_SOURCE_ROOT_DIR%/build" ^
             -Ax64 ^
             -DTARGET_BUILD_PLATFORM=windows ^
+            -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%/scripts/buildsystems/vcpkg.cmake" ^
             -DPX_OUTPUT_ARCH=x86 ^
             --no-warn-unused-cli  ^
-            -DCMAKEMODULES_PATH=%PHYSX_SOURCE_ROOT_DIR%/externals/CMakeModules ^
             -DPXSHARED_PATH=%PHYSX_SOURCE_ROOT_DIR%/pxshared ^
-            -DCMAKE_PREFIX_PATH="%PHYSX_SOURCE_ROOT_DIR%/externals/CMakeModules;%PHYSX_SOURCE_ROOT_DIR%/externals/targa" ^
             -DPHYSX_ROOT_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
             -DPX_OUTPUT_LIB_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
             -DPX_OUTPUT_BIN_DIR="%PHYSX_SOURCE_ROOT_DIR%/physx" ^
