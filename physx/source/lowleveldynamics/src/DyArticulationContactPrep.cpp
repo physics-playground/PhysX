@@ -25,7 +25,7 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 
 #include "foundation/PxPreprocessor.h"
@@ -126,7 +126,7 @@ PxVec3 SolverExtBody::getAngVel() const
 	else
 	{
 		const Vec3V angular = mArticulation->getLinkVelocity(mLinkIndex).angular;
-		
+
 		PxVec3 result;
 		V3StoreU(angular, result);
 		/*PxVec3 result;
@@ -182,26 +182,26 @@ Cm::SpatialVectorV createImpulseResponseVector(const Ps::aos::Vec3V& linear, con
 	return Cm::SpatialVectorV(linear, angular);
 }
 
-PxReal getImpulseResponse(const SolverExtBody& b0, const Cm::SpatialVector& impulse0, Cm::SpatialVector& deltaV0, PxReal dom0, PxReal angDom0, 
-	const SolverExtBody& b1, const Cm::SpatialVector& impulse1, Cm::SpatialVector& deltaV1, PxReal dom1, PxReal angDom1, 
+PxReal getImpulseResponse(const SolverExtBody& b0, const Cm::SpatialVector& impulse0, Cm::SpatialVector& deltaV0, PxReal dom0, PxReal angDom0,
+	const SolverExtBody& b1, const Cm::SpatialVector& impulse1, Cm::SpatialVector& deltaV1, PxReal dom1, PxReal angDom1,
 	Cm::SpatialVectorF* Z, bool allowSelfCollision)
 {
 	PxReal response;
 	allowSelfCollision = false;
 	// right now self-collision with contacts crashes the solver
-	
+
 	//KS - knocked this out to save some space on SPU
 	if(allowSelfCollision && b0.mLinkIndex!=PxSolverConstraintDesc::NO_LINK && b0.mArticulation == b1.mArticulation && 0)
 	{
-		/*ArticulationHelper::getImpulseSelfResponse(*b0.mFsData,b0.mLinkIndex, impulse0, deltaV0, 
+		/*ArticulationHelper::getImpulseSelfResponse(*b0.mFsData,b0.mLinkIndex, impulse0, deltaV0,
 													  b1.mLinkIndex, impulse1, deltaV1);*/
 
-		b0.mArticulation->getImpulseSelfResponse(b0.mLinkIndex, b1.mLinkIndex, Z, impulse0.scale(dom0, angDom0), impulse1.scale(dom1, angDom1), 
+		b0.mArticulation->getImpulseSelfResponse(b0.mLinkIndex, b1.mLinkIndex, Z, impulse0.scale(dom0, angDom0), impulse1.scale(dom1, angDom1),
 			deltaV0, deltaV1);
-		
+
 		response = impulse0.dot(deltaV0) + impulse1.dot(deltaV1);
 	}
-	else 
+	else
 	{
 		if(b0.mLinkIndex == PxSolverConstraintDesc::NO_LINK)
 		{
@@ -315,10 +315,11 @@ void setupFinalizeExtSolverContacts(
 	staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W=V4SetZ(staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W, d0);
 	staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W=V4SetW(staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W, d1);
 
-	const FloatV restDistance = FLoad(restDist); 
+	const FloatV restDistance = FLoad(restDist);
 
 	PxU32 frictionPatchWritebackAddrIndex = 0;
 	PxU32 contactWritebackCount = 0;
+	(void)(contactWritebackCount);
 
 	Ps::prefetchLine(c.contactID);
 	Ps::prefetchLine(c.contactID, 128);
@@ -338,7 +339,7 @@ void setupFinalizeExtSolverContacts(
 			continue;
 
 		const FrictionPatch& frictionPatch = c.frictionPatches[i];
-		PX_ASSERT(frictionPatch.anchorCount <= 2);  //0==anchorCount is allowed if all the contacts in the manifold have a large offset. 
+		PX_ASSERT(frictionPatch.anchorCount <= 2);  //0==anchorCount is allowed if all the contacts in the manifold have a large offset.
 
 		const Gu::ContactPoint* contactBase0 = buffer + c.contactPatches[c.correlationListHeads[i]].start;
 		const PxReal combinedRestitution = contactBase0->restitution;
@@ -350,43 +351,43 @@ void setupFinalizeExtSolverContacts(
 		const bool disableStrongFriction = !!(contactBase0->materialFlags & PxMaterialFlag::eDISABLE_FRICTION);
 		staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W=V4SetX(staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W, FLoad(staticFriction));
 		staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W=V4SetY(staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W, FLoad(dynamicFriction));
-	
+
 		SolverContactHeader* PX_RESTRICT header = reinterpret_cast<SolverContactHeader*>(ptr);
-		ptr += sizeof(SolverContactHeader);		
+		ptr += sizeof(SolverContactHeader);
 
 		Ps::prefetchLine(ptr + 128);
 		Ps::prefetchLine(ptr + 256);
 		Ps::prefetchLine(ptr + 384);
-		
+
 		const bool haveFriction = (disableStrongFriction == 0) ;//PX_IR(n.staticFriction) > 0 || PX_IR(n.dynamicFriction) > 0;
 		header->numNormalConstr		= Ps::to8(contactCount);
 		header->numFrictionConstr	= Ps::to8(haveFriction ? frictionPatch.anchorCount*2 : 0);
-	
+
 		header->type				= Ps::to8(DY_SC_TYPE_EXT_CONTACT);
 
 		header->flags = flags;
 
 		const FloatV restitution = FLoad(combinedRestitution);
-	
+
 		header->staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W = staticFrictionX_dynamicFrictionY_dominance0Z_dominance1W;
 
 		header->angDom0 = invInertiaScale0;
 		header->angDom1 = invInertiaScale1;
-	
+
 		const PxU32 pointStride = sizeof(SolverContactPointExt);
 		const PxU32 frictionStride = sizeof(SolverContactFrictionExt);
 
 		const Vec3V normal = V3LoadU(buffer[c.contactPatches[c.correlationListHeads[i]].start].normal);
-		
+
 		FloatV accumImpulse = FZero();
 
-		for(PxU32 patch=c.correlationListHeads[i]; 
-			patch!=CorrelationBuffer::LIST_END; 
+		for(PxU32 patch=c.correlationListHeads[i];
+			patch!=CorrelationBuffer::LIST_END;
 			patch = c.contactPatches[patch].next)
 		{
 			const PxU32 count = c.contactPatches[patch].count;
 			const Gu::ContactPoint* contactBase = buffer + c.contactPatches[patch].start;
-				
+
 			PxU8* p = ptr;
 
 			for(PxU32 j=0;j<count;j++)
@@ -398,7 +399,7 @@ void setupFinalizeExtSolverContacts(
 
 				accumImpulse = FAdd(accumImpulse, setupExtSolverContact(b0, b1, d0, d1, angD0, angD1, frame0p, frame1p, normal, invDt, invDtp8, restDistance, maxPenBias, restitution,
 					bounceThreshold, contact, *solverContact, ccdMaxSeparation, Z, vel0, vel1));
-			
+
 			}
 
 			ptr = p;
@@ -443,16 +444,16 @@ void setupFinalizeExtSolverContacts(
 
 			const Vec3V t1 = V3Cross(normal, t0Cross);
 			const VecCrossV t1Cross = V3PrepareCross(t1);
-			
+
 			//We want to set the writeBack ptr to point to the broken flag of the friction patch.
-			//On spu we have a slight problem here because the friction patch array is 
-			//in local store rather than in main memory. The good news is that the address of the friction 
-			//patch array in main memory is stored in the work unit. These two addresses will be equal 
+			//On spu we have a slight problem here because the friction patch array is
+			//in local store rather than in main memory. The good news is that the address of the friction
+			//patch array in main memory is stored in the work unit. These two addresses will be equal
 			//except on spu where one is local store memory and the other is the effective address in main memory.
 			//Using the value stored in the work unit guarantees that the main memory address is used on all platforms.
 			PxU8* PX_RESTRICT writeback = frictionDataPtr + frictionPatchWritebackAddrIndex*sizeof(FrictionPatch);
 
-			header->frictionBrokenWritebackByte = writeback;			
+			header->frictionBrokenWritebackByte = writeback;
 
 			for(PxU32 j = 0; j < frictionPatch.anchorCount; j++)
 			{

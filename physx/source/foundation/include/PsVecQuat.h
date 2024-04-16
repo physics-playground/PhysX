@@ -306,7 +306,7 @@ PX_FORCE_INLINE bool isValidQuatV(const QuatV q)
 	const FloatV unitTolerance = FLoad(1e-4f);
 	const FloatV tmp = FAbs(FSub(QuatLength(q), FOne()));
 	const BoolV con = FIsGrtr(unitTolerance, tmp);
-	return isFiniteVec4V(q) & (BAllEqTTTT(con) == 1);
+	return (int)isFiniteVec4V(q) & (int)(BAllEqTTTT(con) == 1);
 }
 
 PX_FORCE_INLINE bool isSaneQuatV(const QuatV q)
@@ -314,7 +314,7 @@ PX_FORCE_INLINE bool isSaneQuatV(const QuatV q)
 	const FloatV unitTolerance = FLoad(1e-2f);
 	const FloatV tmp = FAbs(FSub(QuatLength(q), FOne()));
 	const BoolV con = FIsGrtr(unitTolerance, tmp);
-	return isFiniteVec4V(q) & (BAllEqTTTT(con) == 1);
+	return (int)isFiniteVec4V(q) & (int)(BAllEqTTTT(con) == 1);
 }
 
 PX_FORCE_INLINE Mat33V QuatGetMat33V(const QuatVArg q)
