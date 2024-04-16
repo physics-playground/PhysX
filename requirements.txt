@@ -2,3 +2,7 @@ ruff
 pylint
 pylance
 black
+build
+pytest
+mypy
+setuptools

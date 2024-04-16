@@ -6,6 +6,8 @@
 # Intermediate
 #
 
+**/*.egg-info/
+
 out/
 physx/bin/
 physx/compiler/vc*/
@@ -14,7 +16,8 @@ physx/include/PxConfig.h
 build/
 build_x64/
 .build/
-
+dist/
+.ruff_cache/
 .venv/
 .mypy_cache/
 

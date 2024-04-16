@@ -1,6 +1,5 @@
-
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -30,21 +29,19 @@ classifiers = [
 ]
 dependencies = ["ruff", "pylance", "pylint", "mypy", "black"]
 
+[tool.setuptools.packages.find]
+where = ["physx/buildtools"]
+namespaces = false
+
 [project.optional-dependencies]
-dev = ["check-manifest"]
-test = ["coverage"]
+dev = ["ruff", "pylance", "pylint", "mypy", "black"]
+test = ["coverage", "pytest"]
 
 [project.urls]
 "Homepage" = "https://github.com/physics-playground/PhysX"
 "Bug Reports" = "https://github.com/physics-playground/PhysX/issues"
 "Say Thanks!" = "http://saythanks.io/to/joelvaneenwyk"
 "Source" = "https://github.com/physics-playground/PhysX/"
-
-[project.scripts]
-sample = "sample:main"
-
-[tool.setuptools]
-package-data = { "sample" = ["*.dat"] }
 
 [tool.ruff]
 exclude = [
