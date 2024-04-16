@@ -1,17 +1,21 @@
-name: CodeQL
+name: Analysis
 
 on:
   push:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+    types: [opened, synchronize, reopened]
   schedule:
-    - cron: "40 7 * * 3"
+    - cron: '40 7 * * 3'
+  workflow_dispatch:
+
+permissions:
+  # allows SonarCloud to decorate PRs with analysis results
+  pull-requests: read
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
-    runs-on: "windows-latest"
     timeout-minutes: 360
     permissions:
       # required for all workflows
@@ -24,20 +28,46 @@ jobs:
       actions: read
       contents: read
 
+    env:
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
+
     strategy:
       fail-fast: false
       matrix:
         include:
           - language: c-cpp
             build-mode: manual
+            tool: codeql
+            os: windows-latest
+            platform: windows
+          - language: c-cpp
+            build-mode: manual
+            tool: sonar
+            os: ubuntu-latest
+            platform: linux
           - language: python
             build-mode: none
+            tool: codeql
+            os: ubuntu-latest
+            platform: linux
+
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
+
+      - if: ${{ matrix.tool == 'sonar' }}
+        name: Install sonar-scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-c-cpp@v2
 
       # Initializes the CodeQL tools for scanning.
-      - name: Initialize CodeQL
+      - if: ${{ matrix.tool == 'codeql' }}
+        name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
@@ -47,19 +77,17 @@ jobs:
         name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.25.0"
-          ninjaVersion: "^1.11.1"
+          cmakeVersion: '~3.25.0'
+          ninjaVersion: '^1.11.1'
 
       - if: matrix.build-mode == 'manual'
         name: Configure CMake
-        run: >
+        run: >-
           cmake
           -S "${{github.workspace}}/physx/compiler/public"
           -B "${{github.workspace}}/build"
-          -Ax64
           --no-warn-unused-cli
-          -DTARGET_BUILD_PLATFORM=linux
-          -DPX_OUTPUT_ARCH=x86
+          -DTARGET_BUILD_PLATFORM=${{matrix.platform}}=
           -DCMAKEMODULES_PATH="${{github.workspace}}/externals/CMakeModules"
           -DPXSHARED_PATH="${{github.workspace}}/pxshared"
           -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/CMakeModules;${{github.workspace}}/externals/targa"
@@ -74,11 +102,25 @@ jobs:
           -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
           -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/vc17win64/PhysX"
 
-      - if: matrix.build-mode == 'manual'
+      - if: ${{ matrix.tool == 'sonar' && matrix.build-mode == 'manual' }}
         name: Build
         run: cmake --build build/ --config Release
 
-      - name: Perform CodeQL Analysis
+      - if: ${{ matrix.tool == 'sonar' }}
+        name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
+
+      - if: ${{ matrix.tool == 'sonar' }}
+        name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+
+      - if: ${{ matrix.tool == 'codeql' }}
+        name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: '/language:${{matrix.language}}'

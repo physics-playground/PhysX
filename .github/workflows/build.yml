@@ -4,15 +4,15 @@ on:
   push:
     branches: [main, develop]
     paths-ignore:
-      - "Docs/**"
-      - "**.md"
-      - "**.txt"
+      - 'Docs/**'
+      - '**.md'
+      - '**.txt'
   pull_request:
     branches: [main, develop]
     paths-ignore:
-      - "Docs/**"
-      - "**.md"
-      - "**.txt"
+      - 'Docs/**'
+      - '**.md'
+      - '**.txt'
 
 jobs:
   visual_studio:
