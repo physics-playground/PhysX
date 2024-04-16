@@ -19,16 +19,14 @@ if ! command -v clang &>/dev/null && ! command -v gcc &>/dev/null; then
 fi
 
 (
-    cd "$PHYSX_ROOT_DIR" || true
     rm -rf "$PROJECT_ROOT_DIR/physx/compiler/linux-*/"
     python "$PHYSX_ROOT_DIR/buildtools/cmake_generate_projects.py" "$@"
     status=$?
     if [ "$status" -ne "0" ]; then
         echo "Error $status"
         exit 1
+    else
+        # cmake --build "$PROJECT_ROOT_DIR/physx/compiler/linux-release" --config Release
+        make --directory="$PROJECT_ROOT_DIR/physx/compiler/linux-release" -j"$(nproc)"
     fi
-
-    cd "$PROJECT_ROOT_DIR/physx/compiler/linux-release" || true
-    # cmake --build "$PROJECT_ROOT_DIR/physx/compiler/linux-release" --config Release
-    make -j"$(nproc)"
 )
