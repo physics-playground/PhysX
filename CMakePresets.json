@@ -1,32 +1,29 @@
 {
-  "version": 2,
+  "schema": "https://raw.githubusercontent.com/microsoft/vscode-cmake-tools/main/schemas/CMakePresets-v8-schema.json",
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 23,
+    "patch": 0
+  },
   "configurePresets": [
     {
       "name": "Debug",
-      "binaryDir": "${sourceDir}/.build/vs-release",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/.build/vs-debug",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       }
     },
     {
       "name": "Release",
-      "binaryDir": "${sourceDir}/.build/vs-debug",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "${sourceDir}/.build/vs-release",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_BUILD_TYPE": "Release"
       }
-    }
-  ],
-  "workflowPresets": [
-    {
-      "name": "Default",
-      "description": "",
-      "displayName": "",
-      "steps": [
-        {
-          "type": "configure",
-          "name": "Debug"
-        }
-      ]
     }
   ]
 }

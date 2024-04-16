@@ -3,25 +3,26 @@
     {
       "name": "x64-Debug",
       "generator": "Ninja",
-      "configurationType": "Debug",
-      "inheritEnvironments": ["msvc_x64"],
+      "configurationType": "RelWithDebInfo",
+      "inheritEnvironments": [ "msvc_x64" ],
       "buildRoot": "${projectDir}\\.build\\vs-build-${name}",
       "installRoot": "${projectDir}\\.build\\vs-install-${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "intelliSenseMode": "windows-msvc-x64"
+      "intelliSenseMode": "windows-msvc-x64",
+      "cmakeToolchain": "${env.USERPROFILE}/.vcpkg-clion/scripts/buildsystems/vcpkg.cmake"
     },
     {
       "name": "x64-Release",
       "generator": "Ninja",
-      "configurationType": "RelWithDebInfo",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64" ],
       "buildRoot": "${projectDir}\\.build\\vs-build-${name}",
       "installRoot": "${projectDir}\\.build\\vs-install-${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "inheritEnvironments": ["msvc_x64_x64"],
       "variables": [
         {
           "name": "PX_BUILDSNIPPETS",
@@ -33,7 +34,8 @@
           "value": "True",
           "type": "BOOL"
         }
-      ]
+      ],
+      "cmakeToolchain": "${env.USERPROFILE}/.vcpkg-clion/scripts/buildsystems/vcpkg.cmake"
     }
   ]
 }
