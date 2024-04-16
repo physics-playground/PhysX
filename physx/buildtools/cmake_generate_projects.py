@@ -12,7 +12,7 @@ import xml.etree.ElementTree
 
 
 def systemCall(command):
-    print("##[cmd] %s" % command)
+    print(("##[cmd] %s" % command))
     os.system(command)
 
 
@@ -66,22 +66,26 @@ def noPresetProvided():
             presetXml = xml.etree.ElementTree.parse(preset).getroot()
             if preset.find("user") == -1:
                 print(
-                    "("
-                    + str(counter)
-                    + ") "
-                    + presetXml.get("name")
-                    + " <--- "
-                    + presetXml.get("comment")
+                    (
+                        "("
+                        + str(counter)
+                        + ") "
+                        + presetXml.get("name")  # type: ignore
+                        + " <--- "
+                        + presetXml.get("comment")
+                    )
                 )
                 presetList.append(presetXml.get("name"))
             else:
                 print(
-                    "("
-                    + str(counter)
-                    + ") "
-                    + presetXml.get("name")
-                    + ".user <--- "
-                    + presetXml.get("comment")
+                    (
+                        "("
+                        + str(counter)
+                        + ") "
+                        + presetXml.get("name")  # type: ignore
+                        + ".user <--- "
+                        + presetXml.get("comment")
+                    )
                 )
                 presetList.append(presetXml.get("name") + ".user")
             counter = counter + 1
@@ -91,12 +95,14 @@ def noPresetProvided():
             input = raw_input
     except NameError:
         pass
-    mode = int(input("Enter preset number: "))
-    print("Running generate_projects.bat " + presetList[mode])
+    mode = int(eval(input("Enter preset number: ")))
+    print(("Running generate_projects.bat " + presetList[mode]))
     return presetList[mode]
 
 
 class CMakePreset:
+    """Class to parse the preset xml file and get the cmake parameters."""
+
     presetName = ""
     targetPlatform = ""
     compiler = ""
@@ -106,13 +112,13 @@ class CMakePreset:
     def __init__(self, presetName):
         xmlPath = "buildtools/presets/" + presetName + ".xml"
         if os.path.isfile(xmlPath):
-            print("Using preset xml: " + xmlPath)
+            print(("Using preset xml: " + xmlPath))
         else:
             xmlPath = "buildtools/presets/public/" + presetName + ".xml"
             if os.path.isfile(xmlPath):
-                print("Using preset xml: " + xmlPath)
+                print(("Using preset xml: " + xmlPath))
             else:
-                print("Preset xml file: " + xmlPath + " not found")
+                print(("Preset xml file: " + xmlPath + " not found"))
                 exit()
 
         # get the xml
@@ -122,10 +128,12 @@ class CMakePreset:
             self.targetPlatform = platform.attrib["targetPlatform"]
             self.compiler = platform.attrib["compiler"]
             print(
-                "Target platform: "
-                + self.targetPlatform
-                + " using compiler: "
-                + self.compiler
+                (
+                    "Target platform: "
+                    + self.targetPlatform
+                    + " using compiler: "
+                    + self.compiler
+                )
             )
 
         for cmakeSwitch in presetNode.find("CMakeSwitches"):
@@ -190,17 +198,17 @@ class CMakePreset:
                         + os.environ["PM_CUDA_PATH"]
                     )
                 if self.compiler == "vc15":
-                    print("VS15CL:" + os.environ["VS150CLPATH"])
+                    print(("VS15CL:" + os.environ["VS150CLPATH"]))
                     outString = (
                         outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS150CLPATH"]
                     )
                 if self.compiler == "vc16":
-                    print("VS16CL:" + os.environ["VS160CLPATH"])
+                    print(("VS16CL:" + os.environ["VS160CLPATH"]))
                     outString = (
                         outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS160CLPATH"]
                     )
                 if self.compiler == "vc17":
-                    print("VS17CL:" + os.environ["VS170CLPATH"])
+                    print(("VS17CL:" + os.environ["VS170CLPATH"]))
                     outString = (
                         outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS170CLPATH"]
                     )
@@ -495,14 +503,14 @@ def cleanupCompilerDir(compilerDirName):
 def presetProvided(pName):
     parsedPreset = CMakePreset(pName)
 
-    print("PM_CMakeModules_PATH: " + os.environ["PM_CMakeModules_PATH"])
-    print("PM_PATHS: " + os.environ["PM_PATHS"])
+    print(("PM_CMakeModules_PATH: " + os.environ["PM_CMakeModules_PATH"]))
+    print(("PM_PATHS: " + os.environ["PM_PATHS"]))
 
     if os.environ.get("PM_cmake_PATH") is not None:
         cmakeExec = os.environ["PM_cmake_PATH"] + "/bin/cmake" + cmakeExt()
     else:
         cmakeExec = "cmake" + cmakeExt()
-    print("Cmake: " + cmakeExec)
+    print(("Cmake: " + cmakeExec))
 
     # gather cmake parameters
     cmakeParams = parsedPreset.getPlatformCMakeParams()
