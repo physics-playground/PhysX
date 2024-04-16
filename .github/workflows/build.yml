@@ -13,32 +13,165 @@ on:
       - 'Docs/**'
       - '**.md'
       - '**.txt'
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '40 7 * * 3'
+  workflow_dispatch:
+
+permissions:
+  # Allows SonarCloud to decorate PRs with analysis results
+  pull-requests: write
+
+env:
+  # Set the build directory for the build-wrapper output
+  BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory "$
+  BUILD_OUTPUT_DIR: build/
 
 jobs:
-  visual_studio:
-    runs-on: windows-latest
-    name: Visual Studio CL
+  build:
     strategy:
       fail-fast: false
       matrix:
         build_type: [Debug, Release]
+        platform: [ubuntu-latest]
+
+    name: Build (${{ matrix.build_type }}) ⚙️
+    runs-on: ${{matrix.platform}}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           submodules: true
+          fetch-depth: 0
 
       - name: Get latest CMake and ninja
-        uses: lukka/get-cmake@v3.29.2
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: '~3.25.0'
+          ninjaVersion: '^1.11.1'
 
-      - name: Add msbuild to PATH
+      - if: matrix.platform == 'windows-latest'
+        name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
-        run: |
-          $workspace = "$env:GITHUB_WORKSPACE" -replace '[\\/]', '/'
-          cmake -S "${workspace}/physx/compiler/public" -B "${workspace}/build" -A x64 -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86 --no-warn-unused-cli -DCMAKEMODULES_PATH="${workspace}/externals/CMakeModules" -DPXSHARED_PATH="${workspace}/pxshared" -DCMAKE_PREFIX_PATH="${workspace}/externals/CMakeModules;${workspace}/externals/targa" -DPHYSX_ROOT_DIR="${workspace}/physx" -DPX_OUTPUT_LIB_DIR="${workspace}/physx" -DPX_OUTPUT_BIN_DIR="${workspace}/physx" -DPX_BUILDSNIPPETS=FALSE -DPX_BUILDPUBLICSAMPLES=FALSE -DPX_GENERATE_STATIC_LIBRARIES=FALSE -DNV_USE_STATIC_WINCRT=TRUE -DNV_USE_DEBUG_WINCRT=TRUE -DPX_FLOAT_POINT_PRECISE_MATH=FALSE -DCMAKE_INSTALL_PREFIX="${workspace}/physx/install/vc17win64/PhysX"
+        run: >-
+          cmake -S . -B "${{ env.BUILD_OUTPUT_DIR }}" -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}"
 
       - name: Build
-        run: cmake --build build/ --config "${{ matrix.build_type }}"
+        run: >-
+          cmake --build "${{ env.BUILD_OUTPUT_DIR }}"
+
+  analyze:
+    needs: build
+    timeout-minutes: 360
+    permissions:
+      # required for all workflows
+      security-events: write
+
+      # required to fetch internal or private CodeQL packs
+      packages: write
+
+      # only required for workflows in private repositories
+      actions: write
+      contents: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: c-cpp
+            build-mode: manual
+            tool: codeql
+            os: windows-latest
+            platform: windows
+            preset: vc17win64
+          - language: c-cpp
+            build-mode: manual
+            tool: sonar
+            os: ubuntu-latest
+            platform: linux
+            preset: linux-aarch64
+          - language: python
+            build-mode: none
+            tool: codeql
+            os: ubuntu-latest
+            platform: linux
+            preset: python
+
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
+
+      - if: ${{ matrix.tool == 'sonar' }}
+        name: Install sonar-scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-c-cpp@v2
+
+      # Initializes the CodeQL tools for scanning.
+      - if: ${{ matrix.tool == 'codeql' }}
+        name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Get latest CMake and ninja
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: '~3.25.0'
+          ninjaVersion: '^1.11.1'
+
+      - if: matrix.build-mode == 'manual'
+        name: Configure CMake
+        run: >-
+          cmake
+          -S .
+          -B "${{ env.BUILD_OUTPUT_DIR }}"
+          -DCMAKE_BUILD_TYPE=Release
+          --no-warn-unused-cli
+          -DTARGET_BUILD_PLATFORM=${{matrix.platform}}
+          -DCMAKEMODULES_PATH="${{github.workspace}}/externals/cmakemodules"
+          -DPXSHARED_PATH="${{github.workspace}}/pxshared"
+          -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/cmakemodules;${{github.workspace}}/externals/targa"
+          -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
+          -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
+          -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
+          -DPX_BUILDSNIPPETS=FALSE
+          -DPX_BUILDPUBLICSAMPLES=FALSE
+          -DPX_GENERATE_STATIC_LIBRARIES=FALSE
+          -DPX_DEBUG=1
+          -DNV_USE_STATIC_WINCRT=TRUE
+          -DNV_USE_DEBUG_WINCRT=TRUE
+          -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
+          -DCMAKE_INSTALL_PREFIX="./physx/install/${{matrix.preset}}/PhysX"
+
+      - if: ${{ matrix.tool == 'sonar' && matrix.build-mode == 'manual' }}
+        name: Build
+        run: cmake --build "${{ env.BUILD_OUTPUT_DIR }}"
+
+      - if: ${{ matrix.tool == 'sonar' }}
+        name: Run build-wrapper
+        run: >
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}
+          cmake --build "${{ env.BUILD_OUTPUT_DIR }}"
+
+      - if: ${{ matrix.tool == 'sonar' }}
+        name: Run sonar-scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
+
+      - if: ${{ matrix.tool == 'codeql' }}
+        name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{matrix.language}}'
