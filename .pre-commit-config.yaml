@@ -5,11 +5,11 @@ repos:
     rev: v4.6.0
     hooks:
       - id: trailing-whitespace
-        exclude: ".*"
+        exclude: '.*'
       - id: end-of-file-fixer
-        exclude: ".*"
+        exclude: '.*'
       - id: check-yaml
-        exclude: ".*"
+        exclude: '.*'
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
