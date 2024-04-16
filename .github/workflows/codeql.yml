@@ -47,8 +47,8 @@ jobs:
         name: Get latest CMake and ninja
         uses: lukka/get-cmake@latest
         with:
-          cmakeVersion: "~3.25.0"  # <--= optional, use most recent 3.25.x version
-          ninjaVersion: "^1.11.1"  # <--= optional, use most recent 1.x version
+          cmakeVersion: "~3.25.0"
+          ninjaVersion: "^1.11.1"
 
       - if: matrix.build-mode == 'manual'
         name: Configure CMake
