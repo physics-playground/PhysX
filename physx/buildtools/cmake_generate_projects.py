@@ -11,7 +11,7 @@ import sys
 import xml.etree.ElementTree
 
 
-def systemCall(command):
+def systemCall(command) -> None:
     print(("##[cmd] %s" % command))
     os.system(command)
 
@@ -28,7 +28,7 @@ def cmakeExt():
     return ""
 
 
-def filterPreset(presetName):
+def filterPreset(presetName: str) -> bool:
     winPresetFilter = [
         "win",
         "uwp",
@@ -48,19 +48,19 @@ def filterPreset(presetName):
     return False
 
 
-def noPresetProvided():
-    global input
+def noPresetProvided() -> str | None:
     print("Preset parameter required, available presets:")
     presetfiles = []
-    for file in glob.glob("buildtools/presets/*.xml"):
+    presets_dir = os.path.join(os.environ.get("PHYSX_ROOT_DIR", ""), "buildtools", "presets")
+    for file in glob.glob(f"{presets_dir}/*.xml"):
         presetfiles.append(file)
 
     if len(presetfiles) == 0:
-        for file in glob.glob("buildtools/presets/public/*.xml"):
+        for file in glob.glob(f"{presets_dir}/public/*.xml"):
             presetfiles.append(file)
 
     counter = 0
-    presetList = []
+    presetList: list[str] = []
     for preset in presetfiles:
         if filterPreset(preset):
             presetXml = xml.etree.ElementTree.parse(preset).getroot()
@@ -70,34 +70,32 @@ def noPresetProvided():
                         "("
                         + str(counter)
                         + ") "
-                        + presetXml.get("name")  # type: ignore
+                        + presetXml.get("name", "")
                         + " <--- "
-                        + presetXml.get("comment")
+                        + presetXml.get("comment", "")
                     )
                 )
-                presetList.append(presetXml.get("name"))
+                presetList.append(presetXml.get("name", ""))
             else:
                 print(
                     (
                         "("
                         + str(counter)
                         + ") "
-                        + presetXml.get("name")  # type: ignore
+                        + presetXml.get("name", "")
                         + ".user <--- "
-                        + presetXml.get("comment")
+                        + presetXml.get("comment", "")
                     )
                 )
-                presetList.append(presetXml.get("name") + ".user")
+                presetList.append(presetXml.get("name", "") + ".user")
             counter = counter + 1
-    # Fix Python 2.x.
+
     try:
-        if sys.version_info.major == 2:
-            input = raw_input
-    except NameError:
-        pass
-    mode = int(eval(input("Enter preset number: ")))
-    print(("Running generate_projects.bat " + presetList[mode]))
-    return presetList[mode]
+        mode = int(eval(input("Enter preset number: ")))
+    except:
+        mode = -1
+
+    return None if mode < 0 or mode >= len(presetList) else presetList[mode]
 
 
 class CMakePreset:
@@ -106,15 +104,16 @@ class CMakePreset:
     presetName = ""
     targetPlatform = ""
     compiler = ""
-    cmakeSwitches = []
-    cmakeParams = []
+    cmakeSwitches: list[str] = []
+    cmakeParams: list[str] = []
 
     def __init__(self, presetName):
-        xmlPath = "buildtools/presets/" + presetName + ".xml"
+        presets_dir = os.path.join(os.environ.get("PHYSX_ROOT_DIR", ""), "buildtools", "presets")
+        xmlPath = f"{presets_dir}/{presetName}.xml"
         if os.path.isfile(xmlPath):
             print(("Using preset xml: " + xmlPath))
         else:
-            xmlPath = "buildtools/presets/public/" + presetName + ".xml"
+            xmlPath = f"{presets_dir}/public/{presetName}.xml"
             if os.path.isfile(xmlPath):
                 print(("Using preset xml: " + xmlPath))
             else:
@@ -123,57 +122,38 @@ class CMakePreset:
 
         # get the xml
         presetNode = xml.etree.ElementTree.parse(xmlPath).getroot()
-        self.presetName = presetNode.attrib["name"]
-        for platform in presetNode.findall("platform"):
-            self.targetPlatform = platform.attrib["targetPlatform"]
-            self.compiler = platform.attrib["compiler"]
-            print(
-                (
-                    "Target platform: "
-                    + self.targetPlatform
-                    + " using compiler: "
-                    + self.compiler
-                )
-            )
+        if presetNode is not None:
+            self.presetName = presetNode.attrib["name"]
+            for platform in presetNode.findall("platform"):
+                self.targetPlatform = platform.attrib["targetPlatform"]
+                self.compiler = platform.attrib["compiler"]
+                print(("Target platform: " + self.targetPlatform + " using compiler: " + self.compiler))
 
-        for cmakeSwitch in presetNode.find("CMakeSwitches"):
-            cmSwitch = (
-                "-D"
-                + cmakeSwitch.attrib["name"]
-                + "="
-                + cmakeSwitch.attrib["value"].upper()
-            )
-            self.cmakeSwitches.append(cmSwitch)
+            for cmakeSwitch in presetNode.find("CMakeSwitches"):
+                cmSwitch = "-D" + cmakeSwitch.attrib["name"] + "=" + cmakeSwitch.attrib["value"].upper()
+                self.cmakeSwitches.append(cmSwitch)
 
-        for cmakeParam in presetNode.find("CMakeParams"):
-            if (
-                cmakeParam.attrib["name"] == "CMAKE_INSTALL_PREFIX"
-                or cmakeParam.attrib["name"] == "PX_OUTPUT_LIB_DIR"
-                or cmakeParam.attrib["name"] == "PX_OUTPUT_EXE_DIR"
-                or cmakeParam.attrib["name"] == "PX_OUTPUT_DLL_DIR"
-            ):
-                cmParam = (
-                    "-D"
-                    + cmakeParam.attrib["name"]
-                    + '="'
-                    + os.environ["PHYSX_ROOT_DIR"]
-                    + "/"
-                    + cmakeParam.attrib["value"]
-                    + '"'
-                )
-            elif cmakeParam.attrib["name"] == "ANDROID_ABI":
-                cmParam = (
-                    "-D"
-                    + cmakeParam.attrib["name"]
-                    + '="'
-                    + cmakeParam.attrib["value"]
-                    + '"'
-                )
-            else:
-                cmParam = (
-                    "-D" + cmakeParam.attrib["name"] + "=" + cmakeParam.attrib["value"]
-                )
-            self.cmakeParams.append(cmParam)
+            for cmakeParam in presetNode.find("CMakeParams"):
+                if (
+                    cmakeParam.attrib["name"] == "CMAKE_INSTALL_PREFIX"
+                    or cmakeParam.attrib["name"] == "PX_OUTPUT_LIB_DIR"
+                    or cmakeParam.attrib["name"] == "PX_OUTPUT_EXE_DIR"
+                    or cmakeParam.attrib["name"] == "PX_OUTPUT_DLL_DIR"
+                ):
+                    cmParam = (
+                        "-D"
+                        + cmakeParam.attrib["name"]
+                        + '="'
+                        + os.environ["PHYSX_ROOT_DIR"]
+                        + "/"
+                        + cmakeParam.attrib["value"]
+                        + '"'
+                    )
+                elif cmakeParam.attrib["name"] == "ANDROID_ABI":
+                    cmParam = "-D" + cmakeParam.attrib["name"] + '="' + cmakeParam.attrib["value"] + '"'
+                else:
+                    cmParam = "-D" + cmakeParam.attrib["name"] + "=" + cmakeParam.attrib["value"]
+                self.cmakeParams.append(cmParam)
 
     pass
 
@@ -192,26 +172,16 @@ class CMakePreset:
             outString = outString + " " + cmakeSwitch
             if cmakeSwitch.find("PX_GENERATE_GPU_PROJECTS") != -1:
                 if os.environ.get("PM_CUDA_PATH") is not None:
-                    outString = (
-                        outString
-                        + " -DCUDA_TOOLKIT_ROOT_DIR="
-                        + os.environ["PM_CUDA_PATH"]
-                    )
+                    outString = outString + " -DCUDA_TOOLKIT_ROOT_DIR=" + os.environ["PM_CUDA_PATH"]
                 if self.compiler == "vc15":
                     print(("VS15CL:" + os.environ["VS150CLPATH"]))
-                    outString = (
-                        outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS150CLPATH"]
-                    )
+                    outString = outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS150CLPATH"]
                 if self.compiler == "vc16":
                     print(("VS16CL:" + os.environ["VS160CLPATH"]))
-                    outString = (
-                        outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS160CLPATH"]
-                    )
+                    outString = outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS160CLPATH"]
                 if self.compiler == "vc17":
                     print(("VS17CL:" + os.environ["VS170CLPATH"]))
-                    outString = (
-                        outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS170CLPATH"]
-                    )
+                    outString = outString + " -DCUDA_HOST_COMPILER=" + os.environ["VS170CLPATH"]
 
         return outString
 
@@ -281,10 +251,7 @@ class CMakePreset:
         elif self.targetPlatform == "ps4":
             outString = outString + " -DTARGET_BUILD_PLATFORM=ps4"
             outString = (
-                outString
-                + " -DCMAKE_TOOLCHAIN_FILE="
-                + os.environ["PM_CMakeModules_PATH"]
-                + "/ps4/PS4Toolchain.txt"
+                outString + " -DCMAKE_TOOLCHAIN_FILE=" + os.environ["PM_CMakeModules_PATH"] + "/ps4/PS4Toolchain.txt"
             )
             outString = outString + " -DCMAKE_GENERATOR_PLATFORM=ORBIS"
             outString = outString + " -DSUPPRESS_SUFFIX=ON"
@@ -361,9 +328,7 @@ class CMakePreset:
                 )
                 outString = outString + " -T v143"
                 outString = outString + " -DCMAKE_VS170PATH=" + os.environ["VS170PATH"]
-            outString = (
-                outString + " -DCMAKE_GENERATOR_PLATFORM=Gaming.Xbox.Scarlett.x64"
-            )
+            outString = outString + " -DCMAKE_GENERATOR_PLATFORM=Gaming.Xbox.Scarlett.x64"
             outString = outString + " -DSUPPRESS_SUFFIX=ON"
             return outString
         elif self.targetPlatform == "switch32":
@@ -397,14 +362,10 @@ class CMakePreset:
             outString = outString + ' -DANDROID_STL="gnustl_static"'
             outString = outString + ' -DCM_ANDROID_FP="softfp"'
             if os.environ.get("PM_AndroidNDK_PATH") is None:
-                print(
-                    "Please provide path to android NDK in variable PM_AndroidNDK_PATH."
-                )
+                print("Please provide path to android NDK in variable PM_AndroidNDK_PATH.")
                 exit(-1)
             else:
-                outString = (
-                    outString + " -DANDROID_NDK=" + os.environ["PM_AndroidNDK_PATH"]
-                )
+                outString = outString + " -DANDROID_NDK=" + os.environ["PM_AndroidNDK_PATH"]
                 outString = (
                     outString
                     + ' -DCMAKE_MAKE_PROGRAM="'
@@ -424,18 +385,8 @@ class CMakePreset:
                 )
             elif self.compiler == "clang":
                 if os.environ.get("PM_clang_PATH") is not None:
-                    outString = (
-                        outString
-                        + " -DCMAKE_C_COMPILER="
-                        + os.environ["PM_clang_PATH"]
-                        + "/bin/clang"
-                    )
-                    outString = (
-                        outString
-                        + " -DCMAKE_CXX_COMPILER="
-                        + os.environ["PM_clang_PATH"]
-                        + "/bin/clang++"
-                    )
+                    outString = outString + " -DCMAKE_C_COMPILER=" + os.environ["PM_clang_PATH"] + "/bin/clang"
+                    outString = outString + " -DCMAKE_CXX_COMPILER=" + os.environ["PM_clang_PATH"] + "/bin/clang++"
                 else:
                     outString = outString + " -DCMAKE_C_COMPILER=clang"
                     outString = outString + " -DCMAKE_CXX_COMPILER=clang++"
@@ -479,12 +430,8 @@ def getCommonParams():
     outString = "--no-warn-unused-cli"
     outString = outString + ' -DCMAKE_PREFIX_PATH="' + os.environ["PM_PATHS"] + '"'
     outString = outString + ' -DPHYSX_ROOT_DIR="' + os.environ["PHYSX_ROOT_DIR"] + '"'
-    outString = (
-        outString + ' -DPX_OUTPUT_LIB_DIR="' + os.environ["PHYSX_ROOT_DIR"] + '"'
-    )
-    outString = (
-        outString + ' -DPX_OUTPUT_BIN_DIR="' + os.environ["PHYSX_ROOT_DIR"] + '"'
-    )
+    outString = outString + ' -DPX_OUTPUT_LIB_DIR="' + os.environ["PHYSX_ROOT_DIR"] + '"'
+    outString = outString + ' -DPX_OUTPUT_BIN_DIR="' + os.environ["PHYSX_ROOT_DIR"] + '"'
     if os.environ.get("GENERATE_SOURCE_DISTRO") == "1":
         outString = outString + " -DPX_GENERATE_SOURCE_DISTRO=1"
     return outString
@@ -519,9 +466,7 @@ def presetProvided(pName):
     cmakeParams = cmakeParams + " " + parsedPreset.getCMakeParams()
     # print(cmakeParams)
 
-    if os.path.isfile(
-        os.environ["PHYSX_ROOT_DIR"] + "/compiler/internal/CMakeLists.txt"
-    ):
+    if os.path.isfile(os.environ["PHYSX_ROOT_DIR"] + "/compiler/internal/CMakeLists.txt"):
         cmakeMasterDir = "internal"
     else:
         cmakeMasterDir = "public"
@@ -533,15 +478,7 @@ def presetProvided(pName):
         # run the cmake script
         # print('Cmake params:' + cmakeParams)
         os.chdir(os.path.join(os.environ["PHYSX_ROOT_DIR"], outputDir))
-        systemCall(
-            cmakeExec
-            + ' "'
-            + os.environ["PHYSX_ROOT_DIR"]
-            + "/compiler/"
-            + cmakeMasterDir
-            + '"'
-            + cmakeParams
-        )
+        systemCall(cmakeExec + ' "' + os.environ["PHYSX_ROOT_DIR"] + "/compiler/" + cmakeMasterDir + '"' + cmakeParams)
         os.chdir(os.environ["PHYSX_ROOT_DIR"])
     else:
         configs = ["debug", "checked", "profile", "release"]
@@ -569,24 +506,31 @@ def presetProvided(pName):
     pass
 
 
-def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    physx_root_dir = os.environ.get("PHYSX_ROOT_DIR", script_dir)
-    os.environ["PHYSX_ROOT_DIR"] = physx_root_dir
+def main() -> int:
+    return_code = 0
 
-    if len(sys.argv) != 2:
-        presetName = noPresetProvided()
+    try:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        branch_root_dir = os.path.abspath(os.path.join(script_dir, os.pardir, os.pardir))
+        branch_physx_dir = os.path.join(branch_root_dir, "physx")
+        physx_root_dir = os.environ.get("PHYSX_ROOT_DIR", branch_physx_dir)
+        os.environ["PHYSX_ROOT_DIR"] = physx_root_dir
         os.chdir(physx_root_dir)
-        if sys.platform == "win32":
-            systemCall("generate_projects.bat " + presetName)
+
+        if len(sys.argv) < 2:
+            presetName = noPresetProvided()
+            systemCall(f"{os.path.join(physx_root_dir, f'generate_projects.{packmanExt()}')} {presetName}")
         else:
-            systemCall("./generate_projects.sh " + presetName)
-    else:
-        presetName = sys.argv[1]
-        if filterPreset(presetName):
-            presetProvided(presetName)
-        else:
-            print("Preset not supported on this build platform.")
+            presetName = sys.argv[1]
+            if filterPreset(presetName):
+                presetProvided(presetName)
+            else:
+                print("Preset not supported on this build platform.")
+                return_code = 70
+    except Exception:
+        return_code = 80
+
+    return return_code
 
 
 if __name__ == "__main__":
