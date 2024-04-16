@@ -3,16 +3,8 @@ name: Build
 on:
   push:
     branches: [main, develop]
-    paths-ignore:
-      - 'Docs/**'
-      - '**.md'
-      - '**.txt'
   pull_request:
     branches: [main, develop]
-    paths-ignore:
-      - 'Docs/**'
-      - '**.md'
-      - '**.txt'
     types: [opened, synchronize, reopened]
   schedule:
     - cron: '40 7 * * 3'
@@ -35,8 +27,9 @@ jobs:
         build_type: [Release]
         platform: [ubuntu-latest]
 
-    name: Build (${{ matrix.build_type }}) ⚙️
-    runs-on: ${{matrix.platform}}
+    # e.g., "Build Release ⚙️"
+    name: "Build ${{ matrix.build_type }} ⚙️"
+    runs-on: "${{matrix.platform}}"
 
     steps:
       - name: Checkout Code
@@ -87,26 +80,30 @@ jobs:
             os: windows-latest
             platform: windows
             preset: vc17win64
+            build_type: Release
           - language: c-cpp
             build-mode: manual
             tool: sonar
             os: ubuntu-latest
             platform: linux
             preset: linux-aarch64
+            build_type: Release
           - language: python
             build-mode: none
             tool: codeql
             os: ubuntu-latest
             platform: linux
             preset: python
+            build_type: Release
 
-    name: Analyze (${{ matrix.language }})
-    runs-on: ${{ matrix.os }}
+    name: "Analyze ${{ matrix.language }} 🔍"
+    runs-on: "${{ matrix.os }}"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          submodules: true
           # Shallow clones should be disabled for a better relevancy of analysis
           fetch-depth: 0
 
@@ -131,26 +128,7 @@ jobs:
       - if: matrix.build-mode == 'manual'
         name: Configure CMake
         run: >-
-          cmake
-          -S .
-          -B "${{ env.BUILD_OUTPUT_DIR }}"
-          -DCMAKE_BUILD_TYPE=Release
-          --no-warn-unused-cli
-          -DTARGET_BUILD_PLATFORM=${{matrix.platform}}
-          -DCMAKEMODULES_PATH="${{github.workspace}}/externals/cmakemodules"
-          -DPXSHARED_PATH="${{github.workspace}}/pxshared"
-          -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/cmakemodules;${{github.workspace}}/externals/targa"
-          -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
-          -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
-          -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
-          -DPX_BUILDSNIPPETS=FALSE
-          -DPX_BUILDPUBLICSAMPLES=FALSE
-          -DPX_GENERATE_STATIC_LIBRARIES=FALSE
-          -DPX_DEBUG=1
-          -DNV_USE_STATIC_WINCRT=TRUE
-          -DNV_USE_DEBUG_WINCRT=TRUE
-          -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
-          -DCMAKE_INSTALL_PREFIX="./physx/install/${{matrix.preset}}/PhysX"
+          cmake -S . -B "${{ env.BUILD_OUTPUT_DIR }}" -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}"
 
       - if: ${{ matrix.tool == 'sonar' && matrix.build-mode == 'manual' }}
         name: Build
@@ -158,7 +136,7 @@ jobs:
 
       - if: ${{ matrix.tool == 'sonar' }}
         name: Run build-wrapper
-        run: >
+        run: >-
           build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}
           cmake --build "${{ env.BUILD_OUTPUT_DIR }}"
 
