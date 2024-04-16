@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Debug, Release]
+        build_type: [Release]
         platform: [ubuntu-latest]
 
     name: Build (${{ matrix.build_type }}) ⚙️
