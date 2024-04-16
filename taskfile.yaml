@@ -7,6 +7,8 @@ vars:
   CMAKE_MODULES: "{{.ROOT_DIR}}/externals/cmakemodules"
   CMAKE_TARGA: "{{.ROOT_DIR}}/externals/targa"
   BUILD_DIR: "{{.ROOT_DIR}}/.build/task"
+  CMAKE_GENERATOR: '{{if eq .OS "Windows_NT"}}Visual Studio 2022{{else}}Unix Makefiles{{end}}'
+  CMAKE_ARCHITECTURE: '{{if eq .OS "Windows_NT"}}-A x64{{else}}{{end}}'
 
 tasks:
   default:
@@ -14,14 +16,14 @@ tasks:
       SEARCH_PATHS: "{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}"
       SOURCE_DIR: "{{toSlash .ROOT_DIR}}"
       BUILD_DIR: "{{toSlash .BUILD_DIR}}"
+    silent: false
     cmds:
       - cmd: >-
           cmake
-          -G "Visual Studio 17 2022"
-          -A x64
+          -G "{{.CMAKE_GENERATOR}}"
+          {{.CMAKE_ARCHITECTURE}}
           -DCMAKE_PREFIX_PATH="{{.SEARCH_PATHS}}"
           -S "{{.SOURCE_DIR}}"
           -B "{{.BUILD_DIR}}"
       - cmd: >-
           cmake --build "{{.BUILD_DIR}}" --config Release
-    silent: false
