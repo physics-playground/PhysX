@@ -18,7 +18,7 @@ The Win32 build may intermittently boot to a black screen. If this occurs, exit 
 
 This depot contains external third party open source software, copyright belonging to their respective owners:
 
-* OpenGL Extension Wrangler Library
-* glext
-* glut
-* FrameBufferObject by Aaron Lefohn, Robert Strzodka, and Adam Moerschell
+- OpenGL Extension Wrangler Library
+- glext
+- glut
+- FrameBufferObject by Aaron Lefohn, Robert Strzodka, and Adam Moerschell
