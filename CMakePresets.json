@@ -1,32 +1,32 @@
 {
-    "version": 2,
-    "configurePresets": [
+  "version": 2,
+  "configurePresets": [
+    {
+      "name": "Debug",
+      "binaryDir": "${sourceDir}/.build/vs-release",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
+      "name": "Release",
+      "binaryDir": "${sourceDir}/.build/vs-debug",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "Default",
+      "description": "",
+      "displayName": "",
+      "steps": [
         {
-            "name": "Debug",
-            "binaryDir": "${sourceDir}/.build/vs-release",
-            "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-            }
-        },
-        {
-            "name": "Release",
-          "binaryDir": "${sourceDir}/.build/vs-debug",
-            "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-            }
+          "type": "configure",
+          "name": "Debug"
         }
-    ],
-    "workflowPresets": [
-        {
-            "name": "Default",
-            "description": "",
-            "displayName": "",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "Debug"
-                }
-            ]
-        }
-    ]
+      ]
+    }
+  ]
 }

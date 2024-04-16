@@ -2,6 +2,9 @@
 # PhysX 4
 #
 
+.pnp.cjs
+.yarn/
+
 #
 # Intermediate
 #

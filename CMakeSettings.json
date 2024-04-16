@@ -4,7 +4,7 @@
       "name": "x64-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
-      "inheritEnvironments": [ "msvc_x64" ],
+      "inheritEnvironments": ["msvc_x64"],
       "buildRoot": "${projectDir}\\.build\\vs-build-${name}",
       "installRoot": "${projectDir}\\.build\\vs-install-${name}",
       "cmakeCommandArgs": "",
@@ -21,7 +21,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "inheritEnvironments": ["msvc_x64_x64"],
       "variables": [
         {
           "name": "PX_BUILDSNIPPETS",

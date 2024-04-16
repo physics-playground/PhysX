@@ -7,11 +7,16 @@
       "strings": true
     }
   },
+  "[markdown]": {
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": false,
-    "gitlens.codeLens.symbolScopes": [
-      "!Module"
-    ],
+    "gitlens.codeLens.symbolScopes": ["!Module"],
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit",
       "source.fixAll": "explicit"
