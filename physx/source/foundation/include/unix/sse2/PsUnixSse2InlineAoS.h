@@ -120,7 +120,7 @@ PX_FORCE_INLINE bool isAligned16(void* a)
 #define ASSERT_ISFINITELENGTH(a) //PX_ASSERT(isFiniteLength(a))
 #else
 #define ASSERT_ISVALIDVEC3V(a)
-#define ASSERT_ISVALIDFLOATV(a) 
+#define ASSERT_ISVALIDFLOATV(a)
 #define ASSERT_ISALIGNED16(a)
 #define ASSERT_ISFINITELENGTH(a)
 #endif
@@ -1201,7 +1201,7 @@ PX_FORCE_INLINE FloatV V3Dot(const Vec3V a, const Vec3V b)
 	const __m128 t1 = _mm_shuffle_ps(t0, t0, _MM_SHUFFLE(1,0,3,2));	//	ay*by | ax*bx | aw*bw | az*bz
 	const __m128 t2 = _mm_add_ps(t0, t1);							//	ay*by + aw*bw | ax*bx + az*bz | aw*bw + ay*by | az*bz + ax*bx
 	const __m128 t3 = _mm_shuffle_ps(t2, t2, _MM_SHUFFLE(2,3,0,1));	//	ax*bx + az*bz | ay*by + aw*bw | az*bz + ax*bx | aw*bw + ay*by
-	return _mm_add_ps(t3, t2);										//	ax*bx + az*bz + ay*by + aw*bw 
+	return _mm_add_ps(t3, t2);										//	ax*bx + az*bz + ay*by + aw*bw
 																	//	ay*by + aw*bw + ax*bx + az*bz
 																	//	az*bz + ax*bx + aw*bw + ay*by
 																	//	aw*bw + ay*by + az*bz + ax*bx

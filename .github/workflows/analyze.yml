@@ -40,16 +40,19 @@ jobs:
             tool: codeql
             os: windows-latest
             platform: windows
+            preset: vc17win64
           - language: c-cpp
             build-mode: manual
             tool: sonar
             os: ubuntu-latest
             platform: linux
+            preset: linux-aarch64
           - language: python
             build-mode: none
             tool: codeql
             os: ubuntu-latest
             platform: linux
+            preset: python
 
     name: Analyze (${{ matrix.language }})
     runs-on: ${{ matrix.os }}
@@ -86,30 +89,33 @@ jobs:
           cmake
           -S "${{github.workspace}}/physx/compiler/public"
           -B "${{github.workspace}}/build"
+          -DCMAKE_BUILD_TYPE=Release
           --no-warn-unused-cli
-          -DTARGET_BUILD_PLATFORM=${{matrix.platform}}=
-          -DCMAKEMODULES_PATH="${{github.workspace}}/externals/CMakeModules"
+          -DTARGET_BUILD_PLATFORM=${{matrix.platform}}
+          -DCMAKEMODULES_PATH="${{github.workspace}}/externals/cmakemodules"
           -DPXSHARED_PATH="${{github.workspace}}/pxshared"
-          -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/CMakeModules;${{github.workspace}}/externals/targa"
+          -DCMAKE_PREFIX_PATH="${{github.workspace}}/externals/cmakemodules;${{github.workspace}}/externals/targa"
           -DPHYSX_ROOT_DIR="${{github.workspace}}/physx"
           -DPX_OUTPUT_LIB_DIR="${{github.workspace}}/physx"
           -DPX_OUTPUT_BIN_DIR="${{github.workspace}}/physx"
           -DPX_BUILDSNIPPETS=FALSE
           -DPX_BUILDPUBLICSAMPLES=FALSE
           -DPX_GENERATE_STATIC_LIBRARIES=FALSE
+          -DPX_DEBUG=1
           -DNV_USE_STATIC_WINCRT=TRUE
           -DNV_USE_DEBUG_WINCRT=TRUE
           -DPX_FLOAT_POINT_PRECISE_MATH=FALSE
-          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/vc17win64/PhysX"
+          -DCMAKE_INSTALL_PREFIX="${{github.workspace}}/physx/install/${{matrix.preset}}/PhysX"
 
       - if: ${{ matrix.tool == 'sonar' && matrix.build-mode == 'manual' }}
         name: Build
-        run: cmake --build build/ --config Release
+        run: cmake --build build/
 
       - if: ${{ matrix.tool == 'sonar' }}
         name: Run build-wrapper
-        run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build build/ --config Release
+        run: >
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}
+          cmake --build build/
 
       - if: ${{ matrix.tool == 'sonar' }}
         name: Run sonar-scanner
