@@ -51,20 +51,29 @@ function build() {
     export PM_GLEWLINUX_PATH="$PROJECT_ROOT_DIR/externals/glew-linux"
     export PM_PATHS="$PM_opengllinux_PATH;$PM_TARGA_PATH;$PM_CGLINUX_PATH;$PM_GLEWLINUX_PATH"
 
-    setup "$@"
+    if [ "${1:-}" == "clean" ]; then
+        rm -rf .build
+    fi
 
-    (
-        rm -rf "$PROJECT_ROOT_DIR/physx/compiler/linux-*/"
-        python "$PHYSX_ROOT_DIR/buildtools/cmake_generate_projects.py" "$@"
-        status=$?
-        if [ "$status" -ne "0" ]; then
-            echo "Error $status"
-            exit 1
-        else
-            # cmake --build "$PROJECT_ROOT_DIR/physx/compiler/linux-release" --config Release
-            make --directory="$PROJECT_ROOT_DIR/physx/compiler/linux-release" -j"$(nproc)"
-        fi
-    )
+    if [ "${1:-}" == "manual" ]; then
+        setup "$@"
+
+        (
+            rm -rf "$PROJECT_ROOT_DIR/physx/compiler/linux-*/"
+            python "$PHYSX_ROOT_DIR/buildtools/cmake_generate_projects.py" "$@"
+            status=$?
+            if [ "$status" -ne "0" ]; then
+                echo "Error $status"
+                exit 1
+            else
+                # cmake --build "$PROJECT_ROOT_DIR/physx/compiler/linux-release" --config Release
+                make --directory="$PROJECT_ROOT_DIR/physx/compiler/linux-release" -j"$(nproc)"
+            fi
+        )
+    else
+        cmake -S . -B .build/test -DCMAKE_BUILD_TYPE=Release
+        cmake --build .build/test
+    fi
 }
 
 build "$@"
