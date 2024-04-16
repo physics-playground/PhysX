@@ -1,4 +1,13 @@
 {
+  "[cmake]": {
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+  },
+  "editor.formatOnSave": false,
   "cmake.additionalKits": ["externals/cmakemodules/"],
   "cmake.allowCommentsInPresetsFile": true,
   "cmake.allowUnsupportedPresetsVersions": true,
