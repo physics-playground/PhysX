@@ -1,4 +1,3 @@
-//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
@@ -23,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2023 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -36,6 +35,7 @@
 
 #include "foundation/PxPreprocessor.h"
 
+
 #if PX_VC
 #pragma warning(push)
 #pragma warning(disable : 4985) // 'symbol name': attributes not present on previous declaration
@@ -43,6 +43,12 @@
 #include <math.h>
 #if PX_VC
 #pragma warning(pop)
+#endif
+
+#if (PX_LINUX_FAMILY && !PX_ARM_FAMILY)
+// Force linking against nothing newer than glibc v2.17 to remain compatible with platforms with older glibc versions
+__asm__(".symver expf,expf@GLIBC_2.2.5");
+__asm__(".symver powf,powf@GLIBC_2.2.5");
 #endif
 
 #include <float.h>
@@ -62,6 +68,8 @@ static const float PxInvPi = float(0.31830988618379067154);
 static const float PxInvTwoPi = float(0.15915494309189533577);
 static const float PxPiDivTwo = float(1.57079632679489661923);
 static const float PxPiDivFour = float(0.78539816339744830962);
+static const float PxSqrt2 = float(1.4142135623730951);
+static const float PxInvSqrt2 = float(0.7071067811865476);
 
 /**
 \brief The return value is the greater of the two specified values.
@@ -164,6 +172,12 @@ PX_CUDA_CALLABLE PX_FORCE_INLINE double PxRecipSqrt(double a)
 	return 1 / ::sqrt(a);
 }
 
+//!	\brief square of the argument
+PX_CUDA_CALLABLE PX_FORCE_INLINE PxF32 PxSqr(const PxF32 a)
+{
+	return a * a;
+}
+
 //! trigonometry -- all angles are in radians.
 
 //!	\brief Sine of an angle ( <b>Unit:</b> Radians )
@@ -188,6 +202,24 @@ PX_CUDA_CALLABLE PX_FORCE_INLINE float PxCos(float a)
 PX_CUDA_CALLABLE PX_FORCE_INLINE double PxCos(double a)
 {
 	return ::cos(a);
+}
+
+//! \brief compute sine and cosine at the same time
+PX_CUDA_CALLABLE PX_FORCE_INLINE void PxSinCos(const PxF32 a, PxF32& sin, PxF32& cos)
+{
+#if defined(__CUDACC__) && __CUDA_ARCH__ >= 350
+	__sincosf(a, &sin, &cos);
+#else
+	sin = PxSin(a);
+	cos = PxCos(a);
+#endif
+}
+
+//! \brief compute sine and cosine at the same time
+PX_CUDA_CALLABLE PX_FORCE_INLINE void PxSinCos(const double a, double& sin, double& cos)
+{
+	sin = PxSin(a);
+	cos = PxCos(a);
 }
 
 /**
@@ -288,6 +320,14 @@ PX_CUDA_CALLABLE PX_FORCE_INLINE double PxAtan2(double x, double y)
 	return ::atan2(x, y);
 }
 
+/**
+\brief Converts degrees to radians.
+*/
+PX_CUDA_CALLABLE PX_FORCE_INLINE PxF32 PxDegToRad(const PxF32 a)
+{
+	return 0.01745329251994329547f * a;
+}
+
 //!	\brief returns true if the passed number is a finite floating point number as opposed to INF, NAN, etc.
 PX_CUDA_CALLABLE PX_FORCE_INLINE bool PxIsFinite(float f)
 {
@@ -320,6 +360,11 @@ PX_CUDA_CALLABLE PX_FORCE_INLINE float PxSign(float a)
 	return physx::intrinsics::sign(a);
 }
 
+PX_CUDA_CALLABLE PX_FORCE_INLINE float PxSign2(float a, float eps = FLT_EPSILON)
+{
+	return (a < -eps) ? -1.0f : (a > eps) ? 1.0f : 0.0f;
+}
+
 PX_CUDA_CALLABLE PX_FORCE_INLINE float PxPow(float x, float y)
 {
 	return ::powf(x, y);
@@ -335,4 +380,5 @@ PX_CUDA_CALLABLE PX_FORCE_INLINE float PxLog(float x)
 #endif
 
 /** @} */
-#endif // #ifndef PXFOUNDATION_PXMATH_H
+#endif
+

@@ -30,6 +30,7 @@
 #include "foundation/PxMat33.h"
 #include "foundation/PxMathUtils.h"
 #include "foundation/PxVec4.h"
+#include "foundation/PxPlane.h"
 #include "foundation/PxAssert.h"
 #include "PsMathUtils.h"
 #include "PsUtilities.h"
@@ -41,7 +42,7 @@ using namespace physx::intrinsics;
 
 PX_FOUNDATION_API PxTransform physx::PxTransformFromPlaneEquation(const PxPlane& plane)
 {
-	PxPlane p = plane; 
+	PxPlane p = plane;
 	p.normalize();
 
 	// special case handling for axis aligned planes
@@ -66,8 +67,8 @@ PX_FOUNDATION_API PxTransform physx::PxTransformFromSegment(const PxVec3& p0, co
 	if(halfHeight)
 		*halfHeight = height/2;
 
-	return PxTransform((p1+p0) * 0.5f, 
-						height<1e-6f ? PxQuat(PxIdentity) : PxShortestRotation(PxVec3(1.f,0,0), axis/height));		
+	return PxTransform((p1+p0) * 0.5f,
+						height<1e-6f ? PxQuat(PxIdentity) : PxShortestRotation(PxVec3(1.f,0,0), axis/height));
 }
 
 PX_FOUNDATION_API PxQuat physx::PxShortestRotation(const PxVec3& v0, const PxVec3& v1)
@@ -217,10 +218,10 @@ void physx::shdfnd::integrateTransform(const PxTransform& curTrans, const PxVec3
 	// Integrate the rotation using closed form quaternion integrator
 	PxReal w = angvel.magnitudeSquared();
 
-	if(w != 0.0f)
+	if (w != 0.0f)
 	{
 		w = PxSqrt(w);
-		if(w != 0.0f)
+		if (w != 0.0f)
 		{
 			const PxReal v = timeStep * w * 0.5f;
 			const PxReal q = PxCos(v);

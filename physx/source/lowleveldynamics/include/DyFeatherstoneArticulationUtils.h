@@ -25,7 +25,7 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 #ifndef DY_FEATHERSTONE_ARTICULATION_UTIL_H
 #define DY_FEATHERSTONE_ARTICULATION_UTIL_H
@@ -50,7 +50,8 @@ namespace Dy
 		PX_CUDA_CALLABLE PX_FORCE_INLINE SpatialSubspaceMatrix() :numColumns(0)
 		{
 			//PxMemZero(columns, sizeof(Cm::SpatialVectorF) * 6);
-			memset(columns, 0, sizeof(Cm::UnAlignedSpatialVector) * MaxColumns);
+            // #todo #jve
+			//memset(columns, 0, sizeof(Cm::UnAlignedSpatialVector) * MaxColumns);
 		}
 
 		PX_CUDA_CALLABLE PX_FORCE_INLINE void setNumColumns(const PxU32 nc)
@@ -105,7 +106,7 @@ namespace Dy
 
 
 	private:
-		Cm::UnAlignedSpatialVector columns[MaxColumns];			//192		192			
+		Cm::UnAlignedSpatialVector columns[MaxColumns];			//192		192
 		PxU32	numColumns;						//4			208 (12 bytes padding)
 
 	};
@@ -193,7 +194,7 @@ namespace Dy
 			ret.R = R.getTranspose();
 			ret.T = T.getTranspose();
 			return ret;
-			
+
 		}
 
 		PX_CUDA_CALLABLE PX_FORCE_INLINE Cm::SpatialVectorF transposeTransform(const Cm::SpatialVectorF& s) const
@@ -238,13 +239,13 @@ namespace Dy
 	//so we can get rid of bottomRight
 	struct SpatialMatrix
 	{
-		PxMat33 topLeft;		// intialize to 0 
+		PxMat33 topLeft;		// intialize to 0
 		PxMat33 topRight;		// initialize to mass matrix
 		PxMat33 bottomLeft;		// initialize to inertia
 		PxU32	padding;		//4		112
 
 	public:
-		
+
 		PX_CUDA_CALLABLE PX_FORCE_INLINE SpatialMatrix()
 		{
 		}
@@ -315,7 +316,7 @@ namespace Dy
 			PxMat33 newTopLeft = topLeft - s.topLeft;
 			PxMat33 newTopRight = topRight - s.topRight;
 			PxMat33 newBottomLeft = bottomLeft - s.bottomLeft;
-			
+
 			return SpatialMatrix(newTopLeft, newTopRight, newBottomLeft);
 		}
 
@@ -333,7 +334,7 @@ namespace Dy
 			PxMat33 newTopLeft = -topLeft;
 			PxMat33 newTopRight = -topRight;
 			PxMat33 newBottomLeft = -bottomLeft;
-			
+
 			return SpatialMatrix(newTopLeft, newTopRight, newBottomLeft);
 		}
 
@@ -409,7 +410,7 @@ namespace Dy
 			PxMat33 topLeft(columns[0].top, columns[1].top, columns[2].top);
 			PxMat33 bottomLeft(columns[0].bottom, columns[1].bottom, columns[2].bottom);
 			PxMat33 topRight(columns[3].top, columns[4].top, columns[5].top);
-			
+
 			return SpatialMatrix(topLeft, topRight, bottomLeft);
 		}
 
@@ -619,7 +620,7 @@ namespace Dy
 			PxMat33 rComp1 = bottomLeft + bottomRight * rComp0;
 
 			PxMat33 newTopRight = rComp1.getInverse();
-			
+
 			return SpatialMatrix(newTopLeft, newTopRight, newBottomLeft);
 		}
 
