@@ -7,6 +7,36 @@
       "strings": true
     }
   },
+  "[python]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "gitlens.codeLens.symbolScopes": [
+      "!Module"
+    ],
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit",
+      "source.fixAll": "explicit"
+    },
+    "editor.formatOnType": true,
+    "editor.formatOnSave": true,
+    "editor.wordBasedSuggestions": "off"
+  },
+  "ruff.lint.enable": true,
+  "ruff.showNotifications": "always",
+  "ruff.fixAll": true,
+  "ruff.organizeImports": true,
+  "ruff.enable": true,
+  "ruff.lint.run": "onType",
+  "ruff.codeAction.disableRuleComment": {
+    "enable": true
+  },
+  "pylint.severity": {
+    "convention": "Hint",
+    "error": "Hint",
+    "fatal": "Hint",
+    "refactor": "Hint",
+    "warning": "Hint",
+    "info": "Hint"
+  },
   "editor.formatOnSave": false,
   "cmake.additionalKits": ["externals/cmakemodules/"],
   "cmake.allowCommentsInPresetsFile": true,
@@ -30,7 +60,7 @@
   "cmake.setBuildTypeOnMultiConfig": true,
   "cmake.configureArgs": [
     "-DCMAKE_PREFIX_PATH=externals;externals/cmakemodules;externals/targa",
-    null
+    "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
   ],
   "cmake.touchbar.visibility": "hidden",
   "cmake.useCMakePresets": "always",
