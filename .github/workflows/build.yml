@@ -2,13 +2,13 @@ name: Build
 
 on:
   push:
-    branches: [main, dev, develop]
+    branches: [main, develop]
     paths-ignore:
       - "Docs/**"
       - "**.md"
       - "**.txt"
   pull_request:
-    branches: [main, dev, develop]
+    branches: [main, develop]
     paths-ignore:
       - "Docs/**"
       - "**.md"
@@ -33,12 +33,12 @@ jobs:
         uses: lukka/get-cmake@v3.29.2
 
       - name: Add msbuild to PATH
-        uses: microsoft/setup-msbuild@31e0ba28c780f4bd10cfc8075d1fff655386e214
+        uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake
         run: |
           $workspace = "$env:GITHUB_WORKSPACE" -replace '[\\/]', '/'
-          cmake -S "${workspace}/physx/compiler/public" -B "${workspace}/build" -Ax64 -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86 --no-warn-unused-cli -DCMAKEMODULES_PATH="${workspace}/externals/CMakeModules" -DPXSHARED_PATH="${workspace}/pxshared" -DCMAKE_PREFIX_PATH="${workspace}/externals/CMakeModules;${workspace}/externals/targa" -DPHYSX_ROOT_DIR="${workspace}/physx" -DPX_OUTPUT_LIB_DIR="${workspace}/physx" -DPX_OUTPUT_BIN_DIR="${workspace}/physx" -DPX_BUILDSNIPPETS=FALSE -DPX_BUILDPUBLICSAMPLES=FALSE -DPX_GENERATE_STATIC_LIBRARIES=FALSE -DNV_USE_STATIC_WINCRT=TRUE -DNV_USE_DEBUG_WINCRT=TRUE -DPX_FLOAT_POINT_PRECISE_MATH=FALSE -DCMAKE_INSTALL_PREFIX="${workspace}/physx/install/vc17win64/PhysX"
+          cmake -S "${workspace}/physx/compiler/public" -B "${workspace}/build" -A x64 -DTARGET_BUILD_PLATFORM=windows -DPX_OUTPUT_ARCH=x86 --no-warn-unused-cli -DCMAKEMODULES_PATH="${workspace}/externals/CMakeModules" -DPXSHARED_PATH="${workspace}/pxshared" -DCMAKE_PREFIX_PATH="${workspace}/externals/CMakeModules;${workspace}/externals/targa" -DPHYSX_ROOT_DIR="${workspace}/physx" -DPX_OUTPUT_LIB_DIR="${workspace}/physx" -DPX_OUTPUT_BIN_DIR="${workspace}/physx" -DPX_BUILDSNIPPETS=FALSE -DPX_BUILDPUBLICSAMPLES=FALSE -DPX_GENERATE_STATIC_LIBRARIES=FALSE -DNV_USE_STATIC_WINCRT=TRUE -DNV_USE_DEBUG_WINCRT=TRUE -DPX_FLOAT_POINT_PRECISE_MATH=FALSE -DCMAKE_INSTALL_PREFIX="${workspace}/physx/install/vc17win64/PhysX"
 
       - name: Build
         run: cmake --build build/ --config "${{ matrix.build_type }}"

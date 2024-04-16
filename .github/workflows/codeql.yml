@@ -2,9 +2,9 @@ name: CodeQL
 
 on:
   push:
-    branches: [main, dev, develop]
+    branches: [main, develop]
   pull_request:
-    branches: [main, dev, develop]
+    branches: [main, develop]
   schedule:
     - cron: "40 7 * * 3"
 
@@ -45,7 +45,10 @@ jobs:
 
       - if: matrix.build-mode == 'manual'
         name: Get latest CMake and ninja
-        uses: lukka/get-cmake@v3.29.2
+        uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~3.25.0"  # <--= optional, use most recent 3.25.x version
+          ninjaVersion: "^1.11.1"  # <--= optional, use most recent 1.x version
 
       - if: matrix.build-mode == 'manual'
         name: Configure CMake
