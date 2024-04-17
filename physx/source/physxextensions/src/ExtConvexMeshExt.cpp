@@ -25,10 +25,11 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 
 #include "foundation/PxTransform.h"
+#include "foundation/PxPlane.h"
 #include "geometry/PxConvexMeshGeometry.h"
 #include "geometry/PxConvexMesh.h"
 #include "extensions/PxConvexMeshExt.h"
@@ -37,7 +38,7 @@ using namespace physx;
 
 static const PxReal gEpsilon = .01f;
 
-PxU32 physx::PxFindFaceIndex(const PxConvexMeshGeometry& convexGeom, const PxTransform& pose, 
+PxU32 physx::PxFindFaceIndex(const PxConvexMeshGeometry& convexGeom, const PxTransform& pose,
 	const PxVec3& impactPos, const PxVec3& unitDir)
 {
 	PX_ASSERT(unitDir.isFinite());
@@ -65,7 +66,7 @@ PxU32 physx::PxFindFaceIndex(const PxConvexMeshGeometry& convexGeom, const PxTra
 	{
 		PxHullPolygon hullPolygon;
 		convexGeom.convexMesh->getPolygonData(j, hullPolygon);
-		
+
 		// transform hull plane into shape space
 		PxPlane plane;
 		const PxVec3 tmp = shape2VertexSkew.transformTranspose(PxVec3(hullPolygon.mPlane[0],hullPolygon.mPlane[1],hullPolygon.mPlane[2]));

@@ -86,7 +86,7 @@ class PxQuatT
 	*/
 	PX_CUDA_CALLABLE PX_INLINE PxQuatT(Type angleRadians, const PxVec3T<Type>& unitAxis)
 	{
-		PX_ASSERT(PxAbs(Type(1.0) - unitAxis.magnitude()) < Type(1e-3));
+		PX_SHARED_ASSERT(PxAbs(Type(1.0) - unitAxis.magnitude()) < Type(1e-3));
 		const Type a = angleRadians * Type(0.5);
 
 		Type s;

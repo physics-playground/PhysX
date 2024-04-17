@@ -84,7 +84,7 @@ PX_CUDA_CALLABLE PX_FORCE_INLINE T PxMax(T a, T b)
 template <>
 PX_CUDA_CALLABLE PX_FORCE_INLINE float PxMax(float a, float b)
 {
-	return intrinsics::selectMax(a, b);
+	return physx::intrinsics::selectMax(a, b);
 }
 
 /**
@@ -100,7 +100,7 @@ template <>
 //! overload for float to use fsel on xbox
 PX_CUDA_CALLABLE PX_FORCE_INLINE float PxMin(float a, float b)
 {
-	return intrinsics::selectMin(a, b);
+	return physx::intrinsics::selectMin(a, b);
 }
 
 /*

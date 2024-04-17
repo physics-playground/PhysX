@@ -33,6 +33,7 @@
 */
 
 #include "foundation/PxQuat.h"
+#include "foundation/PxAssert.h"
 
 #if !PX_DOXYGEN
 namespace physx
@@ -73,7 +74,7 @@ class PxTransformT
 
 	PX_CUDA_CALLABLE PX_FORCE_INLINE PxTransformT(const PxVec3T<Type>& p0, const PxQuatT<Type>& q0) : q(q0), p(p0)
 	{
-		PX_ASSERT(q0.isSane());
+        PX_SHARED_ASSERT(q0.isSane());
 	}
 
 	PX_CUDA_CALLABLE PX_FORCE_INLINE explicit PxTransformT(const PxMat44T<Type>& m); // defined in PxMat44.h

@@ -111,7 +111,7 @@ class PxVec3T
 	*/
 	PX_CUDA_CALLABLE PX_FORCE_INLINE Type& operator[](unsigned int index)
 	{
-		PX_ASSERT(index <= 2);
+        PX_SHARED_ASSERT(index <= 2);
 		return reinterpret_cast<Type*>(this)[index];
 	}
 
@@ -120,7 +120,7 @@ class PxVec3T
 	*/
 	PX_CUDA_CALLABLE PX_FORCE_INLINE const Type& operator[](unsigned int index) const
 	{
-		PX_ASSERT(index <= 2);
+		PX_SHARED_ASSERT(index <= 2);
 		return reinterpret_cast<const Type*>(this)[index];
 	}
 

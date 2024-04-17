@@ -389,26 +389,26 @@ PX_CUDA_CALLABLE PX_INLINE PxQuatT<Type>::PxQuatT(const PxMat33T<Type>& m)
 	{
 		if(m.column0.x > m.column1.y)
 		{
-			const Type t = Type(1.0) + m.column0.x - m.column1.y - m.column2.z;
-			*this = PxQuatT<Type>(t, m.column0.y + m.column1.x, m.column2.x + m.column0.z, m.column1.z - m.column2.y) * (Type(0.5) / PxSqrt(t));
+			const Type tt = Type(1.0) + m.column0.x - m.column1.y - m.column2.z;
+			*this = PxQuatT<Type>(tt, m.column0.y + m.column1.x, m.column2.x + m.column0.z, m.column1.z - m.column2.y) * (Type(0.5) / PxSqrt(tt));
 		}
 		else
 		{
-			const Type t = Type(1.0) - m.column0.x + m.column1.y - m.column2.z;
-			*this = PxQuatT<Type>(m.column0.y + m.column1.x, t, m.column1.z + m.column2.y, m.column2.x - m.column0.z) * (Type(0.5) / PxSqrt(t));
+			const Type tt = Type(1.0) - m.column0.x + m.column1.y - m.column2.z;
+			*this = PxQuatT<Type>(m.column0.y + m.column1.x, tt, m.column1.z + m.column2.y, m.column2.x - m.column0.z) * (Type(0.5) / PxSqrt(tt));
 		}
 	}
 	else
 	{
 		if(m.column0.x < -m.column1.y)
 		{
-			const Type t = Type(1.0) - m.column0.x - m.column1.y + m.column2.z;
-			*this = PxQuatT<Type>(m.column2.x + m.column0.z, m.column1.z + m.column2.y, t, m.column0.y - m.column1.x) * (Type(0.5) / PxSqrt(t));
+			const Type tt = Type(1.0) - m.column0.x - m.column1.y + m.column2.z;
+			*this = PxQuatT<Type>(m.column2.x + m.column0.z, m.column1.z + m.column2.y, tt, m.column0.y - m.column1.x) * (Type(0.5) / PxSqrt(tt));
 		}
 		else
 		{
-			const Type t = Type(1.0) + m.column0.x + m.column1.y + m.column2.z;
-			*this = PxQuatT<Type>(m.column1.z - m.column2.y, m.column2.x - m.column0.z, m.column0.y - m.column1.x, t) * (Type(0.5) / PxSqrt(t));
+			const Type tt = Type(1.0) + m.column0.x + m.column1.y + m.column2.z;
+			*this = PxQuatT<Type>(m.column1.z - m.column2.y, m.column2.x - m.column0.z, m.column0.y - m.column1.x, tt) * (Type(0.5) / PxSqrt(tt));
 		}
 	}
 }
