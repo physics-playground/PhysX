@@ -3,6 +3,15 @@
   <component name="SonarLintProjectSettings">
     <option name="bindingEnabled" value="true" />
     <option name="bindingSuggestionsEnabled" value="false" />
+    <option name="fileExclusions">
+      <list>
+        <option value="DIRECTORY:out" />
+        <option value="DIRECTORY:node_modules" />
+        <option value="DIRECTORY:build" />
+        <option value="DIRECTORY:.vs" />
+        <option value="DIRECTORY:.build" />
+      </list>
+    </option>
     <option name="projectKey" value="physics-playground_PhysX" />
     <option name="serverId" value="sonarcloud" />
   </component>
