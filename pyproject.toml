@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "physx"
+name = "nvidia-gameworks-physx"
 version = "4.0.0"
 description = "NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices."
 readme = "README.md"

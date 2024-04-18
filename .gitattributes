@@ -93,9 +93,10 @@
 # Exclude files from exporting
 #
 
-.gitattributes export-ignore
-.gitignore     export-ignore
-.gitkeep       export-ignore
+.gitattributes      export-ignore
+.gitignore          export-ignore
+.gitkeep            export-ignore
+.gitmodules         export-ignore
 
 # Sources
 *.c     text diff=cpp
