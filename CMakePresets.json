@@ -1,11 +1,5 @@
 {
-  // "$schema": "https://raw.githubusercontent.com/microsoft/vscode-cmake-tools/main/schemas/CMakePresets-v8-schema.json",
   "version": 6,
-  // "cmakeMinimumRequired": {
-  //   "major": 3,
-  //   "minor": 23,
-  //   "patch": 0
-  // },
   "configurePresets": [
     {
       "name": "Debug",

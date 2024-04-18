@@ -5,6 +5,8 @@
 vcpkg_installed/
 vcpkg.*.nupkg
 --*/
+externals/vcpkg/
+Folder.DotSettings*
 
 ##
 #

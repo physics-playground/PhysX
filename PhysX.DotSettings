@@ -1,0 +1,13 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003A_002D_002Dconfig_0020Debug/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003Aexternals_002Fd_003Avcpkg/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003Aout/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003Avcpkg_005Finstalled/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/Highlighting/AnalysisEnabled/@EntryValue">SOLUTION</s:String>
+	<s:Boolean x:Key="/Default/CodeInspection/Highlighting/IdentifierHighlightingEnabled/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003Acmake_002Dbuild_002Ddebug/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003Acmake_002Dbuild_002Ddebug_002Devent_002Dtrace/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=DB94C55F_002D6B9A_002D4AAE_002D80D7_002D29FD8153E6B5_002Fd_003Aexternals_002Fd_003Avcpkg/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Feedback/ShouldPrompt/@EntryValue">False</s:Boolean>
+	<s:String x:Key="/Default/Environment/Hierarchy/PsiConfigurationSettingsKey/LocationType/@EntryValue">SOLUTION_FOLDER</s:String>
+	<s:Boolean x:Key="/Default/Environment/MemoryUsageIndicator/IsVisible/@EntryValue">True</s:Boolean></wpf:ResourceDictionary>

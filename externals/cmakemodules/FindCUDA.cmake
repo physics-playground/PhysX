@@ -960,7 +960,7 @@ set(CUDA_SDK_SEARCH_PATH
 #   DOC "Location of cutil.h"
 #   NO_DEFAULT_PATH
 #   )
-# # Now search system paths
+## Now search system paths
 # find_path(CUDA_CUT_INCLUDE_DIR cutil.h DOC "Location of cutil.h")
 
 # mark_as_advanced(CUDA_CUT_INCLUDE_DIR)
@@ -968,9 +968,9 @@ set(CUDA_SDK_SEARCH_PATH
 
 # Example of how to find a library in the CUDA_SDK_ROOT_DIR
 
-# # cutil library is called cutil64 for 64 bit builds on windows.  We don't want
-# # to get these confused, so we are setting the name based on the word size of
-# # the build.
+## cutil library is called cutil64 for 64 bit builds on windows.  We don't want
+## to get these confused, so we are setting the name based on the word size of
+## the build.
 
 # if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 #   set(cuda_cutil_name cutil64)
@@ -986,7 +986,7 @@ set(CUDA_SDK_SEARCH_PATH
 #   DOC "Location of cutil library"
 #   NO_DEFAULT_PATH
 #   )
-# # Now search system paths
+## Now search system paths
 # find_library(CUDA_CUT_LIBRARY NAMES cutil ${cuda_cutil_name} DOC "Location of cutil library")
 # mark_as_advanced(CUDA_CUT_LIBRARY)
 # set(CUDA_CUT_LIBRARIES ${CUDA_CUT_LIBRARY})
