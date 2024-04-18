@@ -448,9 +448,14 @@ _Pragma(" clang diagnostic pop")
 
 
 #if PX_WINDOWS_FAMILY
+    // https://gitlab.kitware.com/cmake/cmake/-/commit/6d0b5ff60d288c7847001c1cb01bd55c78cfe4e6
 	// check that exactly one of NDEBUG and _DEBUG is defined
-	#if !defined(NDEBUG) ^ defined(_DEBUG)
-		#error Exactly one of NDEBUG and _DEBUG needs to be defined!
+	#if (!defined(NDEBUG) && !defined(_DEBUG)) || (defined(NDEBUG) && defined(_DEBUG))
+        #if defined(NDEBUG) && defined(_DEBUG)
+		    #error Exactly one of NDEBUG and _DEBUG needs to be defined! Both are defined.
+        #else
+		    #error Exactly one of NDEBUG and _DEBUG needs to be defined! Both are not defined.
+        #endif
 	#endif
 #endif
 

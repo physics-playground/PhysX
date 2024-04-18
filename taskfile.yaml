@@ -3,6 +3,7 @@
 version: '3'
 
 vars:
+  RM: '{{if eq .OS "Windows_NT"}}cmd /d /c rmdir /q /s{{else}}rm -rf{{end}}'
   PHYSX_EXTERNALS: '{{.ROOT_DIR}}/externals'
   CMAKE_MODULES: '{{.ROOT_DIR}}/externals/cmakemodules'
   CMAKE_TARGA: '{{.ROOT_DIR}}/externals/targa'
@@ -12,18 +13,38 @@ vars:
 
 tasks:
   default:
+    silent: false
+    cmds:
+      - task: cmake
+        vars: { PRESET: 'Release' }
+
+  cmake:
     vars:
+      PRESET: '{{default "Release" .PRESET}}'
       SEARCH_PATHS: '{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}'
       SOURCE_DIR: '{{toSlash .ROOT_DIR}}'
       BUILD_DIR: '{{toSlash .BUILD_DIR}}'
-    silent: false
     cmds:
+      - task: remove-cache
+        vars: { TARGET: '{{.BUILD_DIR}}' }
       - cmd: >-
           cmake
-          -G "{{.CMAKE_GENERATOR}}"
-          {{.CMAKE_ARCHITECTURE}}
+          --preset {{.PRESET}}
           -DCMAKE_PREFIX_PATH="{{.SEARCH_PATHS}}"
           -S "{{.SOURCE_DIR}}"
           -B "{{.BUILD_DIR}}"
       - cmd: >-
           cmake --build "{{.BUILD_DIR}}" --config Release
+
+  remove-cache:
+    deps: []
+    internal: true
+    required: [TARGET]
+    status:
+      - 'test ! -d "{{.TARGET}}"'
+      - 'test ! -f "{{.TARGET}}"'
+    cmds:
+      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{end}}'
+        timeout: 5s
+      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" del "{{fromSlash .TARGET}}"{{end}}'
+        timeout: 5s
