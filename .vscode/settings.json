@@ -8,63 +8,81 @@
     }
   },
   "[markdown]": {
-    "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit",
       "source.organizeImports": "explicit"
-    }
+    },
+    "editor.formatOnSave": true
   },
   "[python]": {
     "diffEditor.ignoreTrimWhitespace": false,
-    "gitlens.codeLens.symbolScopes": ["!Module"],
     "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit",
-      "source.fixAll": "explicit"
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
     },
-    "editor.formatOnType": true,
     "editor.formatOnSave": true,
-    "editor.wordBasedSuggestions": "off"
+    "editor.formatOnType": true,
+    "editor.wordBasedSuggestions": "off",
+    "gitlens.codeLens.symbolScopes": [
+      "!Module"
+    ]
   },
-  "ruff.lint.enable": true,
-  "ruff.showNotifications": "always",
-  "ruff.fixAll": true,
-  "ruff.organizeImports": true,
-  "ruff.enable": true,
-  "ruff.lint.run": "onType",
-  "ruff.codeAction.disableRuleComment": {
-    "enable": true
-  },
-  "pylint.severity": {
-    "convention": "Hint",
-    "error": "Hint",
-    "fatal": "Hint",
-    "refactor": "Hint",
-    "warning": "Hint",
-    "info": "Hint"
-  },
-  "editor.formatOnSave": false,
   "cmake.allowCommentsInPresetsFile": true,
   "cmake.allowUnsupportedPresetsVersions": true,
   "cmake.automaticReconfigure": true,
   "cmake.buildBeforeRun": true,
   "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
+  "cmake.buildTask": true,
+  "cmake.cacheInit": "",
+  "cmake.cmakeCommunicationMode": "fileApi",
+  "cmake.configureArgs": [
+    null
+  ],
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
   "cmake.enableTraceLogging": true,
+  "cmake.environment": {
+    "VCPKG_ROOT": "${workspaceFolder}/externals/vcpkg"
+  },
   "cmake.installPrefix": "${workspaceFolder}/.build/install",
+  "cmake.languageSupport.enableFileAPI": true,
   "cmake.loggingLevel": "info",
   "cmake.options.statusBarVisibility": "visible",
   "cmake.revealLog": "always",
   "cmake.setBuildTypeOnMultiConfig": true,
-  "cmake.touchbar.visibility": "hidden",
-  "cmake.useCMakePresets": "auto",
-  "prettier.enable": false,
   "cmake.skipConfigureIfCachePresent": false,
+  "cmake.touchbar.visibility": "hidden",
+  "cmake.useCMakePresets": "always",
+  "cmake.ctest.testExplorerIntegrationEnabled": true,
+  "cmake.exportCompileCommandsFile": true,
+  "editor.formatOnSave": false,
+  "prettier.enable": false,
+  "cmakeExplorer.logpanel": true,
+  "pylint.severity": {
+    "convention": "Hint",
+    "error": "Hint",
+    "fatal": "Hint",
+    "info": "Hint",
+    "refactor": "Hint",
+    "warning": "Hint"
+  },
+  "ruff.codeAction.disableRuleComment": {
+    "enable": true
+  },
+  "ruff.enable": true,
+  "ruff.fixAll": true,
+  "ruff.lint.enable": true,
+  "ruff.lint.run": "onType",
+  "ruff.organizeImports": true,
+  "ruff.showNotifications": "always",
   "vcpkg.general.enable": true,
-  "vcpkg.target.hostTriplet": "x64-windows",
   "vcpkg.target.defaultTriplet": "-static",
-  "vcpkg.target.useStaticLib": true,
+  "vcpkg.target.hostTriplet": "x64-windows",
   "vcpkg.target.installDependencies": true,
   "vcpkg.target.preferSystemLibs": false,
-  "vcpkg.target.useManifest": true
+  "vcpkg.target.useManifest": true,
+  "vcpkg.target.useStaticLib": false,
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "C:\\Users\\jovaneen\\scoop\\apps\\vcpkg\\current/scripts/buildsystems/vcpkg.cmake"
+  }
 }

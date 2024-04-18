@@ -11,9 +11,7 @@ requires-python = ">=3.8"
 license = { file = "LICENSE" }
 keywords = ["sample", "setuptools", "development"]
 authors = [{ name = "NVIDIA", email = "author@example.com" }]
-maintainers = [
-    { name = "Joel Van Eenwyk", email = "joel.vaneenwyk@gmail.com" },
-]
+maintainers = [{ name = "Joel Van Eenwyk", email = "joel.vaneenwyk@gmail.com" }]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -27,7 +25,16 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["ruff", "pylance", "pylint", "mypy", "black"]
+dependencies = [
+    "ruff",
+    "pylance",
+    "pylint",
+    "mypy",
+    "black",
+    "ruff",
+    "build",
+    "setuptools",
+]
 
 [tool.setuptools.packages.find]
 where = ["physx/buildtools"]

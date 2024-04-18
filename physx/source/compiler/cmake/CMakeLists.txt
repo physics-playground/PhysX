@@ -136,3 +136,5 @@ if (PX_GENERATE_SOURCE_DISTRO)
 		file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/source_distro_list.txt" "${FILE_NAME}\n")
 	endforeach ()
 endif ()
+
+message("Added PhysX")

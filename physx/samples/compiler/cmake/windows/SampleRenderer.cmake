@@ -29,8 +29,6 @@
 # Build SampleRenderer
 #
 
-find_package(dxsdk-d3dx CONFIG REQUIRED)
-
 SET(SAMPLERENDERER_COMPILE_DEFS
 	# Common to all configurations
 

@@ -25,7 +25,6 @@
 ##
 ## Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 
-cmake_minimum_required(VERSION 3.7)
 project(Snippets C CXX)
 
 IF(NOT DEFINED CMAKEMODULES_VERSION)
@@ -57,15 +56,15 @@ INCLUDE(NvidiaBuildOptions)
 IF(CMAKE_CONFIGURATION_TYPES)
 	SET(CMAKE_CONFIGURATION_TYPES debug checked profile release)
 	SET(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
-		"Reset config to what we need" 
+		"Reset config to what we need"
 		FORCE)
-	
-	# Need to define these at least once.	
+
+	# Need to define these at least once.
 	SET(CMAKE_SHARED_LINKER_FLAGS_CHECKED "/DEBUG")
 	SET(CMAKE_SHARED_LINKER_FLAGS_PROFILE "/DEBUG")
 
 	SET(CMAKE_EXE_LINKER_FLAGS_PROFILE "/DEBUG")
-	SET(CMAKE_EXE_LINKER_FLAGS_CHECKED "/DEBUG")	
+	SET(CMAKE_EXE_LINKER_FLAGS_CHECKED "/DEBUG")
 ENDIF()
 
 
@@ -84,13 +83,13 @@ SET(SOURCE_DISTRO_FILE_LIST "")
 # Include all of the projects
 SET(SNIPPETS_LIST Articulation BVHStructure ContactModification ContactReport ContactReportCCD ConvexMeshCreate
 	CustomJoint CustomProfiler DeformableMesh HelloWorld ImmediateArticulation ImmediateMode Joint MBP MultiThreading
-	PrunerSerialization RaycastCCD Serialization SplitFetchResults 
+	PrunerSerialization RaycastCCD Serialization SplitFetchResults
 	SplitSim Stepper ToleranceScale TriangleMeshCreate Triggers)
-	
+
 LIST(APPEND SNIPPETS_LIST ${PLATFORM_SNIPPETS_LIST})
-		
-SET(SNIPPETS_VEHICLE_LIST NestedScene Vehicle4W VehicleContactMod VehicleMultiThreading 
-	VehicleNoDrive VehicleScale VehicleTank)	
+
+SET(SNIPPETS_VEHICLE_LIST NestedScene Vehicle4W VehicleContactMod VehicleMultiThreading
+	VehicleNoDrive VehicleScale VehicleTank)
 
 LIST(APPEND SNIPPETS_VEHICLE_LIST ${PLATFORM_SNIPPETS_VEHICLE_LIST})
 
@@ -117,3 +116,5 @@ IF(PX_GENERATE_SOURCE_DISTRO)
 		FILE(APPEND "${CMAKE_CURRENT_BINARY_DIR}/source_distro_list.txt" "${FILE_NAME}\n")
 	ENDFOREACH()
 ENDIF()
+
+message("Added Snippets")

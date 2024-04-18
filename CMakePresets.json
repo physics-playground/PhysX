@@ -4,23 +4,38 @@
     {
       "name": "Debug",
       "generator": "Visual Studio 17 2022",
+      "installDir": "${sourceDir}/.build/vs-debug-install",
       "binaryDir": "${sourceDir}/.build/vs-debug",
       "toolchainFile": "${sourceDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "description": "Debug configuration with `vcpkg` support.",
+      "architecture": "x64",
+      "warnings": {
+        "deprecated": false,
+        "dev": false,
+        "systemVars": false,
+        "uninitialized": false,
+        "unusedCli": false
+      },
+      "debug": {
+        "tryCompile": true
+      },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-        "VCPKG_MANIFEST_MODE": "ON",
-        "VCPKG_MANIFEST_INSTALL": "ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
       "name": "Release",
       "generator": "Visual Studio 17 2022",
+      "installDir": "${sourceDir}/.build/vs-release-install",
       "binaryDir": "${sourceDir}/.build/vs-release",
       "toolchainFile": "${sourceDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "description": "Release configuration with `vcpkg` support.",
+      "architecture": "x64",
+      "debug": {
+        "tryCompile": true
+      },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "VCPKG_MANIFEST_MODE": "ON",
-        "VCPKG_MANIFEST_INSTALL": "ON"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     }
   ]

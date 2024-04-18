@@ -25,3 +25,4 @@ physx
 pxshared
 vcpkg
 VCPKG
+YESNO

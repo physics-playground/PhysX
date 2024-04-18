@@ -26,9 +26,17 @@ tasks:
       BUILD_DIR: '{{toSlash .BUILD_DIR}}'
     env:
       VCPKG_ROOT: '{{toSlash .PHYSX_EXTERNALS}}/vcpkg'
+      # Required to prevent 'git clean' from asking for confirmation if file is in use.
+      GIT_ASK_YESNO: false
     cmds:
       - task: remove-cache
         vars: { TARGET: '{{.BUILD_DIR}}' }
+      - cmd: git submodule update --init --recursive --checkout
+        ignore_error: true
+      - cmd: git add .
+        ignore_error: true
+      - cmd: git clean -xfd
+        ignore_error: true
       - cmd: >-
           cmake
           --preset {{.PRESET}}
