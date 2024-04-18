@@ -2,8 +2,8 @@
 <project version="4">
   <component name="CMakeSharedSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" ENABLED="true" GENERATION_DIR=".build/clion-debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-DCMAKE_PREFIX_PATH=&quot;$CMakeProjectDir$/externals/targa;$CMakeProjectDir$/externals;$CMakeProjectDir$/externals/cmakemodules&quot; -DCMAKE_TOOLCHAIN_FILE=C:\Users\JoelVanEenwyk\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake" BUILD_OPTIONS="--config Debug" />
-      <configuration PROFILE_NAME="Release" ENABLED="true" GENERATION_DIR=".build/clion-release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DCMAKE_PREFIX_PATH=$CMakeProjectDir$/externals/targa;$CMakeProjectDir$/externals;$CMakeProjectDir$/externals/cmakemodules -DCMAKE_TOOLCHAIN_FILE=C:\Users\JoelVanEenwyk\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TRACE_FIND_PACKAGE:BOOL=ON" BUILD_OPTIONS="--config Release" />
+      <configuration PROFILE_NAME="Debug" ENABLED="true" GENERATION_DIR=".build/clion-debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="--profiling-format=google-trace --profiling-output=CMakeFiles\clion-event-trace.json -DCMAKE_TOOLCHAIN_FILE=C:\Users\jovaneen\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake" BUILD_OPTIONS="--config Debug" />
+      <configuration PROFILE_NAME="Release" ENABLED="true" GENERATION_DIR=".build/clion-release" CONFIG_NAME="Release" GENERATION_OPTIONS="-DVCPKG_TRACE_FIND_PACKAGE:BOOL=ON -DCMAKE_TOOLCHAIN_FILE=C:\Users\jovaneen\.vcpkg-clion\vcpkg\scripts\buildsystems\vcpkg.cmake" BUILD_OPTIONS="--config Release" />
     </configurations>
   </component>
 </project>

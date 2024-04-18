@@ -2,7 +2,7 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="FacetManager">
     <facet type="Python" name="Python facet">
-      <configuration sdkName="Python 3.10 (PhysX)" />
+      <configuration sdkName="Python 3.12 (PhysX)" />
     </facet>
   </component>
   <component name="NewModuleRootManager">
@@ -11,6 +11,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Python 3.10 (PhysX) interpreter library" level="application" />
+    <orderEntry type="library" name="Python 3.12 (PhysX) interpreter library" level="application" />
   </component>
 </module>
