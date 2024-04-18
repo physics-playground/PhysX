@@ -10,6 +10,10 @@ vars:
   BUILD_DIR: '{{.ROOT_DIR}}/.build/task'
   CMAKE_GENERATOR: '{{if eq .OS "Windows_NT"}}Visual Studio 2022{{else}}Unix Makefiles{{end}}'
   CMAKE_ARCHITECTURE: '{{if eq .OS "Windows_NT"}}-A x64{{else}}{{end}}'
+  PY_VENV: '{{.ROOT_DIR}}/.venv'
+  PY_VENV_ACTIVATE: '.venv/Scripts/activate.bat'
+  PY_VENV_SCRIPTS: '{{.ROOT_DIR}}/.venv/Scripts'
+  PY_VENV_PIP: '{{.ROOT_DIR}}/.venv/Scripts/pip3.exe'
 
 tasks:
   default:
@@ -18,7 +22,25 @@ tasks:
       - task: cmake
         vars: { PRESET: 'Release' }
 
+  init-venv:
+    env:
+      VIRTUAL_ENV: '{{fromSlash .PY_VENV}}'
+      PATH: '{{fromSlash .PY_VENV_SCRIPTS}};${PATH}'
+      PYTHONHOME: ''
+      VIRTUAL_ENV_PROMPT: '(.venv) '
+    cmds:
+      #- task: remove-cache
+      #  vars: { TARGET: '{{.PY_VENV}}' }
+      #  ignore_error: true
+      - cmd: cmd.exe /d /c call py -3 -m venv "{{fromSlash .PY_VENV}}"
+        ignore_error: true
+      - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade pip
+        platform: [windows]
+      - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade ruff pylint pre-commit
+        platform: [windows]
+
   cmake:
+    deps: [init-venv]
     vars:
       PRESET: '{{default "Release" .PRESET}}'
       SEARCH_PATHS: '{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}'
