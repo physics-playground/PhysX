@@ -1,11 +1,11 @@
 {
-  "name": "physxsdk",
+  "name": "physx",
   "version-string": "1.0.0",
   "builtin-baseline": "ad3bae57455a3c3ce528fcd47d8e8027d0498add",
   "dependencies": [
     {
-      "name": "dxsdk-d3dx",
-      "version>=": "9.29.952.8#6"
+      "name": "directxsdk",
+      "version>=": "jun10#8"
     },
     {
       "name": "gtest",

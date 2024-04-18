@@ -1,14 +1,18 @@
 # Custom Dictionary Words
 cfamily
+clion
 cmakemodules
 cmds
 ctest
 DCMAKE
 DCMAKEMODULES
+directxsdk
 DPHYSX
 DPXSHARED
 DTARGET
+dxsdk
 glew
+gtest
 Kapla
 kaplademo
 Khronos

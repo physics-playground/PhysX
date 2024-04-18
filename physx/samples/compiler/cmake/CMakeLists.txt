@@ -57,12 +57,12 @@ INCLUDE(NvidiaBuildOptions)
 IF(CMAKE_CONFIGURATION_TYPES)
 	SET(CMAKE_CONFIGURATION_TYPES debug checked profile release)
 	SET(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
-		"Reset config to what we need" 
+		"Reset config to what we need"
 		FORCE)
-	
-	# Need to define these at least once.	
+
+	# Need to define these at least once.
 	SET(CMAKE_EXE_LINKER_FLAGS_PROFILE "")
-	SET(CMAKE_EXE_LINKER_FLAGS_CHECKED "")	
+	SET(CMAKE_EXE_LINKER_FLAGS_CHECKED "")
 ENDIF()
 
 SET(SOURCE_DISTRO_FILE_LIST "")

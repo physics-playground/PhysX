@@ -43,7 +43,6 @@
     "info": "Hint"
   },
   "editor.formatOnSave": false,
-  "cmake.additionalKits": ["externals/cmakemodules/"],
   "cmake.allowCommentsInPresetsFile": true,
   "cmake.allowUnsupportedPresetsVersions": true,
   "cmake.automaticReconfigure": true,
@@ -51,9 +50,6 @@
   "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
-  "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "C:/Users/JoelVanEenwyk/.vcpkg-clion/vcpkg/scripts/buildsystems/vcpkg.cmake"
-  },
   "cmake.ctest.allowParallelJobs": true,
   "cmake.enableTraceLogging": true,
   "cmake.ignoreCMakeListsMissing": false,
@@ -63,19 +59,15 @@
   "cmake.options.statusBarVisibility": "visible",
   "cmake.revealLog": "always",
   "cmake.setBuildTypeOnMultiConfig": true,
-  "cmake.configureArgs": [
-    "-DCMAKE_PREFIX_PATH=externals;externals/cmakemodules;externals/targa",
-    "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-  ],
   "cmake.touchbar.visibility": "hidden",
-  "cmake.useCMakePresets": "always",
+  "cmake.useCMakePresets": "auto",
   "prettier.enable": false,
   "cmake.skipConfigureIfCachePresent": false,
   "vcpkg.general.enable": true,
   "vcpkg.target.hostTriplet": "x64-windows",
-  "vcpkg.target.defaultTriplet": "",
-  "vcpkg.target.useStaticLib": false,
+  "vcpkg.target.defaultTriplet": "-static",
+  "vcpkg.target.useStaticLib": true,
   "vcpkg.target.installDependencies": true,
   "vcpkg.target.preferSystemLibs": false,
-  "vcpkg.target.useManifest": false
+  "vcpkg.target.useManifest": true
 }

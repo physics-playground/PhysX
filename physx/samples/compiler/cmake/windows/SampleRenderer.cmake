@@ -29,20 +29,6 @@
 # Build SampleRenderer
 #
 
-IF(NOT DIRECTX_INCLUDE_DIRS)
-	IF($ENV{PM_DirectXSDK_VERSION})
-		find_package(DirectXSDK $ENV{PM_DirectXSDK_VERSION} CONFIG REQUIRED)
-	ELSE()
-		IF(EXISTS $ENV{DXSDK_DIR})
-			SET(DIRECTX_INCLUDE_DIRS $ENV{DXSDK_DIR}/Include)
-		ELSE()
-			MESSAGE("For samples compilation please install DXSDK.")
-		ENDIF()
-	ENDIF()
-	SET(DIRECTX_INCLUDE_DIRS ${DIRECTX_INCLUDE_DIRS} CACHE INTERNAL "DirectX SDK include path")
-ENDIF()
-
-
 SET(SAMPLERENDERER_COMPILE_DEFS
 	# Common to all configurations
 

@@ -2,6 +2,12 @@
 # PhysX 4
 #
 
+vcpkg_installed/
+
+##
+#
+#
+
 .pnp.cjs
 .yarn/
 
