@@ -2,21 +2,11 @@
 <project version="4">
   <component name="PublishConfigData" serverName="Remote Development" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
-      <paths name="WSL (4e63fa45-62e7-4fbc-b5d7-746e387c218c)">
+      <paths name="Remote Host (d5e4c00d-bdd4-4ec5-a5ff-fc78d1fdd526)">
         <serverdata>
           <mappings>
-            <mapping deploy="/tmp/tmp.mycoshiro.physx" local="$PROJECT_DIR$" />
+            <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/build" />
-            <excludedPath local="true" path="$PROJECT_DIR$/.build/clion-release" />
-            <excludedPath local="true" path="$PROJECT_DIR$/.build" />
-            <excludedPath local="true" path="$PROJECT_DIR$/node_modules" />
-            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-relwithdebinfo-wsl" />
-            <excludedPath local="true" path="$PROJECT_DIR$/.vs" />
-            <excludedPath local="true" path="$PROJECT_DIR$/out" />
-            <excludedPath local="true" path="$PROJECT_DIR$/.build/clion-debug" />
-          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>
