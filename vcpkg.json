@@ -1,6 +1,6 @@
 {
   "name": "physx",
-  "version-string": "1.0.0",
+  "version-string": "1.2.0",
   "builtin-baseline": "ad3bae57455a3c3ce528fcd47d8e8027d0498add",
   "dependencies": [
     {
@@ -12,12 +12,12 @@
       "version>=": "1.14.0"
     },
     {
-      "name": "vcpkg-cmake-config",
-      "version>=": "2022-02-06#1"
-    },
-    {
       "name": "vcpkg-cmake",
       "version>=": "2023-05-04"
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "version>=": "2022-02-06#1"
     }
   ]
 }

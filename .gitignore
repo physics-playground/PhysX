@@ -3,6 +3,8 @@
 #
 
 vcpkg_installed/
+vcpkg.*.nupkg
+--*/
 
 ##
 #
