@@ -22,16 +22,26 @@ tasks:
       - task: cmake
         vars: { PRESET: 'Release' }
 
-  init-venv:
+  init:
+    deps: [venv-init, node-init]
+
+  node-init:
+    cmds:
+      - cmd: npm install
+
+  venv-clear:
+    cmds:
+      - task: remove-cache
+        vars: { TARGET: '{{.PY_VENV}}' }
+        ignore_error: true
+
+  venv-init:
     env:
       VIRTUAL_ENV: '{{fromSlash .PY_VENV}}'
       PATH: '{{fromSlash .PY_VENV_SCRIPTS}};${PATH}'
       PYTHONHOME: ''
       VIRTUAL_ENV_PROMPT: '(.venv) '
     cmds:
-      #- task: remove-cache
-      #  vars: { TARGET: '{{.PY_VENV}}' }
-      #  ignore_error: true
       - cmd: cmd.exe /d /c call py -3 -m venv "{{fromSlash .PY_VENV}}"
         ignore_error: true
       - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade pip
@@ -40,7 +50,7 @@ tasks:
         platform: [windows]
 
   cmake:
-    deps: [init-venv]
+    deps: [init]
     vars:
       PRESET: '{{default "Release" .PRESET}}'
       SEARCH_PATHS: '{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}'

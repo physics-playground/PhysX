@@ -4,6 +4,12 @@
     <option name="sdkName" value="Python 3.12 (PhysX)" />
   </component>
   <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
+  <component name="CidrRootsConfiguration">
+    <excludeRoots>
+      <file path="$PROJECT_DIR$/.build" />
+      <file path="$PROJECT_DIR$/externals/vcpkg" />
+    </excludeRoots>
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9" project-jdk-type="Python SDK" />
   <component name="PythonCompatibilityInspectionAdvertiser">
     <option name="version" value="3" />

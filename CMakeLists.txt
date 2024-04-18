@@ -69,8 +69,6 @@ endif()
 
 project(nvidia-gameworks-physx CXX C ASM)
 
-find_library(dxsdk-d3dx REQUIRED MYVAR)
-
 option(PX_BUILDSNIPPETS "Generate the snippets" ON)
 option(PX_BUILDPUBLICSAMPLES "Generate the samples" ON)
 option(PX_CMAKE_SUPPRESS_REGENERATION "Disable zero_check projects" OFF)

@@ -1,7 +1,11 @@
 {
   "[cmake]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
     "editor.formatOnPaste": false,
-    "editor.formatOnSave": false,
+    "editor.formatOnSave": true,
     "editor.formatOnSaveMode": "modificationsIfAvailable",
     "editor.quickSuggestions": {
       "strings": true
@@ -34,30 +38,26 @@
   "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
   "cmake.buildTask": true,
   "cmake.cacheInit": "",
-  "cmake.cmakeCommunicationMode": "fileApi",
-  "cmake.configureArgs": [
-    null
-  ],
   "cmake.configureOnEdit": true,
   "cmake.configureOnOpen": true,
-  "cmake.enableTraceLogging": true,
+  "cmake.ctest.allowParallelJobs": true,
   "cmake.environment": {
     "VCPKG_ROOT": "${workspaceFolder}/externals/vcpkg"
   },
+  "cmake.exportCompileCommandsFile": true,
+  "cmake.ignoreKitEnv": true,
   "cmake.installPrefix": "${workspaceFolder}/.build/install",
-  "cmake.languageSupport.enableFileAPI": true,
-  "cmake.loggingLevel": "info",
-  "cmake.options.statusBarVisibility": "visible",
+  "cmake.languageSupport.enableFileAPI": false,
+  "cmake.loggingLevel": "debug",
+  "cmake.options.statusBarVisibility": "compact",
   "cmake.revealLog": "always",
   "cmake.setBuildTypeOnMultiConfig": true,
-  "cmake.skipConfigureIfCachePresent": false,
-  "cmake.touchbar.visibility": "hidden",
+  "cmake.skipConfigureIfCachePresent": true,
+  "cmake.touchbar.visibility": "default",
   "cmake.useCMakePresets": "always",
-  "cmake.ctest.testExplorerIntegrationEnabled": true,
-  "cmake.exportCompileCommandsFile": true,
+  "cmakeExplorer.logpanel": true,
   "editor.formatOnSave": false,
   "prettier.enable": false,
-  "cmakeExplorer.logpanel": true,
   "pylint.severity": {
     "convention": "Hint",
     "error": "Hint",
@@ -81,8 +81,5 @@
   "vcpkg.target.installDependencies": true,
   "vcpkg.target.preferSystemLibs": false,
   "vcpkg.target.useManifest": true,
-  "vcpkg.target.useStaticLib": false,
-  "cmake.configureSettings": {
-    "CMAKE_TOOLCHAIN_FILE": "C:\\Users\\jovaneen\\scoop\\apps\\vcpkg\\current/scripts/buildsystems/vcpkg.cmake"
-  }
+  "vcpkg.target.useStaticLib": false
 }

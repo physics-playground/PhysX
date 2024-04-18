@@ -29,8 +29,6 @@
 # Build SampleRenderer common
 #
 
-find_package(dxsdk-d3dx CONFIG REQUIRED)
-
 SET(SAMPLERENDERER_DIR ${PHYSX_ROOT_DIR}/samples/sampleframework/renderer)
 
 # Include here after the directories are defined so that the platform specific file can use the variables.
