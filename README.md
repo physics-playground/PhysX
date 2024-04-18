@@ -36,6 +36,10 @@ Platform specific information can be found here:
 - Python 2.7.6 or later
 - CMake 3.12 or later
 
+### `vcpkg`
+
+See [Use vcpkg](https://github.com/lukka/CppBuildTasks/blob/master/README.md#use-vcpkg-as-a-submodule-of-your-git-repository).
+
 ### Setup
 
 1. Clone this repository onto your local drive.

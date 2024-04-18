@@ -1,19 +1,5 @@
 {
-  "name": "nvidia-gameworks-physx",
-  "version-string": "1.2.0",
-  "builtin-baseline": "ad3bae57455a3c3ce528fcd47d8e8027d0498add",
   "dependencies": [
-    {
-      "name": "directxsdk",
-      "version>=": "jun10#8"
-    },
-    {
-      "name": "vcpkg-cmake",
-      "version>=": "2023-05-04"
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "version>=": "2022-02-06#1"
-    }
+    "dxsdk-d3dx"
   ]
 }

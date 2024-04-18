@@ -10,9 +10,9 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = { file = "LICENSE" }
 keywords = ["sample", "setuptools", "development"]
-authors = [{ name = "A. Random Developer", email = "author@example.com" }]
+authors = [{ name = "NVIDIA", email = "author@example.com" }]
 maintainers = [
-    { name = "A. Great Maintainer", email = "maintainer@example.com" },
+    { name = "Joel Van Eenwyk", email = "joel.vaneenwyk@gmail.com" },
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

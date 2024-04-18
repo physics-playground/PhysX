@@ -1,17 +1,17 @@
 {
-  "$schema": "https://raw.githubusercontent.com/microsoft/vscode-cmake-tools/main/schemas/CMakePresets-v8-schema.json",
-  "version": 8,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 23,
-    "patch": 0
-  },
+  // "$schema": "https://raw.githubusercontent.com/microsoft/vscode-cmake-tools/main/schemas/CMakePresets-v8-schema.json",
+  "version": 6,
+  // "cmakeMinimumRequired": {
+  //   "major": 3,
+  //   "minor": 23,
+  //   "patch": 0
+  // },
   "configurePresets": [
     {
       "name": "Debug",
       "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/.build/vs-debug",
-      "toolchainFile": "$env{USERPROFILE}/.vcpkg-clion/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "toolchainFile": "${sourceDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo",
         "VCPKG_MANIFEST_MODE": "ON",
@@ -22,7 +22,7 @@
       "name": "Release",
       "generator": "Visual Studio 17 2022",
       "binaryDir": "${sourceDir}/.build/vs-release",
-      "toolchainFile": "$env{USERPROFILE}/.vcpkg-clion/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "toolchainFile": "${sourceDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "VCPKG_MANIFEST_MODE": "ON",

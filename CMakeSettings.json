@@ -11,7 +11,7 @@
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
       "intelliSenseMode": "windows-msvc-x64",
-      "cmakeToolchain": "${env.USERPROFILE}/.vcpkg-clion/scripts/buildsystems/vcpkg.cmake"
+      "cmakeToolchain": "${projectDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake"
     },
     {
       "name": "x64-Release",
@@ -23,6 +23,7 @@
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
       "ctestCommandArgs": "",
+      "cmakeToolchain": "${projectDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
       "variables": [
         {
           "name": "PX_BUILDSNIPPETS",
@@ -34,8 +35,7 @@
           "value": "True",
           "type": "BOOL"
         }
-      ],
-      "cmakeToolchain": "${env.USERPROFILE}/.vcpkg-clion/scripts/buildsystems/vcpkg.cmake"
+      ]
     }
   ]
 }

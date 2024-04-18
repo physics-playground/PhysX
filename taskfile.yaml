@@ -24,6 +24,8 @@ tasks:
       SEARCH_PATHS: '{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}'
       SOURCE_DIR: '{{toSlash .ROOT_DIR}}'
       BUILD_DIR: '{{toSlash .BUILD_DIR}}'
+    env:
+      VCPKG_ROOT: '{{toSlash .PHYSX_EXTERNALS}}/vcpkg'
     cmds:
       - task: remove-cache
         vars: { TARGET: '{{.BUILD_DIR}}' }
