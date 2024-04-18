@@ -17,7 +17,8 @@
         "unusedCli": false
       },
       "debug": {
-        "tryCompile": true
+        "tryCompile": false,
+        "output": true
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -32,7 +33,8 @@
       "description": "Release configuration with `vcpkg` support.",
       "architecture": "x64",
       "debug": {
-        "tryCompile": true
+        "tryCompile": false,
+        "output": true
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"

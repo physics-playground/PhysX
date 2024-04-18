@@ -2,6 +2,7 @@
     "recommendations": [
         "ms-vscode.cmake-tools",
         "ms-vscode.cpptools-extension-pack",
-        "fredericbonnet.cmake-test-adapter"
+        "fredericbonnet.cmake-test-adapter",
+        "jackboosy.vcpkg-cmake-tools"
     ]
 }

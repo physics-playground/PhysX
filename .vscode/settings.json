@@ -76,10 +76,7 @@
   "ruff.organizeImports": true,
   "ruff.showNotifications": "always",
   "vcpkg.general.enable": true,
-  "vcpkg.target.defaultTriplet": "-static",
-  "vcpkg.target.hostTriplet": "x64-windows",
   "vcpkg.target.installDependencies": true,
-  "vcpkg.target.preferSystemLibs": false,
   "vcpkg.target.useManifest": true,
   "vcpkg.target.useStaticLib": false
 }
