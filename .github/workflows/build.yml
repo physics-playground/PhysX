@@ -24,11 +24,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Release]
+        preset: [px-release]
         platform: [ubuntu-latest]
 
-    # e.g., "Build Release ⚙️"
-    name: "Build ${{ matrix.build_type }} ⚙️"
+    # e.g., "Build | px-release ⚙️"
+    name: "Build | ${{ matrix.preset }} ⚙️"
     runs-on: "${{matrix.platform}}"
 
     steps:
@@ -50,7 +50,7 @@ jobs:
 
       - name: Configure CMake
         run: >-
-          cmake -S . -B "${{ env.BUILD_OUTPUT_DIR }}" -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}"
+          cmake -S . -B "${{ env.BUILD_OUTPUT_DIR }}" --preset="${{ matrix.preset }}"
 
       - name: Build
         run: >-
@@ -80,21 +80,21 @@ jobs:
             os: windows-latest
             platform: windows
             preset: vc17win64
-            build_type: Release
+            preset: px-release
           - language: c-cpp
             build-mode: manual
             tool: sonar
             os: ubuntu-latest
             platform: linux
             preset: linux-aarch64
-            build_type: Release
+            preset: px-release
           - language: python
             build-mode: none
             tool: codeql
             os: ubuntu-latest
             platform: linux
             preset: python
-            build_type: Release
+            preset: px-release
 
     name: "Analyze ${{ matrix.language }} 🔍"
     runs-on: "${{ matrix.os }}"
@@ -128,7 +128,7 @@ jobs:
       - if: matrix.build-mode == 'manual'
         name: Configure CMake
         run: >-
-          cmake -S . -B "${{ env.BUILD_OUTPUT_DIR }}" -DCMAKE_BUILD_TYPE="${{ matrix.build_type }}"
+          cmake -S . -B "${{ env.BUILD_OUTPUT_DIR }}" -DCMAKE_BUILD_TYPE="${{ matrix.preset }}"
 
       - if: ${{ matrix.tool == 'sonar' && matrix.build-mode == 'manual' }}
         name: Build

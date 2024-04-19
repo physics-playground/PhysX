@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
 # https://taskfile.dev
 
 version: '3'
@@ -14,13 +15,16 @@ vars:
   PY_VENV_ACTIVATE: '.venv/Scripts/activate.bat'
   PY_VENV_SCRIPTS: '{{.ROOT_DIR}}/.venv/Scripts'
   PY_VENV_PIP: '{{.ROOT_DIR}}/.venv/Scripts/pip3.exe'
+  PY_VENV_PYTHON: '{{.ROOT_DIR}}/.venv/Scripts/python.exe'
+  PY_VENV_CALL: '{{if eq .OS "Windows_NT"}}cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && call "{{fromSlash .PY_VENV_PYTHON}}"{{else}}. ./.venv/scripts/activate && python3{{end}}'
+  PY: '{{if eq .OS "Windows_NT"}}cmd.exe /d /c call py -3{{else}}python3{{end}}'
 
 tasks:
   default:
     silent: false
     cmds:
       - task: cmake
-        vars: { PRESET: 'Release' }
+        vars: { PRESET: 'px-release' }
 
   init:
     deps: [venv-init, node-init]
@@ -45,19 +49,19 @@ tasks:
   venv-init:
     env:
       VIRTUAL_ENV: '{{fromSlash .PY_VENV}}'
-      PATH: '{{fromSlash .PY_VENV_SCRIPTS}};${PATH}'
+      PATH: '{{fromSlash .PY_VENV_SCRIPTS}};$PATH'
       PYTHONHOME: ''
       VIRTUAL_ENV_PROMPT: '(.venv) '
     cmds:
-      - cmd: cmd.exe /d /c call py -3 -m venv "{{fromSlash .PY_VENV}}"
+      - cmd: '{{.PYY} -m venv "{{fromSlash .PY_VENV}}"'
         ignore_error: true
-      - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade pip
-      - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade ruff pylint pre-commit
+      - cmd: '{{.PY_VENV_CALL}} -m pip install --upgrade pip'
+      - cmd: '{{.PY_VENV_CALL}} -m pip install --upgrade ruff pylint pre-commit'
 
   cmake:
     deps: [init]
     vars:
-      PRESET: '{{default "Release" .PRESET}}'
+      PRESET: '{{default "px-release" .PRESET}}'
       SEARCH_PATHS: '{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}'
       SOURCE_DIR: '{{toSlash .ROOT_DIR}}'
       BUILD_DIR: '{{toSlash .BUILD_DIR}}'
@@ -81,7 +85,7 @@ tasks:
           -S "{{.SOURCE_DIR}}"
           -B "{{.BUILD_DIR}}"
       - cmd: >-
-          cmake --build "{{.BUILD_DIR}}" --config Release
+          cmake --build "{{.BUILD_DIR}}"
 
   remove-cache:
     deps: []

@@ -11,3 +11,4 @@ act = "source:https://raw.githubusercontent.com/theomessin/proto-toml-plugins/ma
 actionlint = "source:https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/actionlint/plugin.toml"
 shellcheck = "source:https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/shellcheck/plugin.toml"
 shfmt = "source:https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/shfmt/plugin.toml"
+task = "source:https://raw.githubusercontent.com/Phault/proto-toml-plugins/main/task/plugin.toml"
