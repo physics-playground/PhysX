@@ -78,5 +78,10 @@
   "vcpkg.general.enable": true,
   "vcpkg.target.installDependencies": true,
   "vcpkg.target.useManifest": true,
-  "vcpkg.target.useStaticLib": false
+  "vcpkg.target.useStaticLib": false,
+  "vcpkg.target.defaultTriplet": "",
+  "cmake.configureArgs": [
+    null,
+    "-DVCPKG_TARGET_TRIPLET="
+  ]
 }

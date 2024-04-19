@@ -25,7 +25,15 @@ tasks:
   init:
     deps: [venv-init, node-init]
 
+  system-init:
+    cmds:
+      - cmd: git submodule update --init --recursive --checkout
+        ignore_error: true
+      - cmd: sh -c ./externals/scripts/install-dependencies.sh
+        platforms: [linux, darwin]
+
   node-init:
+    deps: [system-init]
     cmds:
       - cmd: npm install
 
@@ -33,7 +41,6 @@ tasks:
     cmds:
       - task: remove-cache
         vars: { TARGET: '{{.PY_VENV}}' }
-        ignore_error: true
 
   venv-init:
     env:
@@ -45,9 +52,7 @@ tasks:
       - cmd: cmd.exe /d /c call py -3 -m venv "{{fromSlash .PY_VENV}}"
         ignore_error: true
       - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade pip
-        platform: [windows]
       - cmd: cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && "{{fromSlash .PY_VENV_PIP}}" install --upgrade ruff pylint pre-commit
-        platform: [windows]
 
   cmake:
     deps: [init]
@@ -81,12 +86,11 @@ tasks:
   remove-cache:
     deps: []
     internal: true
-    required: [TARGET]
+    vars:
+      TARGET: '{{default "" TARGET}}'
     status:
       - 'test ! -d "{{.TARGET}}"'
       - 'test ! -f "{{.TARGET}}"'
     cmds:
       - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{end}}'
-        timeout: 5s
       - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" del "{{fromSlash .TARGET}}"{{end}}'
-        timeout: 5s
