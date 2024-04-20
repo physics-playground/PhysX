@@ -79,21 +79,18 @@ jobs:
             tool: codeql
             os: windows-latest
             platform: windows
-            preset: vc17win64
             preset: px-release
           - language: c-cpp
             build-mode: manual
             tool: sonar
             os: ubuntu-latest
             platform: linux
-            preset: linux-aarch64
             preset: px-release
           - language: python
             build-mode: none
             tool: codeql
             os: ubuntu-latest
             platform: linux
-            preset: python
             preset: px-release
 
     name: "Analyze ${{ matrix.language }} 🔍"
