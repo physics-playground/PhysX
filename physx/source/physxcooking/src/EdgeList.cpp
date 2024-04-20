@@ -25,10 +25,11 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 
 #include "foundation/PxMemory.h"
+#include "foundation/PxPlane.h"
 #include "geometry/PxTriangle.h"
 #include "EdgeList.h"
 #include "CmRadixSortBuffered.h"
@@ -78,7 +79,7 @@ bool Gu::EdgeList::load(PxInputStream& stream)
 	//mEdgeToTriangles = ICE_NEW_MEM(EdgeDesc[mNbEdges],EdgeDesc);
 	mData.mEdgeToTriangles = reinterpret_cast<EdgeDescData*>(PX_ALLOC(sizeof(EdgeDescData)*mData.mNbEdges, "EdgeDescData"));
 	stream.read(mData.mEdgeToTriangles, sizeof(EdgeDescData)*mData.mNbEdges);
-	
+
 
 	PxU32 LastOffset = mData.mEdgeToTriangles[mData.mNbEdges-1].Offset + mData.mEdgeToTriangles[mData.mNbEdges-1].Count;
 	mData.mFacesByEdges = reinterpret_cast<PxU32*>(PX_ALLOC(sizeof(PxU32)*LastOffset, "EdgeList FacesByEdges"));
@@ -112,13 +113,13 @@ bool Gu::EdgeListBuilder::init(const EDGELISTCREATE& create)
 		return false;
 
 	// Get rid of useless data
-	if(!create.FacesToEdges)	
-	{ 
-		PX_FREE_AND_RESET(mData.mEdgeFaces); 
+	if(!create.FacesToEdges)
+	{
+		PX_FREE_AND_RESET(mData.mEdgeFaces);
 	}
-	if(!create.EdgesToFaces)	
-	{ 
-		PX_FREE_AND_RESET(mData.mEdgeToTriangles); 
+	if(!create.EdgesToFaces)
+	{
+		PX_FREE_AND_RESET(mData.mEdgeToTriangles);
 		PX_FREE_AND_RESET(mData.mFacesByEdges);
 	}
 
@@ -256,7 +257,7 @@ bool Gu::EdgeListBuilder::createEdgesToFaces(PxU32 nb_faces, const PxU32* dfaces
 
 	// 3) Create Radix-like Offsets
 	mData.mEdgeToTriangles[0].Offset=0;
-	for(PxU32 i=1;i<mData.mNbEdges;i++)	
+	for(PxU32 i=1;i<mData.mNbEdges;i++)
 		mData.mEdgeToTriangles[i].Offset = mData.mEdgeToTriangles[i-1].Offset + mData.mEdgeToTriangles[i-1].Count;
 
 	PxU32 LastOffset = mData.mEdgeToTriangles[mData.mNbEdges-1].Offset + mData.mEdgeToTriangles[mData.mNbEdges-1].Count;
@@ -423,7 +424,7 @@ bool Gu::EdgeListBuilder::computeActiveEdges(PxU32 nb_faces, const PxU32* dfaces
 		}
 		else
 		{
-			//Connected to more than 2 
+			//Connected to more than 2
 			//We need to loop through the triangles and count the number of unique triangles (considering back-face triangles as non-unique). If we end up with more than 2 unique triangles,
 			//then by definition this is an inactive edge. However, if we end up with 2 unique triangles (say like a double-sided tesselated surface), then it depends on the same rules as above
 
@@ -468,15 +469,15 @@ bool Gu::EdgeListBuilder::computeActiveEdges(PxU32 nb_faces, const PxU32* dfaces
 					VRef2 = wfaces[FaceInd+2];
 				}
 
-				if(((VRef0 != VRef00) && (VRef0 != VRef01) && (VRef0 != VRef02)) || 
-					((VRef1 != VRef00) && (VRef1 != VRef01) && (VRef1 != VRef02)) || 
+				if(((VRef0 != VRef00) && (VRef0 != VRef01) && (VRef0 != VRef02)) ||
+					((VRef1 != VRef00) && (VRef1 != VRef01) && (VRef1 != VRef02)) ||
 					((VRef2 != VRef00) && (VRef2 != VRef01) && (VRef2 != VRef02)))
 				{
 					//Not the same as trig 0
 					if(numUniqueTriangles == 2)
 					{
-						if(((VRef0 != VRef10) && (VRef0 != VRef11) && (VRef0 != VRef12)) || 
-							((VRef1 != VRef10) && (VRef1 != VRef11) && (VRef1 != VRef12)) || 
+						if(((VRef0 != VRef10) && (VRef0 != VRef11) && (VRef0 != VRef12)) ||
+							((VRef1 != VRef10) && (VRef1 != VRef11) && (VRef1 != VRef12)) ||
 							((VRef2 != VRef10) && (VRef2 != VRef11) && (VRef2 != VRef12)))
 						{
 							//Too many unique triangles - terminate and mark as inactive
@@ -525,7 +526,7 @@ bool Gu::EdgeListBuilder::computeActiveEdges(PxU32 nb_faces, const PxU32* dfaces
 
 				if(doubleSided0 || doubleSided1)
 				{
-				
+
 		//			Plane PL1 = faces[FBE[ED->Offset+1]].PlaneEquation(verts);
 					PxPlane PL1(verts[VRef10], verts[VRef11], verts[VRef12]);
 
@@ -541,13 +542,13 @@ bool Gu::EdgeListBuilder::computeActiveEdges(PxU32 nb_faces, const PxU32* dfaces
 						T1.normal(N1);
 						const float a = Ps::angle(N0, N1);
 
-						if(fabsf(a)>epsilon)	
+						if(fabsf(a)>epsilon)
 							Active = true;
 					}
 				}
 				else
 				{
-					
+
 					//Not double sided...must have had a bunch of duplicate triangles!!!!
 					//Treat as normal
 					PxU32 Op = OppositeVertex(VRef00, VRef01, VRef02, Edges->Ref0, Edges->Ref1);
@@ -566,7 +567,7 @@ bool Gu::EdgeListBuilder::computeActiveEdges(PxU32 nb_faces, const PxU32* dfaces
 						T1.normal(N1);
 						const float a = Ps::angle(N0, N1);
 
-						if(fabsf(a)>epsilon)	
+						if(fabsf(a)>epsilon)
 							Active = true;
 					}
 				}

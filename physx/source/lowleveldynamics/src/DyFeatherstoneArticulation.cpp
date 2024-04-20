@@ -2165,6 +2165,7 @@ namespace Dy
 
 				PxU8 flags = unit.rigidCore0->mFlags;
 				flags |= PxU8(unit.rigidCore1->mFlags);
+				(void)(flags);
 
 				blockDesc.bodyFrame0 = unit.rigidCore0->body2World;
 				blockDesc.bodyFrame1 = unit.rigidCore1->body2World;

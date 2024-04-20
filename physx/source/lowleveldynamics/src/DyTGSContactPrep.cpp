@@ -635,6 +635,7 @@ namespace Dy
 			}
 
 			contactWritebackCount += contactCount;
+			(void)(contactWritebackCount);
 
 			PxF32* forceBuffers = reinterpret_cast<PxF32*>(ptr);
 			PxMemZero(forceBuffers, sizeof(PxF32) * contactCount);

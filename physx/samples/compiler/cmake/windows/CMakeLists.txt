@@ -26,29 +26,30 @@
 ## Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 
 IF(NOT DEFINED PHYSX_WINDOWS_COMPILE_DEFS)
-	MESSAGE(FATAL ERROR "Samples uses the PhysX compile defs, and they're not defined when they need to be.")
+    MESSAGE(FATAL ERROR "Samples uses the PhysX compile defs, and they're not defined when they need to be.")
 ENDIF()
 
-IF (NOT DEFINED PHYSX_CXX_FLAGS)
-	MESSAGE(FATAL ERROR "Samples uses the PhysX CXX flags, and they're not defined when they need to be.")
+IF(NOT DEFINED PHYSX_CXX_FLAGS)
+    MESSAGE(FATAL ERROR "Samples uses the PhysX CXX flags, and they're not defined when they need to be.")
 ENDIF()
 
-IF (MSVC12)
-	SET(ADDL_WARNINGS "/wd4512")
+IF(MSVC12)
+    SET(ADDL_WARNINGS "/wd4512")
 ENDIF()
 
 IF(NOT CMAKE_CL_64)
-	# disable CUDA stuff for MSVC15 and MSVC14 win32
-	IF(NOT PX_GENERATE_GPU_PROJECTS)
-		SET(PHYSX_CUDA_DEFS "DISABLE_CUDA_PHYSX")
-	ENDIF()
+    # disable CUDA stuff for MSVC15 and MSVC14 win32
+    IF(NOT PX_GENERATE_GPU_PROJECTS)
+        SET(PHYSX_CUDA_DEFS "DISABLE_CUDA_PHYSX")
+    ENDIF()
 ENDIF()
+
 SET(SAMPLES_WINDOWS_COMPILE_DEFS ${PHYSX_CUDA_DEFS};${PHYSX_LIBTYPE_DEFS})
 
 # Get the CXX Flags from the Cached variables set by the PhysX CMakeLists
 SET(CMAKE_CXX_FLAGS "${PHYSX_CXX_FLAGS}  /wd4245 /wd4512 /wd4996 /wd4244 /wd4100 /wd4456 /wd4189 /wd4505 /wd4389 /EHsc ${ADDL_WARNINGS}")
 
-SET(CMAKE_CXX_FLAGS_DEBUG   "${PHYSX_CXX_FLAGS_DEBUG}")
+SET(CMAKE_CXX_FLAGS_DEBUG ${PHYSX_CXX_FLAGS_DEBUG})
 SET(CMAKE_CXX_FLAGS_CHECKED ${PHYSX_CXX_FLAGS_CHECKED})
 SET(CMAKE_CXX_FLAGS_PROFILE ${PHYSX_CXX_FLAGS_PROFILE})
 SET(CMAKE_CXX_FLAGS_RELEASE ${PHYSX_CXX_FLAGS_RELEASE})
@@ -59,12 +60,10 @@ SET(CMAKE_SHARED_LINKER_FLAGS "/DEBUG")
 # Don't redefine PHYSX_WINDOWS_COMPILE_DEFS
 
 # Get the PhysXDevice path
-
 SET(SLN_PHYSXDEVICE_PATH "$ENV{PM_PhysXDevice_PATH}/bin/x86/")
 
 # Include ConfigureFileMT to expose that function
 INCLUDE(ConfigureFileMt)
-
 
 # Include all of the projects
 INCLUDE(SampleBase.cmake)
@@ -80,35 +79,34 @@ SET_PROPERTY(TARGET SamplePlatform PROPERTY FOLDER "PhysX Samples/Libraries only
 SET_PROPERTY(TARGET SampleRenderer PROPERTY FOLDER "PhysX Samples/Libraries only")
 
 IF(PX_BUILDSAMPLES)
-	INCLUDE(SampleHelloWorld.cmake)
-	INCLUDE(SampleBridges.cmake)
-	INCLUDE(SampleCharacterController.cmake)
-	INCLUDE(SampleCustomGravity.cmake)
-	INCLUDE(SampleDebugRendering.cmake)
-	INCLUDE(SampleInstancing.cmake)
-	INCLUDE(SampleLargeWorld.cmake)
-	INCLUDE(SampleNorthPole.cmake)
-	INCLUDE(SampleRaycastCCD.cmake)
-	INCLUDE(SampleSubmarine.cmake)
-	INCLUDE(SampleVehicle.cmake)
-	INCLUDE(Samples.cmake)
+    INCLUDE(SampleHelloWorld.cmake)
+    INCLUDE(SampleBridges.cmake)
+    INCLUDE(SampleCharacterController.cmake)
+    INCLUDE(SampleCustomGravity.cmake)
+    INCLUDE(SampleDebugRendering.cmake)
+    INCLUDE(SampleInstancing.cmake)
+    INCLUDE(SampleLargeWorld.cmake)
+    INCLUDE(SampleNorthPole.cmake)
+    INCLUDE(SampleRaycastCCD.cmake)
+    INCLUDE(SampleSubmarine.cmake)
+    INCLUDE(SampleVehicle.cmake)
+    INCLUDE(Samples.cmake)
 
-	SET_PROPERTY(TARGET SampleHelloWorld PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleBridges PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleCharacterController PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleCustomGravity PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleDebugRendering PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleInstancing PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleLargeWorld PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleNorthPole PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleRaycastCCD PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleSubmarine PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET SampleVehicle PROPERTY FOLDER "PhysX Samples")
-	SET_PROPERTY(TARGET Samples PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleHelloWorld PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleBridges PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleCharacterController PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleCustomGravity PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleDebugRendering PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleInstancing PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleLargeWorld PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleNorthPole PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleRaycastCCD PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleSubmarine PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET SampleVehicle PROPERTY FOLDER "PhysX Samples")
+    SET_PROPERTY(TARGET Samples PROPERTY FOLDER "PhysX Samples")
 ENDIF()
 
 IF(PX_BUILDPUBLICSAMPLES)
-	INCLUDE(Samples.cmake)
-	SET_PROPERTY(TARGET Samples PROPERTY FOLDER "PhysX Samples")
+    INCLUDE(Samples.cmake)
+    SET_PROPERTY(TARGET Samples PROPERTY FOLDER "PhysX Samples")
 ENDIF()
-

@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/cpp
+{
+	"name": "C++",
+
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+			"moby": true,
+			"installDockerBuildx": true,
+			"version": "latest",
+			"dockerDashComposeVersion": "v2"
+		},
+		"ghcr.io/devcontainers/features/git-lfs:1": {
+			"autoPull": true,
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"nodeGypDependencies": true,
+			"version": "lts",
+			"nvmVersion": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/asdf-package:1": {
+			"plugin": "act",
+			"version": "latest",
+			"pluginRepo": "https://github.com/grimoh/asdf-act.git",
+			"latestVersionPattern": "[0-9]"
+		},
+		"ghcr.io/christophermacgown/devcontainer-features/direnv:1": {
+			"autoEnable": true,
+			"architecture": "amd64",
+			"version": "latest"
+		},
+		"ghcr.io/devcontainers-contrib/features/npm-package:1": {
+			"package": "typescript",
+			"version": "latest"
+		}
+	}
+}

@@ -25,7 +25,7 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 #include "SnXmlImpl.h"
 #include "PsHash.h"
 #include "PsHashMap.h"
@@ -51,7 +51,7 @@ using namespace Sn;
 
 using namespace physx::profile; //for the foundation wrapper system.
 
-namespace physx { namespace Sn {	
+namespace physx { namespace Sn {
 
 	class XmlNodeWriter : public SimpleXmlWriter
 	{
@@ -61,8 +61,8 @@ namespace physx { namespace Sn {
 		PxU32						mTabCount;
 
 	public:
-		XmlNodeWriter( XmlMemoryAllocatorImpl& inAllocator, PxU32 inTabCount = 0 ) 
-			: mParseAllocator( inAllocator ) 
+		XmlNodeWriter( XmlMemoryAllocatorImpl& inAllocator, PxU32 inTabCount = 0 )
+			: mParseAllocator( inAllocator )
 			, mCurrentNode( NULL )
 			, mTopNode( NULL )
 			, mTabCount( inTabCount )
@@ -158,7 +158,7 @@ namespace physx { namespace Sn {
 	{
 		XmlMemoryAllocatorImpl*					mAllocator;
 		PxProfileArray<RepXCollectionItem>*		mCollection;
-		
+
 		XmlParseArgs( XmlMemoryAllocatorImpl* inAllocator
 			, PxProfileArray<RepXCollectionItem>* inCollection)
 			: mAllocator( inAllocator )
@@ -283,7 +283,7 @@ namespace physx { namespace Sn {
 
 		virtual XmlReader* getParentReader()
 		{
-			XmlReader* retval = PX_PLACEMENT_NEW((mWrapper.getAllocator().allocate(sizeof(XmlNodeReader), "createNodeEditor",  __FILE__, __LINE__ )), XmlNodeReader) 
+			XmlReader* retval = PX_PLACEMENT_NEW((mWrapper.getAllocator().allocate(sizeof(XmlNodeReader), "createNodeEditor",  __FILE__, __LINE__ )), XmlNodeReader)
 				( mTopNode, mWrapper.getAllocator(), mManager );
 			return retval;
 		}
@@ -299,7 +299,7 @@ namespace physx { namespace Sn {
 		}
 		virtual void setCurrentItemValue( const char* inValue )
 		{
-			mCurrentNode->mData = copyStr( &mManager, inValue ); 
+			mCurrentNode->mData = copyStr( &mManager, inValue );
 		}
 		virtual bool removeChild( const char* name )
 		{
@@ -358,7 +358,7 @@ namespace physx { namespace Sn {
 
 		// return true to continue processing the XML document, false to skip.
 		virtual bool processElement(
-			const char *elementName,   // name of the element		
+			const char *elementName,   // name of the element
 			const char  *elementData,  // element data, null if none
 			const Ps::FastXml::AttributePairs& attr,      // attributes
 			PxI32 /*lineno*/)
@@ -380,15 +380,15 @@ namespace physx { namespace Sn {
 		XmlNode* getTopNode() { return mTopNode; }
 
 		virtual void *  allocate(PxU32 size)
-		{ 
+		{
 			if ( size )
 				return mParseAllocator.allocate(size);
-			return NULL; 
+			return NULL;
 		}
 		virtual void	deallocate(void *mem)
-		{ 
+		{
 			if ( mem )
-				mParseAllocator.deallocate(reinterpret_cast<PxU8*>(mem)); 
+				mParseAllocator.deallocate(reinterpret_cast<PxU8*>(mem));
 		}
 
 	private:
@@ -408,12 +408,12 @@ namespace physx { namespace Sn {
 		{
 		}
 		~RepXCollectionSharedData() {}
-		
+
 		void addRef() { ++mRefCount;}
 		void release()
 		{
 			if ( mRefCount ) --mRefCount;
-			if ( !mRefCount ) { this->~RepXCollectionSharedData(); mWrapper.getAllocator().deallocate(this);} 
+			if ( !mRefCount ) { this->~RepXCollectionSharedData(); mWrapper.getAllocator().deallocate(this);}
 		}
 	};
 
@@ -439,7 +439,7 @@ namespace physx { namespace Sn {
 		RepXCollectionSharedData* operator->() { return mData; }
 		const RepXCollectionSharedData* operator->() const { return mData; }
 	};
-	
+
 	class RepXCollectionImpl : public RepXCollection, public Ps::UserAllocated
 	{
 		SharedDataPtr							mSharedData;
@@ -453,7 +453,7 @@ namespace physx { namespace Sn {
 		PxVec3									mUpVector;
 		const char*								mVersionStr;
 		PxCollection*							mPxCollection;
-		
+
 	public:
 		RepXCollectionImpl( PxSerializationRegistry& inRegistry, PxAllocatorCallback& inAllocator, PxCollection& inPxCollection )
 			: mSharedData( &PX_NEW_REPX_SERIALIZER( RepXCollectionSharedData ))
@@ -495,19 +495,19 @@ namespace physx { namespace Sn {
 		}
 		RepXCollectionImpl& operator=(const RepXCollectionImpl&);
 
-		virtual void destroy() 
-		{ 
+		virtual void destroy()
+		{
 			PxProfileAllocatorWrapper tempWrapper( mSharedData->mWrapper.getAllocator() );
 			this->~RepXCollectionImpl();
-			tempWrapper.getAllocator().deallocate(this); 
+			tempWrapper.getAllocator().deallocate(this);
 		}
-		
+
 		virtual void setTolerancesScale(const PxTolerancesScale& inScale) {  mScale = inScale; }
 		virtual PxTolerancesScale getTolerancesScale() const { return mScale; }
 		virtual void setUpVector( const PxVec3& inUpVector ) { mUpVector = inUpVector; }
 		virtual PxVec3 getUpVector() const { return mUpVector; }
 
-	
+
 		PX_INLINE RepXCollectionItem findItemBySceneItem( const PxRepXObject& inObject ) const
 		{
 			//See if the object is in the collection
@@ -523,7 +523,7 @@ namespace physx { namespace Sn {
 			PX_ASSERT( inObject.id );
 			if ( inObject.serializable == NULL || inObject.id == 0 )
 				return RepXAddToCollectionResult( RepXAddToCollectionResult::InvalidParameters );
-		
+
 			PxRepXSerializer* theSerializer = mSerializationRegistry.getRepXSerializer( inObject.typeName );
 			if ( theSerializer == NULL )
 				return RepXAddToCollectionResult( RepXAddToCollectionResult::SerializerNotFound );
@@ -531,7 +531,7 @@ namespace physx { namespace Sn {
 			RepXCollectionItem existing = findItemBySceneItem( inObject );
 			if ( existing.liveObject.serializable )
 				return RepXAddToCollectionResult( RepXAddToCollectionResult::AlreadyInCollection, existing.liveObject.id );
-			
+
 			XmlNodeWriter theXmlWriter( mAllocator, 1 );
 			XmlWriterImpl theRepXWriter( &theXmlWriter, &mPropertyBuffer );
 			{
@@ -549,7 +549,7 @@ namespace physx { namespace Sn {
 			{
 				RepXCollectionItem theItem( mCollection[idx] );
 				PxRepXSerializer* theSerializer = mSerializationRegistry.getRepXSerializer( theItem.liveObject.typeName );
-				if (theSerializer )				
+				if (theSerializer )
 				{
 					XmlNodeReader theReader( theItem.descriptor, mAllocator.getAllocator(), mAllocator.mManager );
 					XmlMemoryAllocatorImpl instantiationAllocator( mAllocator.getAllocator() );
@@ -564,11 +564,11 @@ namespace physx { namespace Sn {
 				}
 				else
 				{
-					Ps::getFoundation().error(PxErrorCode::eINTERNAL_ERROR, __FILE__, __LINE__, 
+					Ps::getFoundation().error(PxErrorCode::eINTERNAL_ERROR, __FILE__, __LINE__,
 						"PxSerialization::createCollectionFromXml: "
 						"PxRepXSerializer missing for type %s", theItem.liveObject.typeName);
-					return false;					
-				}				
+					return false;
+				}
 			}
 
 			return true;
@@ -584,7 +584,7 @@ namespace physx { namespace Sn {
 				inWriter.beginTag( theNode->mName );
 				if ( theNode->mData && *theNode->mData )
 					inWriter.addContent( theNode->mData );
-				for ( XmlNode* theChild = theNode->mFirstChild; 
+				for ( XmlNode* theChild = theNode->mFirstChild;
 						theChild != NULL;
 						theChild = theChild->mNextSibling )
 					saveXmlNode( theChild, inWriter );
@@ -622,7 +622,7 @@ namespace physx { namespace Sn {
 			if ( theTopNode != NULL )
 			{
 				{
-					
+
 					XmlMemoryAllocatorImpl instantiationAllocator( mAllocator.getAllocator() );
 					XmlNodeReader theReader( theTopNode, mAllocator.getAllocator(), mAllocator.mManager );
 					readProperty( theReader, "UpVector", mUpVector );
@@ -635,12 +635,12 @@ namespace physx { namespace Sn {
 					if ( theReader.read( "version", verStr ) )
 						mVersionStr = verStr;
 				}
-				for ( XmlNode* theChild = theTopNode->mFirstChild; 
+				for ( XmlNode* theChild = theTopNode->mFirstChild;
 						theChild != NULL;
 						theChild = theChild->mNextSibling )
 				{
-					if ( physx::shdfnd::stricmp( theChild->mName, "scale" ) == 0 
-						|| physx::shdfnd::stricmp( theChild->mName, "version" ) == 0 
+					if ( physx::shdfnd::stricmp( theChild->mName, "scale" ) == 0
+						|| physx::shdfnd::stricmp( theChild->mName, "version" ) == 0
 						|| physx::shdfnd::stricmp( theChild->mName, "upvector" ) == 0 )
 						continue;
 					XmlNodeReader theReader( theChild, mAllocator.getAllocator(), mAllocator.mManager );
@@ -655,14 +655,14 @@ namespace physx { namespace Sn {
 			}
 			else
 			{
-				Ps::getFoundation().error(PxErrorCode::eDEBUG_WARNING, __FILE__, __LINE__, 
+				Ps::getFoundation().error(PxErrorCode::eDEBUG_WARNING, __FILE__, __LINE__,
 				"Cannot parse any object from the input buffer, please check the input repx data.");
 			}
 			theFastXml->release();
 		}
-		
+
 		virtual const char* getVersion() { return mVersionStr; }
-		
+
 		virtual const RepXCollectionItem* begin() const
 		{
 			return mCollection.begin();
@@ -671,26 +671,26 @@ namespace physx { namespace Sn {
 		{
 			return mCollection.end();
 		}
-		
+
 		virtual RepXCollection& createCollection( const char* inVersionStr )
 		{
-			PxAllocatorCallback& allocator = mSharedData->mWrapper.getAllocator(); 
+			PxAllocatorCallback& allocator = mSharedData->mWrapper.getAllocator();
 			RepXCollectionImpl* retval = PX_PLACEMENT_NEW((allocator.allocate(sizeof(RepXCollectionImpl), "createCollection",  __FILE__, __LINE__ )), RepXCollectionImpl) ( mSerializationRegistry, *this, inVersionStr );
-		
+
 			return *retval;
 		}
-		
+
 		//Performs a deep copy of the repx node.
-		virtual XmlNode* copyRepXNode( const XmlNode* srcNode ) 
+		virtual XmlNode* copyRepXNode( const XmlNode* srcNode )
 		{
 			return physx::Sn::copyRepXNode( &mAllocator.mManager, srcNode );
 		}
 
-		virtual void addCollectionItem( RepXCollectionItem inItem ) 
+		virtual void addCollectionItem( RepXCollectionItem inItem )
 		{
 			mCollection.pushBack( inItem );
 		}
-		
+
 		virtual PxAllocatorCallback& getAllocator() { return mSharedData->mAllocator.getAllocator(); }
 		//Create a new repx node with this name.  Its value is unset.
 		virtual XmlNode& createRepXNode( const char* name )
@@ -702,14 +702,14 @@ namespace physx { namespace Sn {
 		//Release this when finished.
 		virtual XmlReaderWriter& createNodeEditor()
 		{
-			PxAllocatorCallback& allocator = mSharedData->mWrapper.getAllocator(); 
+			PxAllocatorCallback& allocator = mSharedData->mWrapper.getAllocator();
 			XmlReaderWriter* retval = PX_PLACEMENT_NEW((allocator.allocate(sizeof(XmlNodeReader), "createNodeEditor",  __FILE__, __LINE__ )), XmlNodeReader) ( NULL, allocator, mAllocator.mManager );
 			return *retval;
 		}
 	};
-	
+
 	const char* RepXCollection::getLatestVersion()
-	{ 
+	{
 #define TOSTR_(x)   #x
 #define CONCAT_(a, b, c) TOSTR_(a.##b.##c)
 #define MAKE_VERSION_STR(a,b,c)  CONCAT_(a, b, c)
@@ -724,7 +724,7 @@ namespace physx { namespace Sn {
 	}
 
 	static RepXCollection* create(SerializationRegistry& s, PxInputData &data, PxAllocatorCallback& inAllocator, PxCollection& inCollection )
-	{			
+	{
 		RepXCollectionImpl* theCollection = static_cast<RepXCollectionImpl*>( create(s, inAllocator, inCollection ) );
 		theCollection->load( data, s );
 		return theCollection;
@@ -735,7 +735,7 @@ namespace physx { namespace Sn {
 	{
 		if( !PxSerialization::isSerializable(collection, sr, const_cast<PxCollection*>(externalRefs)) )
 			return false;
-		
+
 		bool bRet = true;
 
 		SerializationRegistry& sn = static_cast<SerializationRegistry&>(sr);
@@ -749,15 +749,15 @@ namespace physx { namespace Sn {
 		{
 			tmpCollection->add(*const_cast<PxCollection*>(externalRefs));
 		}
-		
-		PxAllocatorCallback& allocator = PxGetFoundation().getAllocatorCallback(); 
+
+		PxAllocatorCallback& allocator = PxGetFoundation().getAllocatorCallback();
 		Sn::RepXCollection* theRepXCollection = Sn::create(sn, allocator, *tmpCollection );
-				
+
 		if(inArgs != NULL)
 		{
 			theRepXCollection->setTolerancesScale(inArgs->scale);
 			theRepXCollection->setUpVector(inArgs->upVector);
-		}		
+		}
 
 		PxU32 nbObjects = collection.getNbObjects();
 		if( nbObjects )
@@ -773,54 +773,54 @@ namespace physx { namespace Sn {
 					if( shape.isExclusive() )
 						continue;
 				}
-				
+
 				PxSerialObjectId id = collection.getId(s);
 				if(id == PX_SERIAL_OBJECT_ID_INVALID)
 					id = static_cast<PxSerialObjectId>( reinterpret_cast<size_t>( &s ));
-				
+
 				PxRepXObject ro = PxCreateRepXObject( &s, id );
 				if ( ro.serializable == NULL || ro.id == 0 )
 				{
 					bRet = false;
 					break;
 				}
-					
-				theRepXCollection->addRepXObjectToCollection( ro, tmpCollection, args );				
+
+				theRepXCollection->addRepXObjectToCollection( ro, tmpCollection, args );
 			}
 		}
 		tmpCollection->release();
 
 		theRepXCollection->save(outputStream);
 		theRepXCollection->destroy();
-		
-		
+
+
 		return bRet;
 	}
-	
+
 	PxCollection* PxSerialization::createCollectionFromXml(PxInputData& inputData, PxCooking& cooking, PxSerializationRegistry& sr, const PxCollection* externalRefs, PxStringTable* stringTable, PxXmlMiscParameter* outArgs)
 	{
 		SerializationRegistry& sn = static_cast<SerializationRegistry&>(sr);
 		PxCollection* collection = PxCreateCollection();
 		PX_ASSERT(collection);
-		
+
 		if( externalRefs )
 			collection->add(*const_cast<PxCollection*>(externalRefs));
 
-		PxAllocatorCallback& allocator = PxGetFoundation().getAllocatorCallback(); 
+		PxAllocatorCallback& allocator = PxGetFoundation().getAllocatorCallback();
 		Sn::RepXCollection* theRepXCollection = Sn::create(sn, inputData, allocator, *collection);
 		theRepXCollection = &Sn::RepXUpgrader::upgradeCollection( *theRepXCollection );
-				
-		PxRepXInstantiationArgs args( sn.getPhysics(), &cooking, stringTable );  
+
+		PxRepXInstantiationArgs args( sn.getPhysics(), &cooking, stringTable );
 		if( !theRepXCollection->instantiateCollection(args, *collection) )
 		{
 			collection->release();
 			theRepXCollection->destroy();
 			return NULL;
 		}
-		
+
 		if( externalRefs )
 			collection->remove(*const_cast<PxCollection*>(externalRefs));
-		
+
 		if(outArgs != NULL)
 		{
 			outArgs->upVector = theRepXCollection->getUpVector();
@@ -828,7 +828,7 @@ namespace physx { namespace Sn {
 		}
 
 		theRepXCollection->destroy();
-		
+
 		return collection;
 	}
-} 
+}

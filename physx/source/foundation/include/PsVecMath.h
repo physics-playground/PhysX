@@ -1,4 +1,3 @@
-//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
@@ -23,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2023 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -49,34 +48,28 @@
 // enable/disable SIMD
 #if !defined(PX_SIMD_DISABLED)
 #if PX_INTEL_FAMILY && (!defined(__EMSCRIPTEN__) || defined(__SSE2__))
-#define COMPILE_VECTOR_INTRINSICS 1
-#elif PX_ANDROID && PX_NEON
-#define COMPILE_VECTOR_INTRINSICS 1
-#elif PX_UWP && PX_NEON
-#define COMPILE_VECTOR_INTRINSICS 1
-#elif PX_IOS && PX_NEON
-#define COMPILE_VECTOR_INTRINSICS 1
+	#define COMPILE_VECTOR_INTRINSICS 1
 #elif PX_SWITCH
-#define COMPILE_VECTOR_INTRINSICS 1
+	#define COMPILE_VECTOR_INTRINSICS 1
 #else
-#define COMPILE_VECTOR_INTRINSICS 0
+	#define COMPILE_VECTOR_INTRINSICS 0
 #endif
 #else
-#define COMPILE_VECTOR_INTRINSICS 0
+	#define COMPILE_VECTOR_INTRINSICS 0
 #endif
 
-#if COMPILE_VECTOR_INTRINSICS && PX_INTEL_FAMILY&&(PX_UNIX_FAMILY || PX_PS4)
+#if COMPILE_VECTOR_INTRINSICS && PX_INTEL_FAMILY && PX_UNIX_FAMILY
 // only SSE2 compatible platforms should reach this
 #if PX_EMSCRIPTEN
-#include <emmintrin.h>
+	#include <emmintrin.h>
 #endif
-#include <xmmintrin.h>
+	#include <xmmintrin.h>
 #endif
 
 #if COMPILE_VECTOR_INTRINSICS
-#include "PsAoS.h"
+	#include "PsAoS.h"
 #else
-#include "PsVecMathAoSScalar.h"
+	#include "PsVecMathAoSScalar.h"
 #endif
 
 namespace physx
@@ -309,8 +302,10 @@ PX_FORCE_INLINE FloatV FOne();
 PX_FORCE_INLINE FloatV FHalf();
 //(PX_EPS_REAL,PX_EPS_REAL,PX_EPS_REAL,PX_EPS_REAL)
 PX_FORCE_INLINE FloatV FEps();
+//! @cond
 //(PX_MAX_REAL, PX_MAX_REAL, PX_MAX_REAL PX_MAX_REAL)
 PX_FORCE_INLINE FloatV FMax();
+//! @endcond
 //(-PX_MAX_REAL, -PX_MAX_REAL, -PX_MAX_REAL -PX_MAX_REAL)
 PX_FORCE_INLINE FloatV FNegMax();
 //(1e-6f, 1e-6f, 1e-6f, 1e-6f)
@@ -480,7 +475,7 @@ PX_FORCE_INLINE Vec3V V3NegMulSub(const Vec3V a, const Vec3V b, const Vec3V c);
 // fabs(a)
 PX_FORCE_INLINE Vec3V V3Abs(const Vec3V a);
 
-// a.b 
+// a.b
 // Note: a.w and b.w must have value zero
 PX_FORCE_INLINE FloatV V3Dot(const Vec3V a, const Vec3V b);
 // aXb
@@ -498,7 +493,7 @@ PX_FORCE_INLINE Vec3V V3Normalize(const Vec3V a);
 // a.a>0 ? a*|a.a|^-1/2 : (0,0,0,0)
 // Note: a.w must have value zero
 PX_FORCE_INLINE FloatV V3Length(const Vec3V a);
-// a.a>0 ? a*|a.a|^-1/2 : unsafeReturnValue 
+// a.a>0 ? a*|a.a|^-1/2 : unsafeReturnValue
 // Note: a.w must have value zero
 PX_FORCE_INLINE Vec3V V3NormalizeSafe(const Vec3V a, const Vec3V unsafeReturnValue);
 // a.x + a.y + a.z
@@ -727,7 +722,7 @@ PX_FORCE_INLINE FloatV V4LengthSq(const Vec4V a);
 
 // a*|a.a|^-1/2
 PX_FORCE_INLINE Vec4V V4Normalize(const Vec4V a);
-// a.a>0 ? a*|a.a|^-1/2 : unsafeReturnValue 
+// a.a>0 ? a*|a.a|^-1/2 : unsafeReturnValue
 PX_FORCE_INLINE Vec4V V4NormalizeSafe(const Vec4V a, const Vec4V unsafeReturnValue);
 // a*|a.a|^-1/2
 PX_FORCE_INLINE Vec4V V4NormalizeFast(const Vec4V a);
@@ -1004,10 +999,10 @@ PX_FORCE_INLINE VecU32V V4U32Andc(VecU32V a, VecU32V b);
 PX_FORCE_INLINE VecU32V V4IsGrtrV32u(const Vec4V a, const Vec4V b);
 
 // Math operations on 16-byte aligned Mat33s (represents any 3x3 matrix)
-PX_FORCE_INLINE Mat33V M33Load(const PxMat33& m) 
+PX_FORCE_INLINE Mat33V M33Load(const PxMat33& m)
 {
-	return Mat33V(Vec3V_From_Vec4V(V4LoadU(&m.column0.x)), 
-	Vec3V_From_Vec4V(V4LoadU(&m.column1.x)), V3LoadU(m.column2)); 
+	return Mat33V(Vec3V_From_Vec4V(V4LoadU(&m.column0.x)),
+	Vec3V_From_Vec4V(V4LoadU(&m.column1.x)), V3LoadU(m.column2));
 }
 // a*b
 PX_FORCE_INLINE Vec3V M33MulV3(const Mat33V& a, const Vec3V b);
@@ -1264,19 +1259,12 @@ PX_FORCE_INLINE const PxVec3& V4ReadXYZ(const Vec4V& v)
 
 // this macro transposes 4 Vec4V into 3 Vec4V (assuming that the W component can be ignored
 #define PX_TRANSPOSE_44_34(inA, inB, inC, inD, outA, outB, outC)                                                       \
-	\
 outA = V4UnpackXY(inA, inC);                                                                                           \
-	\
 inA = V4UnpackZW(inA, inC);                                                                                            \
-	\
 inC = V4UnpackXY(inB, inD);                                                                                            \
-	\
 inB = V4UnpackZW(inB, inD);                                                                                            \
-	\
 outB = V4UnpackZW(outA, inC);                                                                                          \
-	\
 outA = V4UnpackXY(outA, inC);                                                                                          \
-	\
 outC = V4UnpackXY(inA, inB);
 
 // this macro transposes 3 Vec4V into 4 Vec4V (with W components as garbage!)
@@ -1341,4 +1329,5 @@ PX_FORCE_INLINE Vec3V V3LoadU_SafeReadW(const PxVec3& f)
 #endif // #if !COMPILE_VECTOR_INTRINSICS
 #include "PsVecQuat.h"
 
-#endif // PSFOUNDATION_PSVECMATH_H
+#endif
+

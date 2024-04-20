@@ -1,4 +1,3 @@
-//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
@@ -23,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2023 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -73,7 +72,9 @@ PX_FORCE_INLINE static bool isValidFloatV(const FloatV a)
 	const PxF32 z = V4ReadZ(a);
 	const PxF32 w = V4ReadW(a);
 
- 	if (
+	return (x == y && x == z && x == w);
+
+ 	/*if (
 		(PxAbs(x - y) < FLOAT_COMPONENTS_EQUAL_THRESHOLD) &&
 		(PxAbs(x - z) < FLOAT_COMPONENTS_EQUAL_THRESHOLD) &&
 		(PxAbs(x - w) < FLOAT_COMPONENTS_EQUAL_THRESHOLD)
@@ -91,7 +92,7 @@ PX_FORCE_INLINE static bool isValidFloatV(const FloatV a)
 		return true;
 	}
 
-	return false;
+	return false;*/
 }
 
 PX_FORCE_INLINE bool isValidVec3V(const Vec3V a)
@@ -120,7 +121,7 @@ PX_FORCE_INLINE bool isAligned16(void* a)
 #define ASSERT_ISFINITELENGTH(a) //PX_ASSERT(isFiniteLength(a))
 #else
 #define ASSERT_ISVALIDVEC3V(a)
-#define ASSERT_ISVALIDFLOATV(a) 
+#define ASSERT_ISVALIDFLOATV(a)
 #define ASSERT_ISALIGNED16(a)
 #define ASSERT_ISFINITELENGTH(a)
 #endif
@@ -170,8 +171,19 @@ PX_FORCE_INLINE PxU32 FiniteTestEq(const Vec4V a, const Vec4V b)
 }
 
 #if !PX_EMSCRIPTEN
+#if PX_CLANG
+#if PX_LINUX
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wglobal-constructors"
+#endif
+#endif
 const PX_ALIGN(16, PxF32 gMaskXYZ[4]) = { physx::PxUnionCast<PxF32>(0xffffffff), physx::PxUnionCast<PxF32>(0xffffffff),
 	                                      physx::PxUnionCast<PxF32>(0xffffffff), 0 };
+#if PX_CLANG
+#if PX_LINUX
+#pragma clang diagnostic pop
+#endif
+#endif
 #else
 // emscripten doesn't like the PxUnionCast data structure
 // the following is what windows and xbox does -- using these for emscripten
@@ -344,7 +356,7 @@ PX_FORCE_INLINE Vec4V V4Load(const PxF32 f)
 
 PX_FORCE_INLINE BoolV BLoad(const bool f)
 {
-	const PxU32 i = -PxI32(f);
+	const PxU32 i = PxU32(-PxI32(f));
 	return _mm_load1_ps(reinterpret_cast<const float*>(&i));
 }
 
@@ -461,6 +473,11 @@ PX_FORCE_INLINE void U4StoreA(const VecU32V uv, PxU32* u)
 {
 	ASSERT_ISALIGNED16(u);
 	_mm_store_ps(reinterpret_cast<float*>(u), uv);
+}
+
+PX_FORCE_INLINE VecI32V I4LoadXYZW(const PxI32& x, const PxI32& y, const PxI32& z, const PxI32& w)
+{
+	return _mm_set_epi32(w, z, y, x);
 }
 
 PX_FORCE_INLINE void I4StoreA(const VecI32V iv, PxI32* i)
@@ -697,8 +714,8 @@ PX_FORCE_INLINE FloatV FAbs(const FloatV a)
 
 PX_FORCE_INLINE FloatV FSel(const BoolV c, const FloatV a, const FloatV b)
 {
-	PX_ASSERT(_VecMathTests::allElementsEqualBoolV(c,BTTTT()) ||
-			  _VecMathTests::allElementsEqualBoolV(c,BFFFF()));
+	PX_ASSERT(vecMathTests::allElementsEqualBoolV(c,BTTTT()) ||
+			  vecMathTests::allElementsEqualBoolV(c,BFFFF()));
 	ASSERT_ISVALIDFLOATV(_mm_or_ps(_mm_andnot_ps(c, b), _mm_and_ps(c, a)));
 	return _mm_or_ps(_mm_andnot_ps(c, b), _mm_and_ps(c, a));
 }
@@ -749,21 +766,21 @@ PX_FORCE_INLINE PxU32 FAllGrtr(const FloatV a, const FloatV b)
 {
 	ASSERT_ISVALIDFLOATV(a);
 	ASSERT_ISVALIDFLOATV(b);
-	return _mm_comigt_ss(a, b);
+	return PxU32(_mm_comigt_ss(a, b));
 }
 
 PX_FORCE_INLINE PxU32 FAllGrtrOrEq(const FloatV a, const FloatV b)
 {
 	ASSERT_ISVALIDFLOATV(a);
 	ASSERT_ISVALIDFLOATV(b);
-	return _mm_comige_ss(a, b);
+	return PxU32(_mm_comige_ss(a, b));
 }
 
 PX_FORCE_INLINE PxU32 FAllEq(const FloatV a, const FloatV b)
 {
 	ASSERT_ISVALIDFLOATV(a);
 	ASSERT_ISVALIDFLOATV(b);
-	return _mm_comieq_ss(a, b);
+	return PxU32(_mm_comieq_ss(a, b));
 }
 
 PX_FORCE_INLINE FloatV FRound(const FloatV a)
@@ -909,7 +926,7 @@ PX_FORCE_INLINE PxU32 FInBounds(const FloatV a, const FloatV min, const FloatV m
 {
 	ASSERT_ISVALIDFLOATV(a);
 	ASSERT_ISVALIDFLOATV(min);
-	ASSERT_ISVALIDFLOATV(max)
+	ASSERT_ISVALIDFLOATV(max);
 	const BoolV c = BAnd(FIsGrtrOrEq(a, min), FIsGrtrOrEq(max, a));
 	return BAllEqTTTT(c);
 }
@@ -982,7 +999,7 @@ PX_FORCE_INLINE FloatV V3GetX(const Vec3V f)
 
 PX_FORCE_INLINE FloatV V3GetY(const Vec3V f)
 {
-	ASSERT_ISVALIDVEC3V(f)
+	ASSERT_ISVALIDVEC3V(f);
 	return _mm_shuffle_ps(f, f, _MM_SHUFFLE(1, 1, 1, 1));
 }
 
@@ -1026,7 +1043,7 @@ PX_FORCE_INLINE Vec3V V3ColY(const Vec3V a, const Vec3V b, const Vec3V c)
 {
 	ASSERT_ISVALIDVEC3V(a);
 	ASSERT_ISVALIDVEC3V(b);
-	ASSERT_ISVALIDVEC3V(c)
+	ASSERT_ISVALIDVEC3V(c);
 	Vec3V r = _mm_shuffle_ps(a, c, _MM_SHUFFLE(3, 1, 3, 1));
 	return V3SetY(r, V3GetY(b));
 }
@@ -1201,7 +1218,7 @@ PX_FORCE_INLINE FloatV V3Dot(const Vec3V a, const Vec3V b)
 	const __m128 t1 = _mm_shuffle_ps(t0, t0, _MM_SHUFFLE(1,0,3,2));	//	ay*by | ax*bx | aw*bw | az*bz
 	const __m128 t2 = _mm_add_ps(t0, t1);							//	ay*by + aw*bw | ax*bx + az*bz | aw*bw + ay*by | az*bz + ax*bx
 	const __m128 t3 = _mm_shuffle_ps(t2, t2, _MM_SHUFFLE(2,3,0,1));	//	ax*bx + az*bz | ay*by + aw*bw | az*bz + ax*bx | aw*bw + ay*by
-	return _mm_add_ps(t3, t2);										//	ax*bx + az*bz + ay*by + aw*bw 
+	return _mm_add_ps(t3, t2);										//	ax*bx + az*bz + ay*by + aw*bw
 																	//	ay*by + aw*bw + ax*bx + az*bz
 																	//	az*bz + ax*bx + aw*bw + ay*by
 																	//	aw*bw + ay*by + az*bz + ax*bx
@@ -1278,7 +1295,7 @@ PX_FORCE_INLINE Vec3V V3NormalizeFast(const Vec3V a)
 PX_FORCE_INLINE Vec3V V3NormalizeSafe(const Vec3V a, const Vec3V unsafeReturnValue)
 {
 	ASSERT_ISVALIDVEC3V(a);
-	const __m128 eps = V3Eps();
+	const __m128 eps = V4Eps();
 	const __m128 length = V3Length(a);
 	const __m128 isGreaterThanZero = FIsGrtr(length, eps);
 	return V3Sel(isGreaterThanZero, V3ScaleInv(a, length), unsafeReturnValue);
@@ -1620,7 +1637,7 @@ PX_FORCE_INLINE PxU32 V3OutOfBounds(const Vec3V a, const Vec3V bounds)
 PX_FORCE_INLINE PxU32 V3InBounds(const Vec3V a, const Vec3V bounds)
 {
 	ASSERT_ISVALIDVEC3V(a);
-	ASSERT_ISVALIDVEC3V(bounds)
+	ASSERT_ISVALIDVEC3V(bounds);
 	return V3InBounds(a, V3Neg(bounds), bounds);
 }
 
@@ -1958,11 +1975,22 @@ PX_FORCE_INLINE FloatV V4Dot(const Vec4V a, const Vec4V b)
 #ifdef __SSE4_2__
 	return _mm_dp_ps(a, b, 0xff);
 #else
-	const __m128 dot1 = _mm_mul_ps(a, b);                                     // x,y,z,w
-	const __m128 shuf1 = _mm_shuffle_ps(dot1, dot1, _MM_SHUFFLE(2, 1, 0, 3)); // w,x,y,z
-	const __m128 shuf2 = _mm_shuffle_ps(dot1, dot1, _MM_SHUFFLE(1, 0, 3, 2)); // z,w,x,y
-	const __m128 shuf3 = _mm_shuffle_ps(dot1, dot1, _MM_SHUFFLE(0, 3, 2, 1)); // y,z,w,x
-	return _mm_add_ps(_mm_add_ps(shuf2, shuf3), _mm_add_ps(dot1, shuf1));
+	//const __m128 dot1 = _mm_mul_ps(a, b);                                     // x,y,z,w
+	//const __m128 shuf1 = _mm_shuffle_ps(dot1, dot1, _MM_SHUFFLE(2, 1, 0, 3)); // w,x,y,z
+	//const __m128 shuf2 = _mm_shuffle_ps(dot1, dot1, _MM_SHUFFLE(1, 0, 3, 2)); // z,w,x,y
+	//const __m128 shuf3 = _mm_shuffle_ps(dot1, dot1, _MM_SHUFFLE(0, 3, 2, 1)); // y,z,w,x
+	//return _mm_add_ps(_mm_add_ps(shuf2, shuf3), _mm_add_ps(dot1, shuf1));
+
+	// aw*bw | az*bz | ay*by | ax*bx
+	const __m128 t0 = _mm_mul_ps(a, b);
+	// ay*by | ax*bx | aw*bw | az*bz
+	const __m128 t1 = _mm_shuffle_ps(t0, t0, _MM_SHUFFLE(1, 0, 3, 2));
+	// ay*by + aw*bw | ax*bx + az*bz | aw*bw + ay*by | az*bz + ax*bx
+	const __m128 t2 = _mm_add_ps(t0, t1);
+	// ax*bx + az*bz | ay*by + aw*bw | az*bz + ax*bx | aw*bw + ay*by
+	const __m128 t3 = _mm_shuffle_ps(t2, t2, _MM_SHUFFLE(2, 3, 0, 1));
+	// ax*bx + az*bz + ay*by + aw*bw
+	return _mm_add_ps(t3, t2);
 #endif
 }
 
@@ -2988,6 +3016,16 @@ PX_FORCE_INLINE VecI32V VecI32V_LeftShift(const VecI32VArg a, const VecShiftVArg
 PX_FORCE_INLINE VecI32V VecI32V_RightShift(const VecI32VArg a, const VecShiftVArg count)
 {
 	return _mm_srl_epi32(a, count.shift);
+}
+
+PX_FORCE_INLINE VecI32V VecI32V_LeftShift(const VecI32VArg a, const PxU32 count)
+{
+	return _mm_slli_epi32(a, PxI32(count));
+}
+
+PX_FORCE_INLINE VecI32V VecI32V_RightShift(const VecI32VArg a, const PxU32 count)
+{
+	return _mm_srai_epi32(a, PxI32(count));
 }
 
 PX_FORCE_INLINE VecI32V VecI32V_And(const VecI32VArg a, const VecI32VArg b)

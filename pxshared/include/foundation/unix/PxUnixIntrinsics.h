@@ -1,4 +1,3 @@
-//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
@@ -23,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2023 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -31,14 +30,14 @@
 #define PXFOUNDATION_PXUNIXINTRINSICS_H
 
 #include "foundation/Px.h"
-#include "foundation/PxSharedAssert.h"
+#include "foundation/PxAssert.h"
 
-#if !(PX_LINUX || PX_ANDROID || PX_PS4 || PX_APPLE_FAMILY)
+#if !(PX_LINUX || PX_APPLE_FAMILY)
 #error "This file should only be included by Unix builds!!"
 #endif
 
-#if (PX_LINUX || PX_ANDROID) && !defined(__CUDACC__) && !PX_EMSCRIPTEN
-    // Linux/android and CUDA compilation does not work with std::isfnite, as it is not marked as CUDA callable
+#if PX_LINUX && !defined(__CUDACC__) && !PX_EMSCRIPTEN
+    // Linux and CUDA compilation does not work with std::isfnite, as it is not marked as CUDA callable
     #include <cmath>
     #ifndef isfinite
         using std::isfinite;
@@ -168,15 +167,6 @@ Copies \c count bytes from \c src to \c dst. Supports overlapping regions.
 PX_FORCE_INLINE void* memMove(void* dest, const void* src, uint32_t count)
 {
 	return memmove(dest, src, count);
-}
-
-/*!
-Set 128B to zero starting at \c dst+offset. Must be aligned.
-*/
-PX_FORCE_INLINE void memZero128(void* dest, uint32_t offset = 0)
-{
-	PX_SHARED_ASSERT(((size_t(dest) + offset) & 0x7f) == 0);
-	memSet(reinterpret_cast<char*>(dest) + offset, 0, 128);
 }
 
 } // namespace intrinsics

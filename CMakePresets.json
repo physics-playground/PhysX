@@ -1,0 +1,124 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 22,
+    "patch": 2
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default Config",
+      "description": "Default build using Ninja generator",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/default",
+      "cacheVariables": {
+        "FIRST_CACHE_VARIABLE": {
+          "type": "BOOL",
+          "value": "OFF"
+        },
+        "SECOND_CACHE_VARIABLE": "ON"
+      },
+      "environment": {
+        "MY_ENVIRONMENT_VARIABLE": "Test",
+        "PATH": "$env{HOME}/ninja/bin:$penv{PATH}"
+      },
+      "vendor": {
+        "example.com/ExampleIDE/1.0": {
+          "autoFormat": true
+        }
+      }
+    },
+    {
+      "name": "px-debug",
+      "generator": "Ninja",
+      "installDir": "${sourceDir}/.build/vs-debug-install",
+      "binaryDir": "${sourceDir}/.build/vs-debug",
+      "toolchainFile": "${sourceDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "description": "Debug configuration with `vcpkg` support.",
+      "warnings": {
+        "deprecated": false,
+        "dev": false,
+        "systemVars": false,
+        "uninitialized": false,
+        "unusedCli": false
+      },
+      "debug": {
+        "tryCompile": false,
+        "output": true
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "px-release",
+      "generator": "Ninja",
+      "installDir": "${sourceDir}/.build/vs-release-install",
+      "binaryDir": "${sourceDir}/.build/vs-release",
+      "toolchainFile": "${sourceDir}/externals/vcpkg/scripts/buildsystems/vcpkg.cmake",
+      "description": "Release configuration with `vcpkg` support.",
+      "debug": {
+        "tryCompile": false,
+        "output": true
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": true
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "default",
+      "configurePreset": "default",
+      "generators": []
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "default",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "default"
+        },
+        {
+          "type": "build",
+          "name": "default"
+        },
+        {
+          "type": "test",
+          "name": "default"
+        },
+        {
+          "type": "package",
+          "name": "default"
+        }
+      ]
+    }
+  ],
+  "vendor": {
+    "example.com/ExampleIDE/1.0": {
+      "autoFormat": false
+    }
+  }
+}

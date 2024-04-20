@@ -130,7 +130,7 @@ class PsTransformV
 	PX_FORCE_INLINE bool isValid() const
 	{
 		// return p.isFinite() && q.isFinite() && q.isValid();
-		return isFiniteVec3V(p) & isFiniteQuatV(q) & isValidQuatV(q);
+		return (int)isFiniteVec3V(p) & (int)isFiniteQuatV(q) & (int)isValidQuatV(q);
 	}
 
 	/**
@@ -141,7 +141,7 @@ class PsTransformV
 	PX_FORCE_INLINE bool isSane() const
 	{
 		// return isFinite() && q.isSane();
-		return isFinite() & isSaneQuatV(q);
+		return (int)isFinite() & (int)isSaneQuatV(q);
 	}
 
 	/**
@@ -150,7 +150,7 @@ class PsTransformV
 	PX_FORCE_INLINE bool isFinite() const
 	{
 		// return p.isFinite() && q.isFinite();
-		return isFiniteVec3V(p) & isFiniteQuatV(q);
+		return (int)isFiniteVec3V(p) & (int)isFiniteQuatV(q);
 	}
 
 	//! Transform transform from parent (returns compound transform: first src, then this->inverse)

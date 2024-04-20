@@ -25,7 +25,7 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 
 #ifndef PX_COLLISION_GRBTRIANGLEMESHCOOKING
@@ -33,6 +33,7 @@
 
 #include "GuMeshData.h"
 #include "cooking/PxCooking.h"
+#include "foundation/PxPlane.h"
 
 namespace physx
 {
@@ -86,7 +87,7 @@ static PxU32 binarySearch(const EdgeTriLookup* __restrict data, const PxU32 numE
 
 // slightly different behavior from collide2: boundary edges are filtered out
 
-static PxU32 findAdjacent(const PxVec3* triVertices, const PxVec3* triNormals, const uint3* triIndices, 
+static PxU32 findAdjacent(const PxVec3* triVertices, const PxVec3* triNormals, const uint3* triIndices,
 	PxU32 nbTris, PxU32 i0, PxU32 i1, const PxPlane& plane,
 	EdgeTriLookup* triLookups, PxU32 triangleIndex)
 {
@@ -145,7 +146,7 @@ static void buildAdjacencies(uint4* triAdjacencies, PxVec3* tempNormalsPerTri_pr
 	//PxVec3 * triNormals = new PxVec3[nbTris];
 
 	EdgeTriLookup* edgeLookups = reinterpret_cast<EdgeTriLookup*>(PX_ALLOC(sizeof(EdgeTriLookup) * nbTris * 3, PX_DEBUG_EXP("edgeLookups")));
-	
+
 
 	for (PxU32 i = 0; i < nbTris; i++)
 	{
@@ -188,7 +189,7 @@ static void buildAdjacencies(uint4* triAdjacencies, PxVec3* tempNormalsPerTri_pr
 
 		triAdjacencies[i] = triAdjIdx;
 	}
-	
+
 
 	PX_FREE(edgeLookups);
 }
@@ -285,7 +286,7 @@ PX_INLINE PxU32 buildVertexConnection_p2(PxU32 * vertValency, PxU32 * vertNeighb
 				if (!matchFound)
 				{
 					PxU32 curPairIdx;
-					
+
 					curPairIdx = vertNeighborStart[curIdx] + vertValency[curIdx];
 					vertNeighboringPairs_prealloc[curPairIdx*2+0] = curIdx;
 					vertNeighboringPairs_prealloc[curPairIdx*2+1] = nextIdx;

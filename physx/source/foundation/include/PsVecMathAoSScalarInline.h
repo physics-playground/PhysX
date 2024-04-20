@@ -1,4 +1,3 @@
-//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
 // are met:
@@ -23,7 +22,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
+// Copyright (c) 2008-2023 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
 // Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
@@ -34,6 +33,11 @@
 #error Scalar version should not be included when using vector intrinsics.
 #endif
 
+#if PX_GCC_FAMILY
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#endif
+
 namespace physx
 {
 namespace shdfnd
@@ -41,11 +45,11 @@ namespace shdfnd
 namespace aos
 {
 
-#define BOOL_TO_U32(b) (PxU32)(- PxI32(b))
-#define TRUE_TO_U32 (PxU32)(-1)
-#define FALSE_TO_U32 (PxU32)(0)
+#define BOOL_TO_U32(b) PxU32(- PxI32(b))
+#define TRUE_TO_U32 PxU32(-1)
+#define FALSE_TO_U32 PxU32(0)
 
-#define BOOL_TO_U16(b) (PxU16)(- PxI32(b))
+#define BOOL_TO_U16(b) PxU16(- PxI32(b))
 
 #define PX_VECMATH_ASSERT_ENABLED 0
 
@@ -82,7 +86,7 @@ PX_FORCE_INLINE bool hasZeroElementInVec4V(const Vec4V a)
 }
 }
 
-namespace _VecMathTests
+namespace vecMathTests
 {
 // PT: this function returns an invalid Vec3V (W!=0.0f) just for unit-testing 'isValidVec3V'
 PX_FORCE_INLINE Vec3V getInvalidVec3V()
@@ -354,10 +358,12 @@ PX_FORCE_INLINE FloatV FEps6()
 	return FLoad(1e-6f);
 }
 
+//! @cond
 PX_FORCE_INLINE FloatV FMax()
 {
 	return FLoad(PX_MAX_REAL);
 }
+//! @endcond
 
 PX_FORCE_INLINE FloatV FNegMax()
 {
@@ -1470,7 +1476,7 @@ PX_FORCE_INLINE BoolV BSetW(const BoolV v, const BoolV f)
 template <int index>
 BoolV BSplatElement(BoolV a)
 {
-	PxU32* b = (PxU32*)&a;
+	PxU32* b = reinterpret_cast<PxU32*>(&a);
 	return BoolV(b[index], b[index], b[index], b[index]);
 }
 
@@ -1967,7 +1973,7 @@ PX_FORCE_INLINE Vec4V Vec4V_From_VecI32V(VecI32V a)
 
 PX_FORCE_INLINE VecI32V VecI32V_From_Vec4V(Vec4V a)
 {
-	float* data = (float*)&a;
+	float* data = reinterpret_cast<float*>(&a);
 	return VecI32V(PxI32(data[0]), PxI32(data[1]), PxI32(data[2]), PxI32(data[3]));
 }
 
@@ -2011,7 +2017,7 @@ PX_FORCE_INLINE VecU32V V4U32SplatElement(BoolV a)
 template <int index>
 PX_FORCE_INLINE Vec4V V4SplatElement(Vec4V a)
 {
-	float* data = (float*)&a;
+	float* data = reinterpret_cast<float*>(&a);
 	return Vec4V(data[index], data[index], data[index], data[index]);
 }
 
@@ -2043,6 +2049,11 @@ PX_FORCE_INLINE VecU32V U4LoadU(const PxU32* i)
 PX_FORCE_INLINE VecU32V U4LoadA(const PxU32* i)
 {
 	return VecU32V(i[0], i[1], i[2], i[3]);
+}
+
+PX_FORCE_INLINE VecI32V I4LoadXYZW(const PxI32& x, const PxI32& y, const PxI32& z, const PxI32& w)
+{
+	return VecI32V(x, y, z, w);
 }
 
 PX_FORCE_INLINE VecI32V I4Load(const PxI32 i)
@@ -2136,6 +2147,16 @@ PX_FORCE_INLINE VecI32V VecI32V_RightShift(const VecI32VArg a, const VecShiftVAr
 {
 	return VecI32V(a.i32[0] >> count.i32[0], a.i32[1] >> count.i32[1], a.i32[2] >> count.i32[2],
 	               a.i32[3] >> count.i32[3]);
+}
+
+PX_FORCE_INLINE VecI32V VecI32V_LeftShift(const VecI32VArg a, const PxU32 count)
+{
+	return VecI32V(a.i32[0] << count, a.i32[1] << count, a.i32[2] << count, a.i32[3] << count);
+}
+
+PX_FORCE_INLINE VecI32V VecI32V_RightShift(const VecI32VArg a, const PxU32 count)
+{
+	return VecI32V(a.i32[0] >> count, a.i32[1] >> count, a.i32[2] >> count, a.i32[3] >> count);
 }
 
 PX_FORCE_INLINE VecI32V VecI32V_And(const VecI32VArg a, const VecI32VArg b)
@@ -2271,5 +2292,9 @@ PX_FORCE_INLINE VecU32V V4ConvertToU32VSaturate(const Vec4V a, PxU32 power)
 } // namespace aos
 } // namespace shdfnd
 } // namespace physx
+
+#if PX_GCC_FAMILY
+#pragma GCC diagnostic pop
+#endif
 
 #endif // PSFOUNDATION_PSVECMATHAOSSCALARINLINE_H

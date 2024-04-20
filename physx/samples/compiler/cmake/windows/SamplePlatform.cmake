@@ -29,39 +29,28 @@
 # Build SamplePlatform
 #
 
-IF(NOT DIRECTX_INCLUDE_DIRS)
-	IF($ENV{PM_DirectXSDK_VERSION})
-		find_package(DirectXSDK $ENV{PM_DirectXSDK_VERSION} CONFIG REQUIRED)
-	ELSE()
-		IF(EXISTS $ENV{DXSDK_DIR})
-			SET(DIRECTX_INCLUDE_DIRS $ENV{DXSDK_DIR}/Include)
-		ELSE()
-			MESSAGE("For samples compilation please install DXSDK.")
-		ENDIF()
-	ENDIF()
-	SET(DIRECTX_INCLUDE_DIRS ${DIRECTX_INCLUDE_DIRS} CACHE INTERNAL "DirectX SDK include path")
-ENDIF()
-
 SET(SAMPLEPLATFORM_COMPILE_DEFS
-	# Common to all configurations
+		# Common to all configurations
+		${PHYSX_WINDOWS_COMPILE_DEFS};${SAMPLES_WINDOWS_COMPILE_DEFS};
 
-	${PHYSX_WINDOWS_COMPILE_DEFS};${SAMPLES_WINDOWS_COMPILE_DEFS};
-
-	$<$<CONFIG:debug>:${PHYSX_WINDOWS_DEBUG_COMPILE_DEFS};>
-	$<$<CONFIG:checked>:${PHYSX_WINDOWS_CHECKED_COMPILE_DEFS};>
-	$<$<CONFIG:profile>:${PHYSX_WINDOWS_PROFILE_COMPILE_DEFS};>
-	$<$<CONFIG:release>:${PHYSX_WINDOWS_RELEASE_COMPILE_DEFS};>
+		$<$<CONFIG:debug>:${PHYSX_WINDOWS_DEBUG_COMPILE_DEFS};>
+		$<$<CONFIG:checked>:${PHYSX_WINDOWS_CHECKED_COMPILE_DEFS};>
+		$<$<CONFIG:profile>:${PHYSX_WINDOWS_PROFILE_COMPILE_DEFS};>
+		$<$<CONFIG:release>:${PHYSX_WINDOWS_RELEASE_COMPILE_DEFS};>
 )
 
 SET(SAMPLEPLATFORM_PLATFORM_SOURCES
-	${PHYSX_ROOT_DIR}/samples/sampleframework/platform/src/windows/WindowsSamplePlatform.cpp
-	${PHYSX_ROOT_DIR}/samples/sampleframework/platform/src/windows/WindowsSampleUserInput.cpp
-	${PHYSX_ROOT_DIR}/samples/sampleframework/platform/include/windows/WindowsSampleUserInputIds.h
-	${PHYSX_ROOT_DIR}/samples/sampleframework/platform/include/windows/WindowsSampleUserInput.h
-	${PHYSX_ROOT_DIR}/samples/sampleframework/platform/include/windows/WindowsSamplePlatform.h
-
+		${PHYSX_ROOT_DIR}/samples/sampleframework/platform/src/windows/WindowsSamplePlatform.cpp
+		${PHYSX_ROOT_DIR}/samples/sampleframework/platform/src/windows/WindowsSampleUserInput.cpp
+		${PHYSX_ROOT_DIR}/samples/sampleframework/platform/include/windows/WindowsSampleUserInputIds.h
+		${PHYSX_ROOT_DIR}/samples/sampleframework/platform/include/windows/WindowsSampleUserInput.h
+		${PHYSX_ROOT_DIR}/samples/sampleframework/platform/include/windows/WindowsSamplePlatform.h
 )
 
 SET(SAMPLEPLATFORM_PLATFORM_INCLUDES
-	${DIRECTX_INCLUDE_DIRS}
+		${DIRECTX_INCLUDE_DIRS}
+)
+
+SET(SAMPLERENDERER_PLATFORM_LINKED_LIBS
+	Microsoft::D3DX9 Microsoft::D3DX10 Microsoft::D3DX11
 )

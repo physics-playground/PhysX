@@ -1,37 +1,13 @@
 # NVIDIA PhysX SDK 4
 
-![NVIDIA Logo](./physx/documentation/PhysXGuide/_static/images/nvidia_logo.png)
-Copyright (c) 2022 NVIDIA Corporation. All rights reserved.
+<!-- markdownlint-disable MD033 -->
+<!--suppress CheckImageSize -->
+<img alt="NVIDIA Logo" src="./physx/documentation/PhysXGuide/_static/images/nvidia_logo.png" width="40%"/>
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-* Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-* Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-* Neither the name of NVIDIA CORPORATION nor the names of its
-   contributors may be used to endorse or promote products derived
-   from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-## PhysX 5 Now Available
-
-The NVIDIA PhysX SDK version 5 is now available [here](https://github.com/NVIDIA-Omniverse/PhysX).
-This repository will continue to be available to support legacy users.  We encourage all new projects to start on the new release.
+> **PhysX 5 Now Available**
+>
+> The NVIDIA PhysX SDK version 5 is now available [here](https://github.com/NVIDIA-Omniverse/PhysX).
+> This repository will continue to be available to support legacy users. We encourage all new projects to start on the new release.
 
 ## Introduction
 
@@ -41,30 +17,34 @@ The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a 
 
 ## Documentation
 
-Please see [Release Notes](http://gameworksdocs.nvidia.com/PhysX/4.1/release_notes.html) for updates pertaining to the latest version.
+Please see [Release Notes](https://gameworksdocs.nvidia.com/PhysX/4.1/release_notes.html) for updates pertaining to the latest version.
 
-The full set of documentation can also be found in the repository under PhysX/documentation or online at [Simulation Documentation](http://gameworksdocs.nvidia.com/simulation.html).
+The full set of documentation can also be found in the repository under PhysX/documentation or online at [Simulation Documentation](https://gameworksdocs.nvidia.com/simulation.html).
 
 Platform specific information can be found here:
 
-* [Microsoft Windows](http://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/windows/readme_windows.html)
-* [Linux](http://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/linux/readme_linux.html)
-* [Google Android ARM](http://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/android/readme_android.html)
-* [Apple macOS](http://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/mac/readme_mac.html)
-* [Apple iOS](http://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/ios/readme_ios.html)
+- [Microsoft Windows](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/windows/readme_windows.html)
+- [Linux](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/linux/readme_linux.html)
+- [Google Android ARM](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/android/readme_android.html)
+- [Apple macOS](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/mac/readme_mac.html)
+- [Apple iOS](https://gameworksdocs.nvidia.com/PhysX/4.1/documentation/platformreadme/ios/readme_ios.html)
 
 ## Quick Start Instructions
 
-Requirements:
+### Requirements
 
-* Python 2.7.6 or later
-* CMake 3.12 or later
+- Python 2.7.6 or later
+- CMake 3.12 or later
 
-To begin:
+### `vcpkg`
+
+See [Use vcpkg](https://github.com/lukka/CppBuildTasks/blob/master/README.md#use-vcpkg-as-a-submodule-of-your-git-repository).
+
+### Setup
 
 1. Clone this repository onto your local drive.
 2. Change directory to `physx/`
-Run `./generate_projects.[bat|sh]` and follow on-screen prompts.
+   Run `./generate_projects.[bat|sh]` and follow on-screen prompts.
 
 This will let you select a platform specific solution to build. You can then open the generated solution file with your IDE and kick off one or more configuration builds.
 
@@ -72,4 +52,33 @@ To build and run the Kapla Demo, see [kaplademo/README.md](kaplademo/README.md).
 
 ## Acknowledgements
 
-This depot contains external third party open source software copyright their respective owners.  See [kaplademo/README.md](kaplademo/README.md) and [externals/README.md](externals/README.md) for details.
+This depot contains external third party open source software copyright their respective owners. See [kaplademo/README.md](kaplademo/README.md) and [externals/README.md](externals/README.md) for details.
+
+## License
+
+Copyright (c) 2022 NVIDIA Corporation. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+- Redistributions of source code must retain the above copyright
+  notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright
+  notice, this list of conditions and the following disclaimer in the
+  documentation and/or other materials provided with the distribution.
+- Neither the name of NVIDIA CORPORATION nor the names of its
+  contributors may be used to endorse or promote products derived
+  from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS "AS IS" AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

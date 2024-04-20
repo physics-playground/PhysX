@@ -1,3 +1,87 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/physx/compiler/public"
+  "[cmake]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.formatOnPaste": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "modificationsIfAvailable",
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+  },
+  "[markdown]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.formatOnSave": true
+  },
+  "[python]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.wordBasedSuggestions": "off",
+    "gitlens.codeLens.symbolScopes": [
+      "!Module"
+    ]
+  },
+  "cmake.allowCommentsInPresetsFile": true,
+  "cmake.allowUnsupportedPresetsVersions": true,
+  "cmake.automaticReconfigure": true,
+  "cmake.buildBeforeRun": true,
+  "cmake.buildDirectory": "${workspaceFolder}/.build/vscode",
+  "cmake.buildTask": true,
+  "cmake.cacheInit": "",
+  "cmake.configureOnEdit": true,
+  "cmake.configureOnOpen": true,
+  "cmake.ctest.allowParallelJobs": true,
+  "cmake.environment": {
+    "VCPKG_ROOT": "${workspaceFolder}/externals/vcpkg"
+  },
+  "cmake.exportCompileCommandsFile": true,
+  "cmake.ignoreKitEnv": true,
+  "cmake.installPrefix": "${workspaceFolder}/.build/install",
+  "cmake.languageSupport.enableFileAPI": false,
+  "cmake.loggingLevel": "debug",
+  "cmake.options.statusBarVisibility": "compact",
+  "cmake.revealLog": "always",
+  "cmake.setBuildTypeOnMultiConfig": true,
+  "cmake.skipConfigureIfCachePresent": true,
+  "cmake.touchbar.visibility": "default",
+  "cmake.useCMakePresets": "always",
+  "cmakeExplorer.logpanel": true,
+  "editor.formatOnSave": false,
+  "prettier.enable": false,
+  "pylint.severity": {
+    "convention": "Hint",
+    "error": "Hint",
+    "fatal": "Hint",
+    "info": "Hint",
+    "refactor": "Hint",
+    "warning": "Hint"
+  },
+  "ruff.codeAction.disableRuleComment": {
+    "enable": true
+  },
+  "ruff.enable": true,
+  "ruff.fixAll": true,
+  "ruff.lint.enable": true,
+  "ruff.lint.run": "onType",
+  "ruff.organizeImports": true,
+  "ruff.showNotifications": "always",
+  "vcpkg.general.enable": true,
+  "vcpkg.target.installDependencies": true,
+  "vcpkg.target.useManifest": true,
+  "vcpkg.target.useStaticLib": false,
+  "vcpkg.target.defaultTriplet": "",
+  "cmake.configureArgs": [
+    null,
+    "-DVCPKG_TARGET_TRIPLET="
+  ]
 }

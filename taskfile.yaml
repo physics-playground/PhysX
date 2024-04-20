@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  RM: '{{if eq .OS "Windows_NT"}}cmd /d /c rmdir /q /s{{else}}rm -rf{{end}}'
+  PHYSX_EXTERNALS: '{{.ROOT_DIR}}/externals'
+  CMAKE_MODULES: '{{.ROOT_DIR}}/externals/cmakemodules'
+  CMAKE_TARGA: '{{.ROOT_DIR}}/externals/targa'
+  BUILD_DIR: '{{.ROOT_DIR}}/.build/task'
+  CMAKE_GENERATOR: '{{if eq .OS "Windows_NT"}}Visual Studio 2022{{else}}Unix Makefiles{{end}}'
+  CMAKE_ARCHITECTURE: '{{if eq .OS "Windows_NT"}}-A x64{{else}}{{end}}'
+  PY_VENV: '{{.ROOT_DIR}}/.venv'
+  PY_VENV_ACTIVATE: '.venv/Scripts/activate.bat'
+  PY_VENV_SCRIPTS: '{{.ROOT_DIR}}/.venv/Scripts'
+  PY_VENV_PIP: '{{.ROOT_DIR}}/.venv/Scripts/pip3.exe'
+  PY_VENV_PYTHON: '{{.ROOT_DIR}}/.venv/Scripts/python.exe'
+  PY_VENV_CALL: '{{if eq .OS "Windows_NT"}}cmd.exe /d /c call "{{fromSlash .PY_VENV_ACTIVATE}}" && call "{{fromSlash .PY_VENV_PYTHON}}"{{else}}. ./.venv/scripts/activate && python3{{end}}'
+  PY: '{{if eq .OS "Windows_NT"}}cmd.exe /d /c call py -3{{else}}python3{{end}}'
+
+tasks:
+  default:
+    silent: false
+    cmds:
+      - task: cmake
+        vars: { PRESET: 'px-release' }
+
+  init:
+    deps: [venv-init, node-init]
+
+  system-init:
+    cmds:
+      - cmd: git submodule update --init --recursive --checkout
+        ignore_error: true
+      - cmd: sh -c ./externals/scripts/install-dependencies.sh
+        platforms: [linux, darwin]
+
+  node-init:
+    deps: [system-init]
+    cmds:
+      - cmd: npm install
+
+  venv-clear:
+    cmds:
+      - task: remove-cache
+        vars: { TARGET: '{{.PY_VENV}}' }
+
+  venv-init:
+    env:
+      VIRTUAL_ENV: '{{fromSlash .PY_VENV}}'
+      PATH: '{{fromSlash .PY_VENV_SCRIPTS}};$PATH'
+      PYTHONHOME: ''
+      VIRTUAL_ENV_PROMPT: '(.venv) '
+    cmds:
+      - cmd: '{{.PYY} -m venv "{{fromSlash .PY_VENV}}"'
+        ignore_error: true
+      - cmd: '{{.PY_VENV_CALL}} -m pip install --upgrade pip'
+      - cmd: '{{.PY_VENV_CALL}} -m pip install --upgrade ruff pylint pre-commit'
+
+  cmake:
+    deps: [init]
+    vars:
+      PRESET: '{{default "px-release" .PRESET}}'
+      SEARCH_PATHS: '{{toSlash .PHYSX_EXTERNALS}};{{toSlash .CMAKE_MODULES}};{{toSlash .CMAKE_TARGA}}'
+      SOURCE_DIR: '{{toSlash .ROOT_DIR}}'
+      BUILD_DIR: '{{toSlash .BUILD_DIR}}'
+    env:
+      VCPKG_ROOT: '{{toSlash .PHYSX_EXTERNALS}}/vcpkg'
+      # Required to prevent 'git clean' from asking for confirmation if file is in use.
+      GIT_ASK_YESNO: false
+    cmds:
+      - task: remove-cache
+        vars: { TARGET: '{{.BUILD_DIR}}' }
+      - cmd: git submodule update --init --recursive --checkout
+        ignore_error: true
+      - cmd: git add .
+        ignore_error: true
+      - cmd: git clean -xfd
+        ignore_error: true
+      - cmd: >-
+          cmake
+          --preset {{.PRESET}}
+          -DCMAKE_PREFIX_PATH="{{.SEARCH_PATHS}}"
+          -S "{{.SOURCE_DIR}}"
+          -B "{{.BUILD_DIR}}"
+      - cmd: >-
+          cmake --build "{{.BUILD_DIR}}"
+
+  remove-cache:
+    deps: []
+    internal: true
+    vars:
+      TARGET: '{{default "" TARGET}}'
+    status:
+      - 'test ! -d "{{.TARGET}}"'
+      - 'test ! -f "{{.TARGET}}"'
+    cmds:
+      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" rmdir /q /s "{{fromSlash .TARGET}}"{{end}}'
+      - cmd: '{{if eq .OS "Windows_NT"}}cmd /d /c if exist "{{fromSlash .TARGET}}" del "{{fromSlash .TARGET}}"{{end}}'

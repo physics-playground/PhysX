@@ -1,0 +1,15 @@
+{
+  "name": "nvidia-gameworks-physx",
+  "version": "1.0.0",
+  "description": "NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs. PhysX is already integrated into some of the most popular game engines, including Unreal Engine, and Unity3D.",
+  "scripts": {
+    "format": "prettier --write .",
+    "check": "prettier --check ."
+  },
+  "author": "NVIDIA",
+  "license": "NVIDIA",
+  "packageManager": "npm@10.5.2+sha256.df0a1f7691654b94786013e5d5b80a873a7ffbae9c82c3bec8b5db76bc3b7dfd",
+  "dependencies": {
+    "prettier": "^3.2.5"
+  }
+}

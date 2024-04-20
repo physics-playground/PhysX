@@ -25,11 +25,12 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 #include "GuIntersectionEdgeEdge.h"
 #include "PsMathUtils.h"
 #include "CmPhysXCommon.h"
+#include "foundation/PxPlane.h"
 
 using namespace physx;
 

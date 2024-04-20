@@ -25,7 +25,7 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 #include "foundation/PxVec4.h"
 #include "foundation/PxMemory.h"
@@ -257,7 +257,7 @@ bool AABBTree::buildFromMesh(SourceMesh& mesh, PxU32 limit)
 		VertexPointers VP;
 		mesh.getTriangle(VP, i);
 
-		const Vec4V v0V = V4LoadU(&VP.Vertex[0]->x);	
+		const Vec4V v0V = V4LoadU(&VP.Vertex[0]->x);
 		const Vec4V v1V = V4LoadU(&VP.Vertex[1]->x);
 		const Vec4V v2V = V4LoadU(&VP.Vertex[2]->x);
 		Vec4V minV = V4Min(v0V, v1V);
@@ -294,8 +294,10 @@ bool AABBTree::buildFromMesh(SourceMesh& mesh, PxU32 limit)
 		mPool->mNodePrimitives	= mIndices;
 		mPool->mNbPrimitives	= nbBoxes;
 
+        const AABBTreeNode* pool = mPool;
+
 		// Build the hierarchy
-		local_BuildHierarchy(mPool, boxes, centers, Stats, mPool, limit);
+		local_BuildHierarchy(mPool, boxes, centers, Stats, pool, limit);
 
 		// Get back total number of nodes
 		mTotalNbNodes = Stats.getCount();
@@ -373,7 +375,7 @@ static PxU32 precomputeNodeSorting(const PxBounds3& box0, const PxBounds3& box1)
 	if(!bPPN)
 		code |= (1<<6);	// Bit 1: PPN
 	if(!bPNP)
-		code |= (1<<5);	// Bit 2: PNP	
+		code |= (1<<5);	// Bit 2: PNP
 	if(!bPNN)
 		code |= (1<<4);	// Bit 3: PNN
 	if(!bNPP)
@@ -799,7 +801,7 @@ static void _ComputeMaxValues(const BV4Node* current, PxVec3& CMax, PxVec3& EMax
 	}
 }
 
-// PT: duplicated for now.... 
+// PT: duplicated for now....
 
 static void _FlattenQ(	BVDataPackedQ* const dest, const PxU32 box_id, PxU32& current_id, const BV4Node* current, PxU32& max_depth, PxU32& current_depth,
 						const PxVec3& CQuantCoeff, const PxVec3& EQuantCoeff, const PxVec3& mCenterCoeff, const PxVec3& mExtentsCoeff)
@@ -1426,7 +1428,7 @@ static bool BuildBV4Internal(BV4Tree& tree, const AABBTree& Source, SourceMesh* 
 
 	if(!tree.init(mesh, Source.getBV()))
 		return false;
-	
+
 	return BuildBV4FromRoot(tree, Root, Params, quantized, epsilon);
 }
 

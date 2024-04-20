@@ -25,7 +25,7 @@
 //
 // Copyright (c) 2008-2021 NVIDIA Corporation. All rights reserved.
 // Copyright (c) 2004-2008 AGEIA Technologies, Inc. All rights reserved.
-// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.  
+// Copyright (c) 2001-2004 NovodeX AG. All rights reserved.
 
 
 #include "PsMathUtils.h"
@@ -63,7 +63,7 @@ namespace physx
 		void PxcFsFlushVelocity(FsData& matrix);
 
 		// we pass this around by value so that when we return from a function the size is unaltered. That means we don't preserve state
-		// across functions - even though that could be handy to preserve baseInertia and jointTransforms across the solver so that if we 
+		// across functions - even though that could be handy to preserve baseInertia and jointTransforms across the solver so that if we
 		// need to run position projection  positions they don't get recomputed.
 
 		void PxcLtbFactor(FsData& m)
@@ -106,7 +106,7 @@ Articulation::~Articulation()
 
 #if DY_DEBUG_ARTICULATION
 
-void Articulation::computeResiduals(const Cm::SpatialVector *v, 
+void Articulation::computeResiduals(const Cm::SpatialVector *v,
 									   const ArticulationJointTransforms* jointTransforms,
 									   bool /*dump*/) const
 {
@@ -148,7 +148,7 @@ void Articulation::checkLimits() const
 	{
 		PxTransform cA2w = mSolverDesc->poses[mSolverDesc->links[i].parent].transform(mSolverDesc->links[i].inboundJoint->parentPose);
 		PxTransform cB2w = mSolverDesc->poses[i].transform(mSolverDesc->links[i].inboundJoint->childPose);
-		
+
 		PxTransform cB2cA = cA2w.transformInv(cB2w);
 
 		// the relative quat must be the short way round for limits to work...
@@ -157,16 +157,16 @@ void Articulation::checkLimits() const
 			cB2cA.q	= -cB2cA.q;
 
 		const ArticulationJointCore& j = *mSolverDesc->links[i].inboundJoint;
-		
+
 		PxQuat swing, twist;
 		if(j.twistLimited || j.swingLimited)
 			Ps::separateSwingTwist(cB2cA.q, swing, twist);
-		
+
 		if(j.swingLimited)
 		{
 			PxReal swingLimitContactDistance = PxMin(j.swingYLimit, j.swingZLimit)/4;
 
-			Cm::ConeLimitHelper eh(PxTan(j.swingYLimit/4), 
+			Cm::ConeLimitHelper eh(PxTan(j.swingYLimit/4),
 								   PxTan(j.swingZLimit/4),
 								   PxTan(swingLimitContactDistance/4));
 
@@ -234,7 +234,7 @@ bool Dy::Articulation::resize(const PxU32 linkCount)
 			mSolverDesc.motionVelocity = mMotionVelocity.begin();
 		}
 		Dy::ArticulationV::resize(linkCount);
-		
+
 		return true;
 	}
 
@@ -487,12 +487,14 @@ void Articulation::prepareDataBlock(FsData& fsData,
 	}
 
 	FsJointVectors* jointVectors = getJointVectors(fsData);
+    PX_UNUSED(jointVectors);
 	for (PxU32 i = 1; i<linkCount; i++)
 	{
-		PX_ALIGN(16, PxVec3) parentOffset = poses[i].p - poses[fsData.parent[i]].p;
-		PX_ALIGN(16, PxVec3) jointOffset = jointTransforms[i].cB2w.p - poses[i].p;
-		jointVectors[i].parentOffset = V3LoadA(parentOffset);
-		jointVectors[i].jointOffset = V3LoadA(jointOffset);
+        // #todo #jve
+		// PX_ALIGN_PREFIX(16) PxVec3 PX_ALIGN_SUFFIX(16) parentOffset = poses[i].p - poses[fsData.parent[i]].p;
+		// PX_ALIGN_PREFIX(16) PxVec3 PX_ALIGN_SUFFIX(16) jointOffset = jointTransforms[i].cB2w.p - poses[i].p;
+		// jointVectors[i].parentOffset = V3LoadA(parentOffset);
+		// jointVectors[i].jointOffset = V3LoadA(jointOffset);
 	}
 }
 
@@ -561,7 +563,7 @@ void Articulation::prepareLtbMatrix(FsData& fsData,
 		const PxVec3 ra = s.cB2w.p - poses[p].p;
 		const PxVec3 rb = s.cB2w.p - poses[i].p;
 
-		// A bit different from the 1D solver, 
+		// A bit different from the 1D solver,
 		// there we use a formulation	j0.v0 - j1.v1 + c = 0
 		// here we use the homogeneous	j0.v0 + j1.v1 + c = 0
 
@@ -654,8 +656,8 @@ void PxcFsComputeJointLoadsSimd(const FsData& matrix,
 	PxU32 maxIterations,
 	PxcFsScratchAllocator allocator)
 {
-	// dsequeira: this is really difficult to optimize on XBox: not inlining generates lots of LHSs, 
-	// inlining generates lots of cache misses because the fn is so huge (almost 2000 instrs.) 
+	// dsequeira: this is really difficult to optimize on XBox: not inlining generates lots of LHSs,
+	// inlining generates lots of cache misses because the fn is so huge (almost 2000 instrs.)
 	// Timing says even for 1 iteration the cache misses are slighly preferable for a
 	// 20-bone articulation, for more iters it's *much* better to take the cache misses.
 	//
@@ -1001,7 +1003,7 @@ void Articulation::computeUnconstrainedVelocitiesTGS(
 	FsInertia*						PX_RESTRICT baseInertia = allocator.alloc<FsInertia>(desc.linkCount);
 	ArticulationJointTransforms*	PX_RESTRICT jointTransforms = allocator.alloc<ArticulationJointTransforms>(desc.linkCount);
 
-	articulation.computeUnconstrainedVelocitiesInternal(desc, dt, gravity, 
+	articulation.computeUnconstrainedVelocitiesInternal(desc, dt, gravity,
 		contextID, baseInertia, jointTransforms, allocator);
 }
 
@@ -1153,7 +1155,7 @@ void Articulation::deltaMotionToMotionVelocity(const ArticulationSolverDesc& des
 	}
 }
 
-void Articulation::pxcFsApplyImpulse(PxU32 linkID, Ps::aos::Vec3V linear, 
+void Articulation::pxcFsApplyImpulse(PxU32 linkID, Ps::aos::Vec3V linear,
 	Ps::aos::Vec3V angular, Cm::SpatialVectorF* /*Z*/, Cm::SpatialVectorF* /*deltaV*/)
 {
 #if DY_ARTICULATION_DEBUG_VERIFY
@@ -1217,7 +1219,7 @@ void Articulation::pxcFsApplyImpulse(PxU32 linkID, Ps::aos::Vec3V linear,
 void Articulation::pxcFsGetVelocities(PxU32 linkID, PxU32 linkID1, Cm::SpatialVectorV& v0, Cm::SpatialVectorV& v1)
 {
 	//Common case - linkID = parent of linkID1...
-	//In this case, we compute the delta velocity between the 2 and return 
+	//In this case, we compute the delta velocity between the 2 and return
 
 	v0 = pxcFsGetVelocity(linkID);
 	v1 = pxcFsGetVelocity(linkID1);
@@ -1636,8 +1638,8 @@ void PxvArticulationDriveCache::applyImpulses(const FsData& cache,
 	Articulation::applyImpulses(cache, Z, V);
 }
 
-void PxvArticulationDriveCache::getImpulseResponse(const FsData& cache, 
-													  PxU32 linkID, 
+void PxvArticulationDriveCache::getImpulseResponse(const FsData& cache,
+													  PxU32 linkID,
 													  const Cm::SpatialVectorV& impulse,
 													  Cm::SpatialVectorV& deltaV)
 {
